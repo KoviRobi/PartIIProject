@@ -8,7 +8,7 @@ public class SchemeString extends SchemeEquality implements SchemeObject
   String value;
 
   public SchemeString(String text, String file, long line, long character)
-  { StringBuilder sb = new StringBuilder();
+  { StringBuilder sb = new StringBuilder(text);
     value = sb.toString();
   }
 

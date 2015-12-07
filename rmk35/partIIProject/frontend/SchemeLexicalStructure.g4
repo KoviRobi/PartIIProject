@@ -98,9 +98,7 @@ fragment StringElement : ~[\\"]
 	| InlineHexEscape
 	;
 
-Bytevector : '#u8(' Byte* ')' ;
-
-fragment Byte : Digit+ ; // FIXME: only between 0 and 255
+Byte : Digit+ ; // FIXME: only between 0 and 255
 
 Number : Num ; // FIXME: only accept proper basis
 

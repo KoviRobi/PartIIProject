@@ -9,8 +9,8 @@ import SchemeLexicalStructure;
 datum[String filename] returns [Object expr]
   : simpleDatum[$filename] { $expr = $simpleDatum.expr; }
   | compoundDatum[$filename] { $expr = $compoundDatum.expr; }
-	| label '=' datum[$filename]
-  | label '#'
+	| label '=' datum[$filename] { $expr = $datum.expr; }
+  | label '#' { $expr = "label " + $label.text; }
 	;
 
 simpleDatum[String filename] returns [Object expr]
@@ -27,7 +27,7 @@ number[String filename] returns [SchemeNumber expr]: Number { $expr = new Scheme
 character[String filename] returns [SchemeCharacter expr] : Character { $expr = new SchemeCharacter($Character.text, $filename, $Character.line, $Character.pos); } ;
 string[String filename] returns [SchemeString expr]: String { $expr = new SchemeString($String.text, "Filename unknown", $String.line, $String.pos); } ;
 symbol[String filename] returns [SchemeIdentifier expr] : Identifier { $expr = new SchemeIdentifier($Identifier.text, $filename, $Identifier.line, $Identifier.pos); } ;
-bytevector[String filename] returns [SchemeBytevector expr] : Bytevector { $expr = new SchemeBytevector($Bytevector.text, $filename, $Bytevector.line, $Bytevector.pos); } ;
+bytevector[String filename] returns [SchemeBytevector expr] : '#u8(' Byte* ')' { $expr = new SchemeBytevector($Byte.text, $filename, $Byte.line, $Byte.pos); } ;
 
 compoundDatum[String filename] returns [Object expr]
   : list[$filename] { $expr = $list.expr; }

@@ -1,8 +1,10 @@
 package rmk35.partIIProject.frontend.AST;
 
 public class SchemeBytevector
-{ public SchemeBytevector(String text, String file, long line, long character)
-  {
+{ String value;
+  
+  public SchemeBytevector(String text, String file, long line, long character)
+  { value = text;
   }
 
   public boolean eqv(Object other)
@@ -15,6 +17,6 @@ public class SchemeBytevector
   }
 
   public String toString()
-  { throw new UnsupportedOperationException();
+  { return value;
   }
 }
