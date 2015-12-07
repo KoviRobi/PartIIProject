@@ -18,6 +18,11 @@ public class SchemeVector
   }
 
   public String toString()
-  { return data.toString();
+  { StringBuilder sb = new StringBuilder();
+    sb.append(" #( ");
+    for (Object o : data)
+      sb.append(o.toString() + " ");
+    sb.append(") ");
+    return sb.toString();
   }
 }

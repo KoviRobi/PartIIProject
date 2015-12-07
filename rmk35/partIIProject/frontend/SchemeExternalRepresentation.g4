@@ -9,8 +9,8 @@ import SchemeLexicalStructure;
 datum[String filename] returns [Object expr]
   : simpleDatum[$filename] { $expr = $simpleDatum.expr; }
   | compoundDatum[$filename] { $expr = $compoundDatum.expr; }
-	| label '=' datum[$filename] { $expr = $datum.expr; }
-  | label '#' { $expr = "label " + $label.text; }
+	| LabelCreate datum[$filename] { $expr = new SchemeLabelledData($LabelCreate.text, $datum.expr, $filename, $LabelCreate.line, $LabelCreate.pos); }
+  | LabelReference { $expr = "label " + $LabelReference.text; }
 	;
 
 simpleDatum[String filename] returns [Object expr]
@@ -27,7 +27,20 @@ number[String filename] returns [SchemeNumber expr]: Number { $expr = new Scheme
 character[String filename] returns [SchemeCharacter expr] : Character { $expr = new SchemeCharacter($Character.text, $filename, $Character.line, $Character.pos); } ;
 string[String filename] returns [SchemeString expr]: String { $expr = new SchemeString($String.text, "Filename unknown", $String.line, $String.pos); } ;
 symbol[String filename] returns [SchemeIdentifier expr] : Identifier { $expr = new SchemeIdentifier($Identifier.text, $filename, $Identifier.line, $Identifier.pos); } ;
-bytevector[String filename] returns [SchemeBytevector expr] : '#u8(' Byte* ')' { $expr = new SchemeBytevector($Byte.text, $filename, $Byte.line, $Byte.pos); } ;
+
+bytevector[String filename]
+  returns [SchemeBytevector expr]
+  locals [Stack<Object> acc, long line, long col]
+  @init {
+   $acc = new Stack<>();
+  }
+  @after {
+   $expr = new SchemeBytevector($acc.toArray(), $filename, $line, $col);
+  }
+  : BytevectorOpen { $line = $BytevectorOpen.line; $col = $BytevectorOpen.pos; }
+    (UInteger { $acc.push($UInteger.text); } )*
+    ')'
+  ;
 
 compoundDatum[String filename] returns [Object expr]
   : list[$filename] { $expr = $list.expr; }
@@ -37,9 +50,9 @@ compoundDatum[String filename] returns [Object expr]
 
 list[String filename]
   returns [SchemeList expr]
-  locals [List acc]
+  locals [List<Object> acc]
   @init {
-   $acc = new LinkedList();
+   $acc = new LinkedList<>();
   }
   @after {
    $expr = new SchemeList($acc, $filename, -1, -1);
@@ -50,9 +63,9 @@ list[String filename]
 
 vector[String filename]
   returns [SchemeVector expr]
-  locals [List acc]
+  locals [List<Object> acc]
   @init {
-   $acc = new ArrayList();
+   $acc = new ArrayList<>();
   }
   @after {
    $expr = new SchemeVector($acc.toArray(), $filename, -1, -1);
@@ -62,8 +75,10 @@ vector[String filename]
 
 abbreviation[String filename]
   returns [Object expr]
-  : abbrevPrefix datum[$filename] ;
+  : AbbrevPrefix datum[$filename] 
+  { $expr = new SchemeAbbreviation($AbbrevPrefix.text, $datum.expr, $filename, $AbbrevPrefix.line, $AbbrevPrefix.pos); }; //FIXME:
 
-abbrevPrefix : '\'' | '`' | ',' | ',@' | '#;' ;
+AbbrevPrefix : '\'' | '`' | ',' | ',@' | '#;' ;
 
-label : '#' UInteger ;
+LabelCreate : '#' UInteger '=' ;
+LabelReference : '#' UInteger '#' ;

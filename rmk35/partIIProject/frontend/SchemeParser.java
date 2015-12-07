@@ -19,7 +19,7 @@ public class SchemeParser
     CommonTokenStream tokens = new CommonTokenStream(lexer);
     SchemeFileParser parser = new SchemeFileParser(tokens);
 
-    List<Object> result = parser.file(args[0]).x;
+    List<Object> result = parser.file(args[0]).data;
     System.out.println(result);
   }
 }

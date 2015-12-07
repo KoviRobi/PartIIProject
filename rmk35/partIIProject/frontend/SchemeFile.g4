@@ -5,6 +5,7 @@ package rmk35.partIIProject.frontend;
 
 import java.util.List;
 import java.util.LinkedList;
+import java.util.Stack;
 
 import rmk35.partIIProject.frontend.AST.SchemeBoolean;
 import rmk35.partIIProject.frontend.AST.SchemeNumber;
@@ -13,17 +14,18 @@ import rmk35.partIIProject.frontend.AST.SchemeCharacter;
 import rmk35.partIIProject.frontend.AST.SchemeString;
 import rmk35.partIIProject.frontend.AST.SchemeIdentifier;
 import rmk35.partIIProject.frontend.AST.SchemeBytevector;
-
 import rmk35.partIIProject.frontend.AST.SchemeList;
 import rmk35.partIIProject.frontend.AST.SchemeVector;
+import rmk35.partIIProject.frontend.AST.SchemeAbbreviation;
+import rmk35.partIIProject.frontend.AST.SchemeLabelledData;
 }
 
 import SchemeExternalRepresentation;
 
-file[String filename] returns [List<Object> x]
+file[String filename] returns [List<Object> data]
   @init {
-   $x = new LinkedList();
+   $data = new LinkedList<>();
   }
   :
-  (datum[$filename] {$x.add($datum.expr);})* EOF
+  (datum[$filename] {System.out.println("Found: " + $data); $data.add($datum.expr);})* EOF
   ;

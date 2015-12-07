@@ -1,9 +1,9 @@
 package rmk35.partIIProject.frontend.AST;
 
 public class SchemeBytevector
-{ String value;
+{ Object[] value;
   
-  public SchemeBytevector(String text, String file, long line, long character)
+  public SchemeBytevector(Object[] text, String file, long line, long character)
   { value = text;
   }
 
@@ -17,6 +17,6 @@ public class SchemeBytevector
   }
 
   public String toString()
-  { return value;
+  { return value.toString();
   }
 }

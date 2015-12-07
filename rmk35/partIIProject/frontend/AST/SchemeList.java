@@ -18,6 +18,17 @@ public class SchemeList
   }
 
   public String toString()
-  { return data.toString();
+  { StringBuilder sb = new StringBuilder();
+    sb.append(" ( ");
+    for (Object o : data)
+    { if (o != null)
+      { sb.append(o.toString() + " ");
+      } else
+      { sb.append("'() ");
+      }
+    }
+
+    sb.append(") ");
+    return sb.toString();
   }
 }
