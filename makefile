@@ -31,9 +31,38 @@ rmk35/partIIProject/frontend/SchemeExternalRepresentation.g4: rmk35/partIIProjec
 .PHONY: clean
 
 clean:
-	-rm rmk35/partIIProject/frontend/SchemeFileLexer.java \
+	-rm -f rmk35/partIIProject/frontend/SchemeFileLexer.java \
 	rmk35/partIIProject/frontend/SchemeFileLexer.class \
 	rmk35/partIIProject/frontend/SchemeFileLexer.tokens \
+	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$AbbrevPrefixContext.class \
+	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$AbbreviationContext.class \
+	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$BoolContext.class \
+	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$BytevectorContext.class \
+	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$CharacterContext.class \
+	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$CompoundDatumContext.class \
+	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$DatumContext.class \
+	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$LabelContext.class \
+	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$ListContext.class \
+	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$NumberContext.class \
+	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$SimpleDatumContext.class \
+	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$StringContext.class \
+	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$SymbolContext.class \
+	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$VectorContext.class \
+	rmk35/partIIProject/frontend/SchemeFileParser\$$AbbrevPrefixContext.class \
+	rmk35/partIIProject/frontend/SchemeFileParser\$$AbbreviationContext.class \
+	rmk35/partIIProject/frontend/SchemeFileParser\$$BoolContext.class \
+	rmk35/partIIProject/frontend/SchemeFileParser\$$BytevectorContext.class \
+	rmk35/partIIProject/frontend/SchemeFileParser\$$CharacterContext.class \
+	rmk35/partIIProject/frontend/SchemeFileParser\$$CompoundDatumContext.class \
+	rmk35/partIIProject/frontend/SchemeFileParser\$$DatumContext.class \
+	rmk35/partIIProject/frontend/SchemeFileParser\$$FileContext.class \
+	rmk35/partIIProject/frontend/SchemeFileParser\$$LabelContext.class \
+	rmk35/partIIProject/frontend/SchemeFileParser\$$ListContext.class \
+	rmk35/partIIProject/frontend/SchemeFileParser\$$NumberContext.class \
+	rmk35/partIIProject/frontend/SchemeFileParser\$$SimpleDatumContext.class \
+	rmk35/partIIProject/frontend/SchemeFileParser\$$StringContext.class \
+	rmk35/partIIProject/frontend/SchemeFileParser\$$SymbolContext.class \
+	rmk35/partIIProject/frontend/SchemeFileParser\$$VectorContext.class \
 	rmk35/partIIProject/frontend/SchemeFileParser.java \
 	rmk35/partIIProject/frontend/SchemeFileParser.class \
 	rmk35/partIIProject/frontend/SchemeFileListener.java \
