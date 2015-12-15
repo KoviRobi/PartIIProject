@@ -16,7 +16,21 @@ rmk35/partIIProject/frontend/SchemeParser.class: rmk35/partIIProject/frontend/Sc
 														 rmk35/partIIProject/frontend/AST/SchemeBytevector.java \
 														 rmk35/partIIProject/frontend/AST/SchemeAbbreviation.java \
 														 rmk35/partIIProject/frontend/AST/SchemeLabelledData.java \
-														 rmk35/partIIProject/frontend/SchemeParserException.java
+														 rmk35/partIIProject/frontend/SchemeParserException.java \
+														 rmk35/partIIProject/backend/SetStatement.java \
+														 rmk35/partIIProject/backend/RuntimeValue.java \
+														 rmk35/partIIProject/backend/LambdaValue.java \
+														 rmk35/partIIProject/backend/Identifier.java \
+														 rmk35/partIIProject/backend/JavaBytecodeGenerator.java \
+														 rmk35/partIIProject/backend/OutputClass.java \
+														 rmk35/partIIProject/backend/Macro.java \
+														 rmk35/partIIProject/backend/MainClass.java \
+														 rmk35/partIIProject/backend/IfStatement.java \
+														 rmk35/partIIProject/backend/ApplicationStatement.java \
+														 rmk35/partIIProject/backend/Definition.java \
+														 rmk35/partIIProject/backend/Statement.java \
+														 rmk35/partIIProject/backend/InnerClass.java \
+														 rmk35/partIIProject/backend/LambdaStatement.java
 	javac $?
 
 %BaseListener.java %Lexer.java %Listener.java %Parser.java: %.g4
@@ -85,7 +99,21 @@ clean:
 	rmk35/partIIProject/frontend/AST/SchemeAbbreviation.class \
 	rmk35/partIIProject/frontend/AST/SchemeLabelledData.class \
 	rmk35/partIIProject/frontend/SchemeParser.class \
-	rmk35/partIIProject/frontend/SchemeParserException.class
+	rmk35/partIIProject/frontend/SchemeParserException.class \
+	rmk35/partIIProject/backend/SetStatement.class \
+	rmk35/partIIProject/backend/RuntimeValue.class \
+	rmk35/partIIProject/backend/LambdaValue.class \
+	rmk35/partIIProject/backend/Identifier.class \
+	rmk35/partIIProject/backend/JavaBytecodeGenerator.class \
+	rmk35/partIIProject/backend/OutputClass.class \
+	rmk35/partIIProject/backend/Macro.class \
+	rmk35/partIIProject/backend/MainClass.class \
+	rmk35/partIIProject/backend/IfStatement.class \
+	rmk35/partIIProject/backend/ApplicationStatement.class \
+	rmk35/partIIProject/backend/Definition.class \
+	rmk35/partIIProject/backend/Statement.class \
+	rmk35/partIIProject/backend/InnerClass.class \
+	rmk35/partIIProject/backend/LambdaStatement.class
 
 
 .PHONY: runtest

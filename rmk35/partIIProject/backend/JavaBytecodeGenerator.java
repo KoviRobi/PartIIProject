@@ -8,9 +8,10 @@ public class JavaBytecodeGenerator
 { public static void generateCode(List<Statement> statements)
   { Map<Identifier, Definition> definitions = new HashMap<>();
     Map<Identifier, Macro> macros = new HashMap<>();
+    OutputClass output = new MainClass();
 
     for (Statement statement : statements)
-    { statement.generateCode(definitions, macros);
+    { statement.generateOutput(definitions, macros, output);
     }
   }
 }

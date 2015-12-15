@@ -11,22 +11,22 @@ public class IfStatement extends Statement
                              OutputClass currentOutput)
   { predicate.generateOutput(definitions, macros, currentOutput);
     // Top of stack is now predicate's value
-    currentOutput.addToMainMethod("  new rmk35/partIIProject/backend/BooleanValue\n");
-    currentOutput.addToMainMethod("  dup\n"); // Because the <init> is void
-    currentOutput.addToMainMethod("  iconst_1\n"); // True
-    currentOutput.addToMainMethod("  invokenonvirtual rmk35/partIIProject/backend/BooleanValue/<init>(I)V\n");
-    currentOutput.addToMainMethod("  invokevirtual rmk35/partIIProject/backend/RuntimeValue/eq(Lrmk35/partIIProject/backend/RuntimeValue;)Z\n");
+    currentOutput.addToPrimaryMethod("  new rmk35/partIIProject/backend/BooleanValue\n");
+    currentOutput.addToPrimaryMethod("  dup\n"); // Because the <init> is void
+    currentOutput.addToPrimaryMethod("  iconst_1\n"); // True
+    currentOutput.addToPrimaryMethod("  invokenonvirtual rmk35/partIIProject/backend/BooleanValue/<init>(I)V\n");
+    currentOutput.addToPrimaryMethod("  invokevirtual rmk35/partIIProject/backend/RuntimeValue/eq(Lrmk35/partIIProject/backend/RuntimeValue;)Z\n");
 
-    int uniqueNumber = currentOutput.uniqueNumber();
-    String falseLabel = "FalseCase" + uniqueNumber;
-    String endLabel = "IfEnd" + uniqueNumber;
-    currentOutput.addToMainMethod("  ifeq " + falseLabel + "\n"); // ifeq has 'a eq b' as 'a-b=0', but 0 is boolean false
+    String uniqueID = currentOutput.uniqueID();
+    String falseLabel = "FalseCase" + uniqueID;
+    String endLabel = "IfEnd" + uniqueID;
+    currentOutput.addToPrimaryMethod("  ifeq " + falseLabel + "\n"); // ifeq has 'a eq b' as 'a-b=0', but 0 is boolean false
     trueCase.generateOutput(definitions, macros, currentOutput);
-    currentOutput.addToMainMethod("  goto " + endLabel + "\n");
+    currentOutput.addToPrimaryMethod("  goto " + endLabel + "\n");
 
-    currentOutput.addToMainMethod(falseLabel + "\n");
+    currentOutput.addToPrimaryMethod(falseLabel + "\n");
     falseCase.generateOutput(definitions, macros, currentOutput);
 
-    currentOutput.addToMainMethod(endLabel + "\n");
+    currentOutput.addToPrimaryMethod(endLabel + "\n");
   }
 }
