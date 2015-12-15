@@ -6,8 +6,8 @@ public class IfStatement extends Statement
 { Statement predicate;
   Statement trueCase;
   Statement falseCase;
-  public void generateOutput(Map<Identifier, Definition> definitions,
-                             Map<Identifier, Macro> macros,
+  public void generateOutput(Map<IdentifierValue, Definition> definitions,
+                             Map<IdentifierValue, Macro> macros,
                              OutputClass currentOutput)
   { predicate.generateOutput(definitions, macros, currentOutput);
     // Top of stack is now predicate's value

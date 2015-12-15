@@ -20,7 +20,11 @@ rmk35/partIIProject/frontend/SchemeParser.class: rmk35/partIIProject/frontend/Sc
 														 rmk35/partIIProject/backend/SetStatement.java \
 														 rmk35/partIIProject/backend/RuntimeValue.java \
 														 rmk35/partIIProject/backend/LambdaValue.java \
-														 rmk35/partIIProject/backend/Identifier.java \
+														 rmk35/partIIProject/backend/IdentifierFactory.java \
+														 rmk35/partIIProject/backend/LocalIdentifierStatement.java \
+														 rmk35/partIIProject/backend/GlobalIdentifierStatement.java \
+														 rmk35/partIIProject/backend/ClosureIdentifierStatement.java \
+														 rmk35/partIIProject/backend/IdentifierValue.java \
 														 rmk35/partIIProject/backend/JavaBytecodeGenerator.java \
 														 rmk35/partIIProject/backend/OutputClass.java \
 														 rmk35/partIIProject/backend/Macro.java \
@@ -103,7 +107,11 @@ clean:
 	rmk35/partIIProject/backend/SetStatement.class \
 	rmk35/partIIProject/backend/RuntimeValue.class \
 	rmk35/partIIProject/backend/LambdaValue.class \
-	rmk35/partIIProject/backend/Identifier.class \
+	rmk35/partIIProject/backend/IdentifierFactory.class \
+	rmk35/partIIProject/backend/LocalIdentifierStatement.class \
+	rmk35/partIIProject/backend/GlobalIdentifierStatement.class \
+	rmk35/partIIProject/backend/ClosureIdentifierStatement.class \
+	rmk35/partIIProject/backend/IdentifierValue.class \
 	rmk35/partIIProject/backend/JavaBytecodeGenerator.class \
 	rmk35/partIIProject/backend/OutputClass.class \
 	rmk35/partIIProject/backend/Macro.class \
@@ -120,3 +128,8 @@ clean:
 
 runtest: all
 	java rmk35.partIIProject.frontend.SchemeParser test.txt
+
+.PHONY: bugs
+
+bugs:
+	find . -name '*.java' -or -name '*.md' | xargs egrep -i 'TODO|FIXME|UnsupportedOperationException'

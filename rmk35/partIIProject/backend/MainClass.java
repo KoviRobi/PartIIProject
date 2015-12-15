@@ -26,4 +26,8 @@ public class MainClass implements OutputClass
   { uniqueNumber++;
     return "Main" + Integer.toString(uniqueNumber);
   }
+
+  public String toString()
+  {
+  }
 }

@@ -5,12 +5,18 @@ import java.util.Map;
 
 public class LambdaStatement extends Statement
 { // FIXME: Single formal at the moment
-  Identifier formals;
-  List<Identifier> closureVariables;
+  IdentifierValue formals;
+  List<IdentifierValue> closureVariables;
   Statement body;
 
-  public void generateOutput(Map<Identifier, Definition> definitions,
-                             Map<Identifier, Macro> macros,
+  public LambdaStatement(IdentifierValue formals, List<IdentifierValue> closureVariables, Statement body)
+  { this.formals = formals;
+    this.closureVariables = closureVariables;
+    this.body = body;
+  }
+
+  public void generateOutput(Map<IdentifierValue, Definition> definitions,
+                             Map<IdentifierValue, Macro> macros,
                              OutputClass outputClass)
   { InnerClass innerClass = new InnerClass(outputClass.uniqueID() + "Lambda", closureVariables);
     body.generateOutput(definitions, macros, innerClass);

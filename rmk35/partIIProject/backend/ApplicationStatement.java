@@ -6,8 +6,8 @@ public class ApplicationStatement extends Statement
 { Statement operator;
   // FIXME: single operand for the moment
   Statement operand;
-  public void generateOutput(Map<Identifier, Definition> definitions,
-                             Map<Identifier, Macro> macros,
+  public void generateOutput(Map<IdentifierValue, Definition> definitions,
+                             Map<IdentifierValue, Macro> macros,
                              OutputClass output)
   { operator.generateOutput(definitions, macros, output);
     operand.generateOutput(definitions, macros, output);
