@@ -4,16 +4,21 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class MainClass implements OutputClass
-{ StringBuilder fields;
+{ String outputName;
+  StringBuilder fields;
   StringBuilder mainMethod;
   List<InnerClass> innerClasses;
   int uniqueNumber = 0;
 
   public MainClass()
-  { this(new StringBuilder(), new StringBuilder(), new ArrayList<InnerClass>());
+  { this("anonymous.j", new StringBuilder(), new StringBuilder(), new ArrayList<InnerClass>());
   }
-  public MainClass(StringBuilder fields, StringBuilder mainMethods, List<InnerClass> innerClasses)
-  { this.fields = fields;
+  public MainClass(String outputName)
+  { this(outputName, new StringBuilder(), new StringBuilder(), new ArrayList<InnerClass>());
+  }
+  public MainClass(String outputName, StringBuilder fields, StringBuilder mainMethod, List<InnerClass> innerClasses)
+  { this.outputName = outputName;
+    this.fields = fields;
     this.mainMethod = mainMethod;
     this.innerClasses = innerClasses;
   }
@@ -28,6 +33,23 @@ public class MainClass implements OutputClass
   }
 
   public String toString()
-  {
+  { return
+      ".class " + outputName + "\n" +
+      ".super java/lang/Object\n" +
+      fields.toString() + "\n" +
+
+      ".method public <init>()V\n" +
+      "  aload_0\n" +
+      "  invokenonvirtual java/lang/Object\n" +
+      "  return\n" +
+      ".end method\n" +
+
+      ".method public static main([Ljava/lang/String;)V\n" +
+      "  .limit stack 3\n" +
+      "  .limit locals 4\n" +
+      mainMethod.toString() +
+      "  return\n" +
+      ".end method\n"
+    ;
   }
 }

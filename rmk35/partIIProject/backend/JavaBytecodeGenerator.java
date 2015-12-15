@@ -6,10 +6,10 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class JavaBytecodeGenerator
-{ public static OutputClass generateOutput(List<Statement> statements, IdentifierFactory identifiers)
+{ public static OutputClass generateOutput(String fileName, List<Statement> statements, IdentifierFactory identifiers)
   { Map<IdentifierValue, Definition> definitions = new HashMap<>();
     Map<IdentifierValue, Macro> macros = new HashMap<>();
-    OutputClass output = new MainClass();
+    OutputClass output = new MainClass(fileName);
 
     for (Statement statement : statements)
     { statement.generateOutput(definitions, macros, output);
@@ -28,6 +28,6 @@ public class JavaBytecodeGenerator
         , new ArrayList<>()
         , new LocalIdentifierStatement(identifiers.getIdentifier("x"))));
 
-    System.out.println(generateOutput(statements, identifiers).toString());
+    System.out.println(generateOutput("test", statements, identifiers).toString());
   }
 }
