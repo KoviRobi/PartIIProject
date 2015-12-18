@@ -22,11 +22,16 @@ public class JavaBytecodeGenerator
   { List<Statement> statements = new ArrayList<>();
     IdentifierFactory identifiers = new IdentifierFactory();
 
-    statements.add
-      (new LambdaStatement
+    Statement idStatement = new LambdaStatement
         ( identifiers.getIdentifier("x")
         , new ArrayList<>()
-        , new LocalIdentifierStatement(identifiers.getIdentifier("x"))));
+        , new LocalIdentifierStatement(identifiers.getIdentifier("x")));
+    IdentifierStatement global = new GlobalIdentifierStatement(null, "test/foo", "Ljava/lang/String");
+
+    statements.add(idStatement);
+    statements.add(new ApplicationStatement(idStatement, idStatement));
+    statements.add(new IfStatement(idStatement, idStatement, idStatement));
+    statements.add(new SetStatement(global, null));
 
     System.out.println(generateOutput("test", statements, identifiers).toString());
   }

@@ -43,7 +43,7 @@ public class MainClass implements OutputClass
       "  invokenonvirtual java/lang/Object\n" +
       "  return\n" +
       ".end method\n" +
-
+      "\n" +
       ".method public static main([Ljava/lang/String;)V\n" +
       "  .limit stack 3\n" +
       "  .limit locals 4\n" +

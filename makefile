@@ -1,4 +1,22 @@
-all: rmk35/partIIProject/frontend/SchemeParser.class
+.PHONY: all
+all: rmk35/partIIProject/frontend/SchemeParser.class \
+		 rmk35/partIIProject/backend/JavaBytecodeGenerator.class
+
+
+# TODO: Make check automatic
+.PHONY: frontendtest backendtest tests
+frontendtest: all
+	java rmk35.partIIProject.frontend.SchemeParser test.txt
+backendtest: all
+	java rmk35.partIIProject.backend.JavaBytecodeGenerator
+tests: frontendtest backendtest
+
+.PHONY: bugs
+bugs:
+	! find . -name '*.java' -or -name '*.md' -or -name 'makefile' | xargs egrep -i 'TODO|FIXME|UnsupportedOperationException' # Look for TODO, FIXME and UnsupportedOperationException
+
+.PHONY: release
+release: all tests bugs
 
 rmk35/partIIProject/frontend/SchemeParser.class: rmk35/partIIProject/frontend/SchemeParser.java \
 														 rmk35/partIIProject/frontend/SchemeFileParser.java \
@@ -16,16 +34,18 @@ rmk35/partIIProject/frontend/SchemeParser.class: rmk35/partIIProject/frontend/Sc
 														 rmk35/partIIProject/frontend/AST/SchemeBytevector.java \
 														 rmk35/partIIProject/frontend/AST/SchemeAbbreviation.java \
 														 rmk35/partIIProject/frontend/AST/SchemeLabelledData.java \
-														 rmk35/partIIProject/frontend/SchemeParserException.java \
-														 rmk35/partIIProject/backend/SetStatement.java \
+														 rmk35/partIIProject/frontend/SchemeParserException.java
+	javac $?
+
+rmk35/partIIProject/backend/JavaBytecodeGenerator.class: rmk35/partIIProject/backend/SetStatement.java \
 														 rmk35/partIIProject/backend/RuntimeValue.java \
 														 rmk35/partIIProject/backend/LambdaValue.java \
 														 rmk35/partIIProject/backend/IdentifierFactory.java \
+														 rmk35/partIIProject/backend/IdentifierStatement.java \
 														 rmk35/partIIProject/backend/LocalIdentifierStatement.java \
 														 rmk35/partIIProject/backend/GlobalIdentifierStatement.java \
 														 rmk35/partIIProject/backend/ClosureIdentifierStatement.java \
 														 rmk35/partIIProject/backend/IdentifierValue.java \
-														 rmk35/partIIProject/backend/JavaBytecodeGenerator.java \
 														 rmk35/partIIProject/backend/OutputClass.java \
 														 rmk35/partIIProject/backend/Macro.java \
 														 rmk35/partIIProject/backend/MainClass.java \
@@ -34,7 +54,8 @@ rmk35/partIIProject/frontend/SchemeParser.class: rmk35/partIIProject/frontend/Sc
 														 rmk35/partIIProject/backend/Definition.java \
 														 rmk35/partIIProject/backend/Statement.java \
 														 rmk35/partIIProject/backend/InnerClass.java \
-														 rmk35/partIIProject/backend/LambdaStatement.java
+														 rmk35/partIIProject/backend/LambdaStatement.java \
+														 rmk35/partIIProject/backend/JavaBytecodeGenerator.java
 	javac $?
 
 %BaseListener.java %Lexer.java %Listener.java %Parser.java: %.g4
@@ -48,7 +69,6 @@ rmk35/partIIProject/frontend/SchemeFile.g4: rmk35/partIIProject/frontend/SchemeE
 rmk35/partIIProject/frontend/SchemeExternalRepresentation.g4: rmk35/partIIProject/frontend/SchemeLexicalStructure.g4
 
 .PHONY: clean
-
 clean:
 	-rm -f rmk35/partIIProject/frontend/SchemeFileLexer.java \
 	rmk35/partIIProject/frontend/SchemeFileLexer.class \
@@ -108,6 +128,7 @@ clean:
 	rmk35/partIIProject/backend/RuntimeValue.class \
 	rmk35/partIIProject/backend/LambdaValue.class \
 	rmk35/partIIProject/backend/IdentifierFactory.class \
+	rmk35/partIIProject/backend/IdentifierStatement.class \
 	rmk35/partIIProject/backend/LocalIdentifierStatement.class \
 	rmk35/partIIProject/backend/GlobalIdentifierStatement.class \
 	rmk35/partIIProject/backend/ClosureIdentifierStatement.class \
@@ -122,14 +143,4 @@ clean:
 	rmk35/partIIProject/backend/Statement.class \
 	rmk35/partIIProject/backend/InnerClass.class \
 	rmk35/partIIProject/backend/LambdaStatement.class
-
-
-.PHONY: runtest
-
-runtest: all
-	java rmk35.partIIProject.frontend.SchemeParser test.txt
-
-.PHONY: bugs
-
-bugs:
-	find . -name '*.java' -or -name '*.md' | xargs egrep -i 'TODO|FIXME|UnsupportedOperationException'
+	find rmk35 -name '*.class' -or -name '*.tokens' -exec false \; # Check if everything has been removed

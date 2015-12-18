@@ -6,6 +6,13 @@ public class IfStatement extends Statement
 { Statement predicate;
   Statement trueCase;
   Statement falseCase;
+
+  public IfStatement(Statement predicate, Statement trueCase, Statement falseCase)
+  { this.predicate = predicate;
+    this.trueCase = trueCase;
+    this.falseCase = falseCase;
+  }
+
   public void generateOutput(Map<IdentifierValue, Definition> definitions,
                              Map<IdentifierValue, Macro> macros,
                              OutputClass currentOutput)
@@ -24,9 +31,9 @@ public class IfStatement extends Statement
     trueCase.generateOutput(definitions, macros, currentOutput);
     currentOutput.addToPrimaryMethod("  goto " + endLabel + "\n");
 
-    currentOutput.addToPrimaryMethod(falseLabel + "\n");
+    currentOutput.addToPrimaryMethod(falseLabel + ":\n");
     falseCase.generateOutput(definitions, macros, currentOutput);
 
-    currentOutput.addToPrimaryMethod(endLabel + "\n");
+    currentOutput.addToPrimaryMethod(endLabel + ":\n");
   }
 }
