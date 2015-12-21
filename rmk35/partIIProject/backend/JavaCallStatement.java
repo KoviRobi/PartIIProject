@@ -12,7 +12,7 @@ public class JavaCallStatement extends Statement
   public JavaCallStatement(NativeFieldStatement field, String methodName, int parameterCount) throws NoSuchMethodException
   { this.field = field;
     for (Method m : field.field.getType().getMethods())
-    { if (m.getName() == methodName && m.getParameterCount() == parameterCount)
+    { if (m.getName() == methodName && m.getParameterTypes().length == parameterCount)
       { boolean acc = true;
         for (Class t : m.getParameterTypes())
         { if (t != Object.class) acc = false;
@@ -34,9 +34,9 @@ public class JavaCallStatement extends Statement
     }
     output.addToPrimaryMethod(")" + NativeFieldStatement.toBinaryName(method.getReturnType().getName()));
     if (method.getDeclaringClass().isInterface())
-    { output.addToPrimaryMethod(" " +  (method.getParameterCount() + 1)); // +1 because of 'this'
+    { output.addToPrimaryMethod(" " +  (method.getParameterTypes().length + 1)); // +1 because of 'this'
     }
     output.addToPrimaryMethod("\n");
-    output.decrementStackCount(method.getParameterCount() + 1);
+    output.decrementStackCount(method.getParameterTypes().length + 1);
   }
 }
