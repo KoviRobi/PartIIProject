@@ -9,18 +9,22 @@ public class MainClass implements OutputClass
   StringBuilder mainMethod;
   List<InnerClass> innerClasses;
   int uniqueNumber = 0;
+  int stackLimit, stackCount;
+  int localLimit, localCount;
 
   public MainClass()
-  { this("anonymous.j", new StringBuilder(), new StringBuilder(), new ArrayList<InnerClass>());
+  { this("anonymous.j");
   }
   public MainClass(String outputName)
-  { this(outputName, new StringBuilder(), new StringBuilder(), new ArrayList<InnerClass>());
+  { this(outputName, new StringBuilder(), new StringBuilder(), new ArrayList<InnerClass>(), 0, 0);
   }
-  public MainClass(String outputName, StringBuilder fields, StringBuilder mainMethod, List<InnerClass> innerClasses)
+  public MainClass(String outputName, StringBuilder fields, StringBuilder mainMethod, List<InnerClass> innerClasses, int stackLimit, int localLimit)
   { this.outputName = outputName;
     this.fields = fields;
     this.mainMethod = mainMethod;
     this.innerClasses = innerClasses;
+    this.stackLimit = stackLimit;
+    this.localLimit = localLimit;
   }
 
   public void addToPrimaryMethod(String value)
@@ -45,11 +49,28 @@ public class MainClass implements OutputClass
       ".end method\n" +
       "\n" +
       ".method public static main([Ljava/lang/String;)V\n" +
-      "  .limit stack 3\n" +
-      "  .limit locals 4\n" +
+      "  .limit stack " + stackLimit + "\n" +
+      "  .limit locals " + localLimit + "\n" +
       mainMethod.toString() +
       "  return\n" +
       ".end method\n"
     ;
+  }
+
+  public void  incrementStackCount(int n)
+  { stackCount += n;
+    stackLimit = Math.max(stackLimit, stackCount);
+  }
+  public void decrementStackCount(int n)
+  { stackCount -= n;
+    if (stackCount<0) throw new InternalCompilerException("Simulated stack underflown");
+  }
+  public void incrementLocalLimit(int n)
+  { localCount += n;
+    localLimit = Math.max(localLimit, localCount);
+  }
+  public void decrementLocalLimit(int n)
+  { localCount -= n;
+    if (localCount<0) throw new InternalCompilerException("Simulated locals underflown");
   }
 }

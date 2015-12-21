@@ -8,4 +8,8 @@ public interface OutputClass
   public void addToPrimaryMethod(String value);
   /** Generates a unique ID that does not start with a number */
   public String uniqueID();
+  public void  incrementStackCount(int n);
+  public void decrementStackCount(int n);
+  public void incrementLocalLimit(int n);
+  public void decrementLocalLimit(int n);
 }

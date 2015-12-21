@@ -19,5 +19,6 @@ public class ApplicationStatement extends Statement
     operand.generateOutput(definitions, macros, output);
     // Invoke operator.run with argument of operand
     output.addToPrimaryMethod("  invokevirtual rmk35/partIIProject/backend/LambdaValue/run(Lrmk35/partIIProject/backend/RuntimeValue;)Lrmk35/partIIProject/backend/RuntimeValue;\n");
+  output.decrementStackCount(1);
   }
 }

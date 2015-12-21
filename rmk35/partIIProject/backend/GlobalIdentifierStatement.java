@@ -17,10 +17,12 @@ public class GlobalIdentifierStatement extends IdentifierStatement
                              Map<IdentifierValue, Macro> macros,
                              OutputClass output)
   { output.addToPrimaryMethod("  getstatic " + name + " " + type + "\n");
+    output.incrementStackCount(1);
   }
   public void generateSetOutput(Map<IdentifierValue, Definition> definitions,
                              Map<IdentifierValue, Macro> macros,
                              OutputClass output)
-  { output.addToPrimaryMethod("  setstatic " + name + " " + type + "\n");
+  { output.addToPrimaryMethod("  putstatic " + name + " " + type + "\n");
+    output.decrementStackCount(1);
   }
 }

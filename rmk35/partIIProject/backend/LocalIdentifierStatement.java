@@ -13,6 +13,7 @@ public class LocalIdentifierStatement extends IdentifierStatement
                              Map<IdentifierValue, Macro> macros,
                              OutputClass output)
   { output.addToPrimaryMethod("  aload_1");
+    output.incrementStackCount(1);
   }
 
   /* Assumes variable to set to is on top of the stack */
@@ -20,5 +21,6 @@ public class LocalIdentifierStatement extends IdentifierStatement
                                 Map<IdentifierValue, Macro> macros,
                                 OutputClass output)
   { output.addToPrimaryMethod("  astore_1");
+    output.decrementStackCount(1);
   }
 }
