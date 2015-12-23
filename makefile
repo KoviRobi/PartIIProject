@@ -19,7 +19,19 @@ bugs:
 .PHONY: release
 release: all tests bugs
 
-rmk35/partIIProject/frontend/SchemeParser.class: rmk35/partIIProject/frontend/SchemeParser.java \
+%.class: %.java
+	javac $?
+
+# If interested, you can look at dependences using
+# >xargs javac -verbose
+# Edit ,y/\[\.\/rmk.*\.class\]/d
+# Edit ,s/\[\.\//\n/g
+# Edit ,s/\]/ \\/g
+# Edit ,d
+#
+# for each .java file.
+
+rmk35/partIIProject/frontend/SchemeParser.class: \
  rmk35/partIIProject/frontend/SchemeFileParser.java \
  rmk35/partIIProject/frontend/SchemeFileLexer.java \
  rmk35/partIIProject/frontend/AST/SchemeList.java \
@@ -36,7 +48,6 @@ rmk35/partIIProject/frontend/SchemeParser.class: rmk35/partIIProject/frontend/Sc
  rmk35/partIIProject/frontend/AST/SchemeAbbreviation.java \
  rmk35/partIIProject/frontend/AST/SchemeLabelledData.java \
  rmk35/partIIProject/frontend/SchemeParserException.java
-	javac $?
 
 rmk35/partIIProject/backend/JavaBytecodeGenerator.class: \
  rmk35/partIIProject/backend/ApplicationStatement.java \
@@ -58,12 +69,11 @@ rmk35/partIIProject/backend/JavaBytecodeGenerator.class: \
  rmk35/partIIProject/backend/Macro.java \
  rmk35/partIIProject/backend/MainClass.java \
  rmk35/partIIProject/backend/NativeFieldStatement.java \
+ rmk35/partIIProject/backend/NumberValue.java \
  rmk35/partIIProject/backend/OutputClass.java \
  rmk35/partIIProject/backend/RuntimeValue.java \
  rmk35/partIIProject/backend/SetStatement.java \
  rmk35/partIIProject/backend/Statement.java \
-
-	javac $?
 
 %BaseListener.java %Lexer.java %Listener.java %Parser.java: %.g4
 	java -jar antlr-4.5.1-complete.jar $<
@@ -151,6 +161,7 @@ clean:
 	rmk35/partIIProject/backend/Macro.class \
 	rmk35/partIIProject/backend/MainClass.class \
 	rmk35/partIIProject/backend/NativeFieldStatement.class \
+	rmk35/partIIProject/backend/NumberValue.class \
 	rmk35/partIIProject/backend/OutputClass.class \
 	rmk35/partIIProject/backend/RuntimeValue.class \
 	rmk35/partIIProject/backend/SetStatement.class \
