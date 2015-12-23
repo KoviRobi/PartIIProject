@@ -2,70 +2,66 @@ package rmk35.partIIProject.backend;
 
 import java.util.List;
 
-public class InnerClass implements OutputClass
+public class InnerClass extends OutputClass
 { String name;
   StringBuilder fields;
   StringBuilder runMethod;
   List<IdentifierValue> closureVariables;
   int uniqueNumber = 0;
-  int stackLimit, stackCount;
-  int localLimit, localCount;
+  MainClass mainClass;
 
-  public InnerClass(String name, List<IdentifierValue> closureVariables)
-  { this(name, closureVariables, new StringBuilder(), new StringBuilder(), 0,  1);
+  public InnerClass(String name, List<IdentifierValue> closureVariables, MainClass mainClass)
+  { this(name, closureVariables, new StringBuilder(), new StringBuilder(), mainClass);
   }
-  public InnerClass(String name, List<IdentifierValue> closureVariables, StringBuilder fields, StringBuilder runMethod, int stackLimit, int localLimit)
-  { this.name = name;
+  public InnerClass(String name, List<IdentifierValue> closureVariables, StringBuilder fields, StringBuilder runMethod, MainClass mainClass)
+  { super(1, 2); // One local for 'this' and one for argument
+    this.name = name;
     this.closureVariables = closureVariables;
     this.fields = fields;
     this.runMethod = runMethod;
-    this.stackLimit = stackCount = stackLimit;
-    this.localLimit = localCount = localLimit;
+    this.mainClass = mainClass;
   }
 
+  @Override
   public String uniqueID()
   { return name + "Inner" + Integer.toString(uniqueNumber);
   }
 
+  @Override
   public void addToPrimaryMethod(String value)
   { runMethod.append(value);
   }
 
-  public String toString()
+  @Override
+  public String getAssembly()
   { return
       ".class " + name + "\n" +
-      ".super java/lang/Object\n" +
+      ".super rmk35/partIIProject/backend/LambdaValue\n" +
       fields.toString() + "\n" +
 
       ".method public <init>()V\n" +
       "  aload_0\n" +
-      "  invokenonvirtual java/lang/Object\n" +
+      "  invokenonvirtual rmk35/partIIProject/backend/LambdaValue/<init>()V\n" +
       "  return\n" +
       ".end method\n" +
 
       ".method public static main([Ljava/lang/String;)V\n" +
       "  .limit stack  " + stackLimit + "\n" +
       "  .limit locals " + localLimit + "\n" +
-      runMethod.toString() +
+      "  astore_1\n" + // Store passed arguments
+     runMethod.toString() +
       "  return\n" +
       ".end method\n"
     ;
   }
 
-  public void  incrementStackCount(int n)
-  { stackCount += n;
-    stackLimit = Math.max(stackLimit, stackCount);
+  @Override
+  String getOutputFileName()
+  { return name + ".j";
   }
-  public void decrementStackCount(int n)
-  { stackCount -= n;
-    if (stackCount<0) throw new InternalCompilerException("Simulated stack underflown");
-  }
-  public void incrementLocalLimit(int n)
-  { localCount += n;
-    localLimit = Math.max(localLimit, localCount);
-  }
-  public void decrementLocalLimit(int n)
-  { localCount -= n;
-    if (localCount<0) throw new InternalCompilerException("Simulated locals underflown");
+
+  @Override
+  public MainClass getMainClass()
+  {  return mainClass;
   }
 }

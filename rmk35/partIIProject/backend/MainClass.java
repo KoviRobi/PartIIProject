@@ -2,29 +2,29 @@ package rmk35.partIIProject.backend;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
-public class MainClass implements OutputClass
-{ String outputName;
+public class MainClass extends OutputClass
+{ String name;
   StringBuilder fields;
   StringBuilder mainMethod;
   List<InnerClass> innerClasses;
   int uniqueNumber = 0;
-  int stackLimit, stackCount;
-  int localLimit, localCount;
 
   public MainClass()
-  { this("anonymous.j");
+  { this("anonymous");
   }
-  public MainClass(String outputName)
-  { this(outputName, new StringBuilder(), new StringBuilder(), new ArrayList<InnerClass>(), 0, 0);
+  public MainClass(String name)
+  { this(name, new StringBuilder(), new StringBuilder(), new ArrayList<InnerClass>());
   }
-  public MainClass(String outputName, StringBuilder fields, StringBuilder mainMethod, List<InnerClass> innerClasses, int stackLimit, int localLimit)
-  { this.outputName = outputName;
+  public MainClass(String name, StringBuilder fields, StringBuilder mainMethod, List<InnerClass> innerClasses)
+  { super(0, 1); // One local for main argument
+    this.name = name;
     this.fields = fields;
     this.mainMethod = mainMethod;
     this.innerClasses = innerClasses;
-    this.stackLimit = stackLimit;
-    this.localLimit = localLimit;
   }
 
   public void addToPrimaryMethod(String value)
@@ -36,15 +36,15 @@ public class MainClass implements OutputClass
     return "Main" + Integer.toString(uniqueNumber);
   }
 
-  public String toString()
+  public String getAssembly()
   { return
-      ".class " + outputName + "\n" +
+      ".class " + name + "\n" +
       ".super java/lang/Object\n" +
       fields.toString() + "\n" +
 
       ".method public <init>()V\n" +
       "  aload_0\n" +
-      "  invokenonvirtual java/lang/Object\n" +
+      "  invokenonvirtual java/lang/Object/<init>()V\n" +
       "  return\n" +
       ".end method\n" +
       "\n" +
@@ -57,20 +57,29 @@ public class MainClass implements OutputClass
     ;
   }
 
-  public void  incrementStackCount(int n)
-  { stackCount += n;
-    stackLimit = Math.max(stackLimit, stackCount);
+  @Override
+  String getOutputFileName()
+  { return name + ".j";
   }
-  public void decrementStackCount(int n)
-  { stackCount -= n;
-    if (stackCount<0) throw new InternalCompilerException("Simulated stack underflown");
+
+  @Override
+  public MainClass getMainClass()
+  { return this;
   }
-  public void incrementLocalLimit(int n)
-  { localCount += n;
-    localLimit = Math.max(localLimit, localCount);
+
+  public void addInnerClass(InnerClass innerClass)
+  { innerClasses.add(innerClass);
   }
-  public void decrementLocalLimit(int n)
-  { localCount -= n;
-    if (localCount<0) throw new InternalCompilerException("Simulated locals underflown");
+
+  @Override
+  public void saveToDisk() throws IOException
+  { try (BufferedWriter writer =
+            new BufferedWriter
+              (new FileWriter(getOutputFileName())))
+    { writer.append(this.getAssembly());
+    }
+    for (OutputClass oc : innerClasses)
+    { oc.saveToDisk();
+    }
   }
 }
