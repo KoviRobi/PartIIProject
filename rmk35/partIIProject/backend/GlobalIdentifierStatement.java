@@ -3,13 +3,11 @@ package rmk35.partIIProject.backend;
 import java.util.Map;
 
 public class GlobalIdentifierStatement extends IdentifierStatement
-{ IdentifierValue value;
-  String name;
+{ String name;
   String type;
 
-  public GlobalIdentifierStatement(IdentifierValue value, String name, String type)
-  { this.value = value;
-    this.name = name;
+  public GlobalIdentifierStatement(String name, String type)
+  { this.name = name;
     this.type = type;
   }
 
