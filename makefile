@@ -20,7 +20,7 @@ bugs:
 release: all tests bugs
 
 %.class: %.java
-	javac $?
+	javac $<
 
 # If interested, you can look at dependences using
 # >xargs javac -verbose
@@ -32,48 +32,47 @@ release: all tests bugs
 # for each .java file.
 
 rmk35/partIIProject/frontend/SchemeParser.class: \
- rmk35/partIIProject/frontend/SchemeFileParser.java \
- rmk35/partIIProject/frontend/SchemeFileLexer.java \
- rmk35/partIIProject/frontend/AST/SchemeList.java \
- rmk35/partIIProject/frontend/AST/SchemeIdentifier.java \
- rmk35/partIIProject/frontend/AST/SchemeSimpleNumber.java \
- rmk35/partIIProject/frontend/AST/SchemeEquality.java \
- rmk35/partIIProject/frontend/AST/SchemeCharacter.java \
- rmk35/partIIProject/frontend/AST/SchemeVector.java \
- rmk35/partIIProject/frontend/AST/SchemeString.java \
- rmk35/partIIProject/frontend/AST/SchemeObject.java \
- rmk35/partIIProject/frontend/AST/SchemeNumber.java \
- rmk35/partIIProject/frontend/AST/SchemeBoolean.java \
- rmk35/partIIProject/frontend/AST/SchemeBytevector.java \
- rmk35/partIIProject/frontend/AST/SchemeAbbreviation.java \
- rmk35/partIIProject/frontend/AST/SchemeLabelledData.java \
- rmk35/partIIProject/frontend/SchemeParserException.java
+ rmk35/partIIProject/frontend/SchemeFileParser.class \
+ rmk35/partIIProject/frontend/SchemeFileLexer.class \
+ rmk35/partIIProject/frontend/AST/SchemeList.class \
+ rmk35/partIIProject/frontend/AST/SchemeIdentifier.class \
+ rmk35/partIIProject/frontend/AST/SchemeSimpleNumber.class \
+ rmk35/partIIProject/frontend/AST/SchemeEquality.class \
+ rmk35/partIIProject/frontend/AST/SchemeCharacter.class \
+ rmk35/partIIProject/frontend/AST/SchemeVector.class \
+ rmk35/partIIProject/frontend/AST/SchemeString.class \
+ rmk35/partIIProject/frontend/AST/SchemeObject.class \
+ rmk35/partIIProject/frontend/AST/SchemeNumber.class \
+ rmk35/partIIProject/frontend/AST/SchemeBoolean.class \
+ rmk35/partIIProject/frontend/AST/SchemeBytevector.class \
+ rmk35/partIIProject/frontend/AST/SchemeAbbreviation.class \
+ rmk35/partIIProject/frontend/AST/SchemeLabelledData.class \
+ rmk35/partIIProject/frontend/SchemeParserException.class
 
 rmk35/partIIProject/backend/JavaBytecodeGenerator.class: \
- rmk35/partIIProject/backend/ApplicationStatement.java \
- rmk35/partIIProject/backend/ClosureIdentifierStatement.java \
- rmk35/partIIProject/backend/Definition.java \
- rmk35/partIIProject/backend/GlobalIdentifierStatement.java \
- rmk35/partIIProject/backend/IdentifierFactory.java \
- rmk35/partIIProject/backend/IdentifierStatement.java \
- rmk35/partIIProject/backend/IdentifierValue.java \
- rmk35/partIIProject/backend/IfStatement.java \
- rmk35/partIIProject/backend/InnerClass.java \
- rmk35/partIIProject/backend/IntegerConstantStatement.java \
- rmk35/partIIProject/backend/InternalCompilerException.java \
- rmk35/partIIProject/backend/JavaBytecodeGenerator.java \
- rmk35/partIIProject/backend/JavaCallStatement.java \
- rmk35/partIIProject/backend/LambdaStatement.java \
- rmk35/partIIProject/backend/LambdaValue.java \
- rmk35/partIIProject/backend/LocalIdentifierStatement.java \
- rmk35/partIIProject/backend/Macro.java \
- rmk35/partIIProject/backend/MainClass.java \
- rmk35/partIIProject/backend/NativeFieldStatement.java \
- rmk35/partIIProject/backend/NumberValue.java \
- rmk35/partIIProject/backend/OutputClass.java \
- rmk35/partIIProject/backend/RuntimeValue.java \
- rmk35/partIIProject/backend/SetStatement.java \
- rmk35/partIIProject/backend/Statement.java \
+ rmk35/partIIProject/backend/ApplicationStatement.class \
+ rmk35/partIIProject/backend/ClosureIdentifierStatement.class \
+ rmk35/partIIProject/backend/Definition.class \
+ rmk35/partIIProject/backend/GlobalIdentifierStatement.class \
+ rmk35/partIIProject/backend/IdentifierFactory.class \
+ rmk35/partIIProject/backend/IdentifierStatement.class \
+ rmk35/partIIProject/backend/IdentifierValue.class \
+ rmk35/partIIProject/backend/IfStatement.class \
+ rmk35/partIIProject/backend/InnerClass.class \
+ rmk35/partIIProject/backend/IntegerConstantStatement.class \
+ rmk35/partIIProject/backend/InternalCompilerException.class \
+ rmk35/partIIProject/backend/JavaCallStatement.class \
+ rmk35/partIIProject/backend/LambdaStatement.class \
+ rmk35/partIIProject/backend/LambdaValue.class \
+ rmk35/partIIProject/backend/LocalIdentifierStatement.class \
+ rmk35/partIIProject/backend/Macro.class \
+ rmk35/partIIProject/backend/MainClass.class \
+ rmk35/partIIProject/backend/NativeFieldStatement.class \
+ rmk35/partIIProject/backend/NumberValue.class \
+ rmk35/partIIProject/backend/OutputClass.class \
+ rmk35/partIIProject/backend/RuntimeValue.class \
+ rmk35/partIIProject/backend/SetStatement.class \
+ rmk35/partIIProject/backend/Statement.class \
 
 %BaseListener.java %Lexer.java %Listener.java %Parser.java: %.g4
 	java -jar antlr-4.5.1-complete.jar $<
