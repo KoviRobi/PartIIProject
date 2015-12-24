@@ -7,12 +7,14 @@ import java.lang.reflect.Method;
 
 public class JavaCallStatement extends Statement
 { NativeFieldStatement field;
+  Statement[] parameters;
   Method method;
 
-  public JavaCallStatement(NativeFieldStatement field, String methodName, int parameterCount) throws NoSuchMethodException
+  public JavaCallStatement(NativeFieldStatement field, String methodName, Statement... parameters) throws NoSuchMethodException
   { this.field = field;
+    this.parameters = parameters;
     for (Method m : field.field.getType().getMethods())
-    { if (m.getName() == methodName && m.getParameterTypes().length == parameterCount)
+    { if (m.getName() == methodName && m.getParameterTypes().length == parameters.length)
       { boolean acc = true;
         for (Class t : m.getParameterTypes())
         { if (t != Object.class) acc = false;
@@ -27,6 +29,10 @@ public class JavaCallStatement extends Statement
                                       Map<IdentifierValue, Macro> macros,
                                       OutputClass output)
   { field.generateOutput(definitions, macros, output);
+    for (Statement s : parameters)
+    { s.generateOutput(definitions, macros, output);
+    }
+
     output.addToPrimaryMethod((method.getDeclaringClass().isInterface())? "  invokeinterface " : "  invokevirtual ");
     output.addToPrimaryMethod(method.getDeclaringClass().getName().replaceAll("\\.", "/") + "/" + method.getName() + "(");
     for (Class<?> argument : method.getParameterTypes())
@@ -37,6 +43,9 @@ public class JavaCallStatement extends Statement
     { output.addToPrimaryMethod(" " +  (method.getParameterTypes().length + 1)); // +1 because of 'this'
     }
     output.addToPrimaryMethod("\n");
-    output.decrementStackCount(method.getParameterTypes().length + 1);
+    output.decrementStackCount(method.getParameterTypes().length); // No +1 because of return value
+    if (method.getReturnType() == void.class)
+    { output.addToPrimaryMethod("  aconst_null\n");
+    }
   }
 }

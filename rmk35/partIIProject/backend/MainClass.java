@@ -20,7 +20,7 @@ public class MainClass extends OutputClass
   { this(name, new StringBuilder(), new StringBuilder(), new ArrayList<InnerClass>());
   }
   public MainClass(String name, StringBuilder fields, StringBuilder mainMethod, List<InnerClass> innerClasses)
-  { super(0, 1); // One local for main argument
+  { super(1, 1); // One local for main argument
     this.name = name;
     this.fields = fields;
     this.mainMethod = mainMethod;

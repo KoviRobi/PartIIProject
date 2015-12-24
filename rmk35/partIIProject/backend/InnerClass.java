@@ -44,13 +44,12 @@ public class InnerClass extends OutputClass
       "  invokenonvirtual rmk35/partIIProject/backend/LambdaValue/<init>()V\n" +
       "  return\n" +
       ".end method\n" +
-
-      ".method public static main([Ljava/lang/String;)V\n" +
+      "\n" +
+      ".method public run(Lrmk35/partIIProject/backend/RuntimeValue;)Lrmk35/partIIProject/backend/RuntimeValue;\n" +
       "  .limit stack  " + stackLimit + "\n" +
       "  .limit locals " + localLimit + "\n" +
-      "  astore_1\n" + // Store passed arguments
      runMethod.toString() +
-      "  return\n" +
+      "  areturn\n" +
       ".end method\n"
     ;
   }

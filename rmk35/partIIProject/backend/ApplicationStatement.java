@@ -18,7 +18,8 @@ public class ApplicationStatement extends Statement
   { operator.generateOutput(definitions, macros, output);
     operand.generateOutput(definitions, macros, output);
     // Invoke operator.run with argument of operand
+    // FIXME: do we need this? output.addToPrimaryMethod("  astore_1\n");
     output.addToPrimaryMethod("  invokevirtual rmk35/partIIProject/backend/LambdaValue/run(Lrmk35/partIIProject/backend/RuntimeValue;)Lrmk35/partIIProject/backend/RuntimeValue;\n");
-  output.decrementStackCount(1);
+    output.decrementStackCount(1);
   }
 }

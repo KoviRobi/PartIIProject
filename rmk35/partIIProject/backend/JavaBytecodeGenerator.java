@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.Arrays;
 
 public class JavaBytecodeGenerator
-{ public static OutputClass generateOutput(String fileName, List<Statement> statements, IdentifierFactory identifiers)
+{ public static OutputClass generateOutput(String name, List<Statement> statements, IdentifierFactory identifiers)
   { Map<IdentifierValue, Definition> definitions = new HashMap<>();
     Map<IdentifierValue, Macro> macros = new HashMap<>();
-    OutputClass output = new MainClass(fileName);
+    OutputClass output = new MainClass(name);
 
     for (Statement statement : statements)
     { statement.generateOutput(definitions, macros, output);
@@ -19,7 +19,7 @@ public class JavaBytecodeGenerator
     return output;
   }
 
-  public static void main(String[] args) throws NoSuchFieldException, NoSuchMethodException, ClassNotFoundException
+  public static void main(String[] args) throws NoSuchFieldException, NoSuchMethodException, ClassNotFoundException, java.io.IOException
   { List<Statement> statements = new ArrayList<>();
     IdentifierFactory identifiers = new IdentifierFactory();
 
@@ -27,6 +27,7 @@ public class JavaBytecodeGenerator
         ( identifiers.getIdentifier("x")
         , new ArrayList<IdentifierValue>()
         , new LocalIdentifierStatement(identifiers.getIdentifier("x")));
+    Statement print42 = new JavaCallStatement(new NativeFieldStatement("java.lang.System", "out"), "println", new IntegerConstantStatement(42));
     IdentifierStatement global = new GlobalIdentifierStatement(null, "test/foo", "Ljava/lang/String");
 /*
     statements.add(idStatement);
@@ -34,8 +35,10 @@ public class JavaBytecodeGenerator
     statements.add(new IfStatement(idStatement, idStatement, idStatement));
     statements.add(new SetStatement(global, null));
 */
-    statements.add(new IntegerConstantStatement(42));
-    statements.add(new JavaCallStatement(new NativeFieldStatement("java.lang.System", "out"), "println", 1));
-    System.out.println(generateOutput("test", statements, identifiers).toString());
+
+    statements.add(new ApplicationStatement(new LambdaStatement(identifiers.getIdentifier("input"), new ArrayList<IdentifierValue>(), print42), idStatement));
+    statements.add(print42);
+
+    generateOutput("test", statements, identifiers).saveToDisk();
   }
 }

@@ -19,14 +19,16 @@ public class LambdaStatement extends Statement
                              Map<IdentifierValue, Macro> macros,
                              OutputClass output)
   { String innerClassName = output.uniqueID() + "$Lambda";
-    InnerClass innerClass = new InnerClass(innerClassName, closureVariables);
+    InnerClass innerClass = new InnerClass(innerClassName, closureVariables, output.getMainClass());
     body.generateOutput(definitions, macros, innerClass);
+    output.getMainClass().addInnerClass(innerClass);
+
     output.addToPrimaryMethod("  new " + innerClassName + "\n"); // Create class
     output.incrementStackCount(1);
     output.addToPrimaryMethod("  dup\n"); // For invokenonvirtual, need 'this' pointer
     output.incrementStackCount(1);
     // FIXME: Pass in closure variables here to the constructor
-    output.addToPrimaryMethod("  invokenonvirtual " + innerClassName + "()V\n");
-    output.incrementStackCount(1);
+    output.addToPrimaryMethod("  invokenonvirtual " + innerClassName + "/<init>()V\n");
+    output.decrementStackCount(1);
   }
 }
