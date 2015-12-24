@@ -57,6 +57,7 @@ rmk35/partIIProject/backend/JavaBytecodeGenerator.class: \
  rmk35/partIIProject/backend/Macro.class \
  rmk35/partIIProject/backend/MainClass.class \
  rmk35/partIIProject/backend/OutputClass.class \
+ rmk35/partIIProject/backend/runtimeValues/BooleanValue.class \
  rmk35/partIIProject/backend/runtimeValues/IdentifierValue.class \
  rmk35/partIIProject/backend/runtimeValues/LambdaValue.class \
  rmk35/partIIProject/backend/runtimeValues/NumberValue.class \
@@ -66,11 +67,11 @@ rmk35/partIIProject/backend/JavaBytecodeGenerator.class: \
  rmk35/partIIProject/backend/statements/GlobalIdentifierStatement.class \
  rmk35/partIIProject/backend/statements/IdentifierStatement.class \
  rmk35/partIIProject/backend/statements/IfStatement.class \
- rmk35/partIIProject/backend/statements/IntegerConstantStatement.class \
  rmk35/partIIProject/backend/statements/JavaCallStatement.class \
  rmk35/partIIProject/backend/statements/LambdaStatement.class \
  rmk35/partIIProject/backend/statements/LocalIdentifierStatement.class \
  rmk35/partIIProject/backend/statements/NativeFieldStatement.class \
+ rmk35/partIIProject/backend/statements/RuntimeValueStatement.class \
  rmk35/partIIProject/backend/statements/SetStatement.class \
  rmk35/partIIProject/backend/statements/Statement.class \
 
@@ -149,6 +150,7 @@ clean:
 	rmk35/partIIProject/backend/Macro.class \
 	rmk35/partIIProject/backend/MainClass.class \
 	rmk35/partIIProject/backend/OutputClass.class \
+	rmk35/partIIProject/backend/runtimeValues/BooleanValue.class \
 	rmk35/partIIProject/backend/runtimeValues/IdentifierValue.class \
 	rmk35/partIIProject/backend/runtimeValues/LambdaValue.class \
 	rmk35/partIIProject/backend/runtimeValues/NumberValue.class \
@@ -158,11 +160,11 @@ clean:
 	rmk35/partIIProject/backend/statements/GlobalIdentifierStatement.class \
 	rmk35/partIIProject/backend/statements/IdentifierStatement.class \
 	rmk35/partIIProject/backend/statements/IfStatement.class \
-	rmk35/partIIProject/backend/statements/IntegerConstantStatement.class \
 	rmk35/partIIProject/backend/statements/JavaCallStatement.class \
 	rmk35/partIIProject/backend/statements/LambdaStatement.class \
 	rmk35/partIIProject/backend/statements/LocalIdentifierStatement.class \
 	rmk35/partIIProject/backend/statements/NativeFieldStatement.class \
+	rmk35/partIIProject/backend/statements/RuntimeValueStatement.class \
 	rmk35/partIIProject/backend/statements/SetStatement.class \
 	rmk35/partIIProject/backend/statements/Statement.class \
 

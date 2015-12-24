@@ -20,6 +20,7 @@ public class ApplicationStatement extends Statement
                              Map<IdentifierValue, Macro> macros,
                              OutputClass output)
   { operator.generateOutput(definitions, macros, output);
+    // FIXME: checkcast for LambdaValue
     operand.generateOutput(definitions, macros, output);
     // Invoke operator.run with argument of operand
     // FIXME: do we need this? output.addToPrimaryMethod("  astore_1\n");

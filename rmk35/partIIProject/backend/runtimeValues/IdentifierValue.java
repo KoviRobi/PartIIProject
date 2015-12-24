@@ -13,8 +13,8 @@ public class IdentifierValue implements RuntimeValue
 
   @Override
   public boolean eq(RuntimeValue other)
-  { return other instanceof IdentifierValue &&
-           name.equals(((IdentifierValue)other).getName());
+  { return other instanceof IdentifierValue
+        && name.equals(((IdentifierValue)other).getName());
   }
 
   @Override

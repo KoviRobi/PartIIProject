@@ -29,11 +29,11 @@ public class JavaBytecodeGenerator
         ( identifiers.getIdentifier("x")
         , new ArrayList<IdentifierValue>()
         , new LocalIdentifierStatement(identifiers.getIdentifier("x")));
-    Statement print42 = new JavaCallStatement(new NativeFieldStatement("java.lang.System", "out"), "println", new IntegerConstantStatement(42));
+    Statement print42 = new JavaCallStatement(new NativeFieldStatement("java.lang.System", "out"), "println", new RuntimeValueStatement("42", NumberValue.class));
 
     statements.add(new ApplicationStatement(new LambdaStatement(identifiers.getIdentifier("input"), new ArrayList<IdentifierValue>(), print42), new LambdaStatement(identifiers.getIdentifier("input"), new ArrayList<IdentifierValue>(), print42)));
 
-    statements.add(new JavaCallStatement(new NativeFieldStatement("java.lang.System", "out"), "println", new ApplicationStatement(idStatement, new IntegerConstantStatement(43))));
+    statements.add(new JavaCallStatement(new NativeFieldStatement("java.lang.System", "out"), "println", new ApplicationStatement(idStatement, new RuntimeValueStatement("7", NumberValue.class))));
 
     generateOutput("test", statements, identifiers).saveToDisk();
   }
