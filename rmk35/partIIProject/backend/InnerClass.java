@@ -1,6 +1,7 @@
 package rmk35.partIIProject.backend;
 
 import java.util.List;
+import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
 public class InnerClass extends OutputClass
 { String name;
@@ -36,16 +37,16 @@ public class InnerClass extends OutputClass
   public String getAssembly()
   { return
       ".class " + name + "\n" +
-      ".super rmk35/partIIProject/backend/LambdaValue\n" +
+      ".super rmk35/partIIProject/backend/runtimeValues/LambdaValue\n" +
       fields.toString() + "\n" +
 
       ".method public <init>()V\n" +
       "  aload_0\n" +
-      "  invokenonvirtual rmk35/partIIProject/backend/LambdaValue/<init>()V\n" +
+      "  invokenonvirtual rmk35/partIIProject/backend/runtimeValues/LambdaValue/<init>()V\n" +
       "  return\n" +
       ".end method\n" +
       "\n" +
-      ".method public run(Lrmk35/partIIProject/backend/RuntimeValue;)Lrmk35/partIIProject/backend/RuntimeValue;\n" +
+      ".method public run(Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;)Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;\n" +
       "  .limit stack  " + stackLimit + "\n" +
       "  .limit locals " + localLimit + "\n" +
      runMethod.toString() +
@@ -55,7 +56,7 @@ public class InnerClass extends OutputClass
   }
 
   @Override
-  String getOutputFileName()
+  public String getOutputFileName()
   { return name + ".j";
   }
 

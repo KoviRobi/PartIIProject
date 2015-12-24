@@ -1,6 +1,10 @@
-package rmk35.partIIProject.backend;
+package rmk35.partIIProject.backend.statements;
 
 import java.util.Map;
+import rmk35.partIIProject.backend.Macro;
+import rmk35.partIIProject.backend.Definition;
+import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
 public class IfStatement extends Statement
 { Statement predicate;
@@ -18,15 +22,15 @@ public class IfStatement extends Statement
                              OutputClass output)
   { predicate.generateOutput(definitions, macros, output);
     // Top of  is now predicate's value
-    output.addToPrimaryMethod("  new rmk35/partIIProject/backend/BooleanValue\n");
+    output.addToPrimaryMethod("  new rmk35/partIIProject/backend/runtimeValues/BooleanValue\n");
     output.incrementStackCount(1);
     output.addToPrimaryMethod("  dup\n"); // Because the <init> is void
     output.incrementStackCount(1);
     output.addToPrimaryMethod("  iconst_1\n"); // True
     output.incrementStackCount(1);
-    output.addToPrimaryMethod("  invokenonvirtual rmk35/partIIProject/backend/BooleanValue/<init>(I)V\n");
+    output.addToPrimaryMethod("  invokenonvirtual rmk35/partIIProject/backend/runtimeValues/BooleanValue/<init>(I)V\n");
     output.decrementStackCount(2);
-    output.addToPrimaryMethod("  invokevirtual rmk35/partIIProject/backend/RuntimeValue/eq(Lrmk35/partIIProject/backend/RuntimeValue;)Z\n");
+    output.addToPrimaryMethod("  invokevirtual rmk35/partIIProject/backend/runtimeValues/RuntimeValue/eq(Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;)Z\n");
     output.decrementStackCount(2);
 
     String uniqueID = output.uniqueID();

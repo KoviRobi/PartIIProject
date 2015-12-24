@@ -1,6 +1,10 @@
-package rmk35.partIIProject.backend;
+package rmk35.partIIProject.backend.statements;
 
 import java.util.Map;
+import rmk35.partIIProject.backend.Macro;
+import rmk35.partIIProject.backend.Definition;
+import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
 public class LocalIdentifierStatement extends IdentifierStatement
 { IdentifierValue value;

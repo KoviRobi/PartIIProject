@@ -1,7 +1,12 @@
-package rmk35.partIIProject.backend;
+package rmk35.partIIProject.backend.statements;
 
 import java.util.List;
 import java.util.Map;
+import rmk35.partIIProject.backend.Macro;
+import rmk35.partIIProject.backend.Definition;
+import rmk35.partIIProject.backend.InnerClass;
+import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
 public class LambdaStatement extends Statement
 { // FIXME: Single formal at the moment

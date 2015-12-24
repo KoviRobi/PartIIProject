@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
+import rmk35.partIIProject.backend.statements.*;  // FIXME
+import rmk35.partIIProject.backend.runtimeValues.*; // FIXME
 
 public class JavaBytecodeGenerator
 { public static OutputClass generateOutput(String name, List<Statement> statements, IdentifierFactory identifiers)
@@ -28,16 +30,10 @@ public class JavaBytecodeGenerator
         , new ArrayList<IdentifierValue>()
         , new LocalIdentifierStatement(identifiers.getIdentifier("x")));
     Statement print42 = new JavaCallStatement(new NativeFieldStatement("java.lang.System", "out"), "println", new IntegerConstantStatement(42));
-    IdentifierStatement global = new GlobalIdentifierStatement(null, "test/foo", "Ljava/lang/String");
-/*
-    statements.add(idStatement);
-    statements.add(new ApplicationStatement(idStatement, idStatement));
-    statements.add(new IfStatement(idStatement, idStatement, idStatement));
-    statements.add(new SetStatement(global, null));
-*/
 
-    statements.add(new ApplicationStatement(new LambdaStatement(identifiers.getIdentifier("input"), new ArrayList<IdentifierValue>(), print42), idStatement));
-    statements.add(print42);
+    statements.add(new ApplicationStatement(new LambdaStatement(identifiers.getIdentifier("input"), new ArrayList<IdentifierValue>(), print42), new LambdaStatement(identifiers.getIdentifier("input"), new ArrayList<IdentifierValue>(), print42)));
+
+    statements.add(new JavaCallStatement(new NativeFieldStatement("java.lang.System", "out"), "println", new ApplicationStatement(idStatement, new IntegerConstantStatement(43))));
 
     generateOutput("test", statements, identifiers).saveToDisk();
   }

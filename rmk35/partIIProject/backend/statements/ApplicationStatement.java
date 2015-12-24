@@ -1,6 +1,10 @@
-package rmk35.partIIProject.backend;
+package rmk35.partIIProject.backend.statements;
 
 import java.util.Map;
+import rmk35.partIIProject.backend.Macro;
+import rmk35.partIIProject.backend.Definition;
+import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
 public class ApplicationStatement extends Statement
 { Statement operator;
@@ -19,7 +23,7 @@ public class ApplicationStatement extends Statement
     operand.generateOutput(definitions, macros, output);
     // Invoke operator.run with argument of operand
     // FIXME: do we need this? output.addToPrimaryMethod("  astore_1\n");
-    output.addToPrimaryMethod("  invokevirtual rmk35/partIIProject/backend/LambdaValue/run(Lrmk35/partIIProject/backend/RuntimeValue;)Lrmk35/partIIProject/backend/RuntimeValue;\n");
+    output.addToPrimaryMethod("  invokevirtual rmk35/partIIProject/backend/runtimeValues/LambdaValue/run(Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;)Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;\n");
     output.decrementStackCount(1);
   }
 }

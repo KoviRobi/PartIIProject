@@ -50,29 +50,29 @@ rmk35/partIIProject/frontend/SchemeParser.class: \
  rmk35/partIIProject/frontend/SchemeParserException.class
 
 rmk35/partIIProject/backend/JavaBytecodeGenerator.class: \
- rmk35/partIIProject/backend/ApplicationStatement.class \
- rmk35/partIIProject/backend/ClosureIdentifierStatement.class \
  rmk35/partIIProject/backend/Definition.class \
- rmk35/partIIProject/backend/GlobalIdentifierStatement.class \
  rmk35/partIIProject/backend/IdentifierFactory.class \
- rmk35/partIIProject/backend/IdentifierStatement.class \
- rmk35/partIIProject/backend/IdentifierValue.class \
- rmk35/partIIProject/backend/IfStatement.class \
  rmk35/partIIProject/backend/InnerClass.class \
- rmk35/partIIProject/backend/IntegerConstantStatement.class \
  rmk35/partIIProject/backend/InternalCompilerException.class \
- rmk35/partIIProject/backend/JavaCallStatement.class \
- rmk35/partIIProject/backend/LambdaStatement.class \
- rmk35/partIIProject/backend/LambdaValue.class \
- rmk35/partIIProject/backend/LocalIdentifierStatement.class \
  rmk35/partIIProject/backend/Macro.class \
  rmk35/partIIProject/backend/MainClass.class \
- rmk35/partIIProject/backend/NativeFieldStatement.class \
- rmk35/partIIProject/backend/NumberValue.class \
  rmk35/partIIProject/backend/OutputClass.class \
- rmk35/partIIProject/backend/RuntimeValue.class \
- rmk35/partIIProject/backend/SetStatement.class \
- rmk35/partIIProject/backend/Statement.class \
+ rmk35/partIIProject/backend/runtimeValues/IdentifierValue.class \
+ rmk35/partIIProject/backend/runtimeValues/LambdaValue.class \
+ rmk35/partIIProject/backend/runtimeValues/NumberValue.class \
+ rmk35/partIIProject/backend/runtimeValues/RuntimeValue.class \
+ rmk35/partIIProject/backend/statements/ApplicationStatement.class \
+ rmk35/partIIProject/backend/statements/ClosureIdentifierStatement.class \
+ rmk35/partIIProject/backend/statements/GlobalIdentifierStatement.class \
+ rmk35/partIIProject/backend/statements/IdentifierStatement.class \
+ rmk35/partIIProject/backend/statements/IfStatement.class \
+ rmk35/partIIProject/backend/statements/IntegerConstantStatement.class \
+ rmk35/partIIProject/backend/statements/JavaCallStatement.class \
+ rmk35/partIIProject/backend/statements/LambdaStatement.class \
+ rmk35/partIIProject/backend/statements/LocalIdentifierStatement.class \
+ rmk35/partIIProject/backend/statements/NativeFieldStatement.class \
+ rmk35/partIIProject/backend/statements/SetStatement.class \
+ rmk35/partIIProject/backend/statements/Statement.class \
 
 %BaseListener.java %Lexer.java %Listener.java %Parser.java: %.g4
 	java -jar antlr-4.5.1-complete.jar $<
@@ -141,29 +141,29 @@ clean:
 	rmk35/partIIProject/frontend/SchemeFileParser\$$VectorContext.class \
 	rmk35/partIIProject/frontend/SchemeParser.class \
 	rmk35/partIIProject/frontend/SchemeParserException.class \
-	rmk35/partIIProject/backend/ApplicationStatement.class \
-	rmk35/partIIProject/backend/ClosureIdentifierStatement.class \
 	rmk35/partIIProject/backend/Definition.class \
-	rmk35/partIIProject/backend/GlobalIdentifierStatement.class \
 	rmk35/partIIProject/backend/IdentifierFactory.class \
-	rmk35/partIIProject/backend/IdentifierStatement.class \
-	rmk35/partIIProject/backend/IdentifierValue.class \
-	rmk35/partIIProject/backend/IfStatement.class \
 	rmk35/partIIProject/backend/InnerClass.class \
-	rmk35/partIIProject/backend/IntegerConstantStatement.class \
 	rmk35/partIIProject/backend/InternalCompilerException.class \
 	rmk35/partIIProject/backend/JavaBytecodeGenerator.class \
-	rmk35/partIIProject/backend/JavaCallStatement.class \
-	rmk35/partIIProject/backend/LambdaStatement.class \
-	rmk35/partIIProject/backend/LambdaValue.class \
-	rmk35/partIIProject/backend/LocalIdentifierStatement.class \
 	rmk35/partIIProject/backend/Macro.class \
 	rmk35/partIIProject/backend/MainClass.class \
-	rmk35/partIIProject/backend/NativeFieldStatement.class \
-	rmk35/partIIProject/backend/NumberValue.class \
 	rmk35/partIIProject/backend/OutputClass.class \
-	rmk35/partIIProject/backend/RuntimeValue.class \
-	rmk35/partIIProject/backend/SetStatement.class \
-	rmk35/partIIProject/backend/Statement.class \
+	rmk35/partIIProject/backend/runtimeValues/IdentifierValue.class \
+	rmk35/partIIProject/backend/runtimeValues/LambdaValue.class \
+	rmk35/partIIProject/backend/runtimeValues/NumberValue.class \
+	rmk35/partIIProject/backend/runtimeValues/RuntimeValue.class \
+	rmk35/partIIProject/backend/statements/ApplicationStatement.class \
+	rmk35/partIIProject/backend/statements/ClosureIdentifierStatement.class \
+	rmk35/partIIProject/backend/statements/GlobalIdentifierStatement.class \
+	rmk35/partIIProject/backend/statements/IdentifierStatement.class \
+	rmk35/partIIProject/backend/statements/IfStatement.class \
+	rmk35/partIIProject/backend/statements/IntegerConstantStatement.class \
+	rmk35/partIIProject/backend/statements/JavaCallStatement.class \
+	rmk35/partIIProject/backend/statements/LambdaStatement.class \
+	rmk35/partIIProject/backend/statements/LocalIdentifierStatement.class \
+	rmk35/partIIProject/backend/statements/NativeFieldStatement.class \
+	rmk35/partIIProject/backend/statements/SetStatement.class \
+	rmk35/partIIProject/backend/statements/Statement.class \
 
 	find rmk35 -name '*.class' -or -name '*.tokens' # Check if everything has been removed

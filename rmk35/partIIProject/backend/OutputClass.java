@@ -36,9 +36,9 @@ public abstract class OutputClass
   public abstract void addToPrimaryMethod(String value);
   /** Generates a unique ID that does not start with a number */
   public abstract String uniqueID();
-  abstract String getOutputFileName();
-  abstract String getAssembly();
-  abstract MainClass getMainClass();
+  public abstract String getOutputFileName();
+  public abstract String getAssembly();
+  public abstract MainClass getMainClass();
 
   public void saveToDisk() throws IOException
   { try (BufferedWriter writer =

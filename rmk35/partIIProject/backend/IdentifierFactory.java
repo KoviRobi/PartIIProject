@@ -2,6 +2,7 @@ package rmk35.partIIProject.backend;
 
 import java.util.Map;
 import java.util.Hashtable;
+import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
 public class IdentifierFactory
 { Map<String, IdentifierValue> generatedIdentifiers = new Hashtable<>();

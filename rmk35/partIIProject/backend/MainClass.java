@@ -58,7 +58,7 @@ public class MainClass extends OutputClass
   }
 
   @Override
-  String getOutputFileName()
+  public String getOutputFileName()
   { return name + ".j";
   }
 
