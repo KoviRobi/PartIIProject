@@ -17,7 +17,7 @@ public class InnerClass extends OutputClass
   { this(name, closureVariables, new HashSet<String>(), new StringBuilder(), mainClass);
   }
   public InnerClass(String name, List<IdentifierValue> closureVariables, Set<String> fields, StringBuilder runMethod, MainClass mainClass)
-  { super(1, 2); // One local for 'this' and one for argument
+  { super(0, 2); // One local for 'this' and one for argument
     this.name = name;
     this.closureVariables = closureVariables;
     this.fields = fields;

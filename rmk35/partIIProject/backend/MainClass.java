@@ -22,7 +22,7 @@ public class MainClass extends OutputClass
   { this(name, new HashSet<String>(), new StringBuilder(), new ArrayList<InnerClass>());
   }
   public MainClass(String name, Set<String> fields, StringBuilder mainMethod, List<InnerClass> innerClasses)
-  { super(1, 1); // One local for main argument
+  { super(0, 1); // One local for main argument
     this.name = name;
     this.fields = fields;
     this.mainMethod = mainMethod;

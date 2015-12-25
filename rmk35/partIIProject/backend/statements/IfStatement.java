@@ -27,14 +27,14 @@ public class IfStatement extends Statement
     // XXX Speed: if we make booleans unique, we could use "if_acmpeq" to compare false
     (new RuntimeValueStatement("0", BooleanValue.class, new String[] {"Z"})).generateOutput(definitions, macros, output);
     output.addToPrimaryMethod("  invokeinterface rmk35/partIIProject/backend/runtimeValues/RuntimeValue/eq(Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;)Z 2\n");
-    output.decrementStackCount(2);
+    output.decrementStackCount(1); // Values compared for equality popped, result pushed
 
     // Stack now contains 1 if predicate is false, otherwise 0.
     String uniqueID = output.uniqueID();
     String falseLabel = "FalseCase" + uniqueID;
     String endLabel = "IfEnd" + uniqueID;
     output.addToPrimaryMethod("  ifne " + falseLabel + "\n"); // ifne branches if 0, but 0 is boolean false
-    output.decrementStackCount(1);
+    output.decrementStackCount(1); // Boolean popped
     trueCase.generateOutput(definitions, macros, output);
     output.addToPrimaryMethod("  goto " + endLabel + "\n");
 

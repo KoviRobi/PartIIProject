@@ -25,8 +25,7 @@ public class SetStatement extends Statement
     { value.generateOutput(definitions, macros, output);
     }
     output.incrementStackCount(1);
-    variable.generateSetOutput(definitions, macros, output);
-    output.decrementStackCount(1);
+    variable.generateSetOutput(definitions, macros, output); // Decrements stack count
     output.addToPrimaryMethod("\n");
   }
 }

@@ -26,7 +26,7 @@ public class ApplicationStatement extends Statement
     // Invoke operator.run with argument of operand
     // FIXME: do we need this? output.addToPrimaryMethod("  astore_1\n");
     output.addToPrimaryMethod("  invokevirtual rmk35/partIIProject/backend/runtimeValues/LambdaValue/run(Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;)Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;\n");
-    output.decrementStackCount(1);
+    output.decrementStackCount(1); // Operator and operand popped, result pushed
     output.addToPrimaryMethod("\n");
   }
 }

@@ -38,6 +38,7 @@ public class JavaCallStatement extends Statement
     { s.generateOutput(definitions, macros, output);
     }
 
+    // Create invokation
     output.addToPrimaryMethod((method.getDeclaringClass().isInterface())? "  invokeinterface " : "  invokevirtual ");
     output.addToPrimaryMethod(method.getDeclaringClass().getName().replaceAll("\\.", "/") + "/" + method.getName() + "(");
     for (Class<?> argument : method.getParameterTypes())
@@ -48,9 +49,11 @@ public class JavaCallStatement extends Statement
     { output.addToPrimaryMethod(" " +  (method.getParameterTypes().length + 1)); // +1 because of 'this'
     }
     output.addToPrimaryMethod("\n");
+    // End create invokation
+
     output.decrementStackCount(method.getParameterTypes().length); // No +1 because of return value
     if (method.getReturnType() == void.class)
-    { output.addToPrimaryMethod("  aconst_null\n");
+    { output.addToPrimaryMethod("  aconst_null\n"); // Which we always ensure
     }
     output.addToPrimaryMethod("\n");
   }

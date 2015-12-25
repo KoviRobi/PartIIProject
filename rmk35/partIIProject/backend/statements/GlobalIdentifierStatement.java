@@ -24,9 +24,10 @@ public class GlobalIdentifierStatement extends IdentifierStatement
     output.incrementStackCount(1);
     output.addToPrimaryMethod("\n");
   }
+
   public void generateSetOutput(Map<IdentifierValue, Definition> definitions,
-                             Map<IdentifierValue, Macro> macros,
-                             OutputClass output)
+                                Map<IdentifierValue, Macro> macros,
+                                OutputClass output)
   { output.addToPrimaryMethod("  ; GlobalIdentifierStatement Set\n");
     output.ensureFieldExists("private static", name, type);
     output.addToPrimaryMethod("  putstatic " + output.getMainClass().getName() + "/" + name + " " + type + "\n");
