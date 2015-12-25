@@ -6,3 +6,8 @@
     another (like C macros do string substitutions, but these are hygienic).
   - Macro: Identifier value and transformer binding
   - IdentifierFactory: Ensures identifiers with the same name are only created once
+
+* Comment keywords
+  - FIXME: shortcomings that need to be fixed before release
+  - TODO: things that would be nice
+  - XXX Speed: speed improvements that should be fairly easy
