@@ -29,11 +29,22 @@ public class JavaBytecodeGenerator
         ( identifiers.getIdentifier("x")
         , new ArrayList<IdentifierValue>()
         , new LocalIdentifierStatement(identifiers.getIdentifier("x")));
-    Statement print42 = new JavaCallStatement(new NativeFieldStatement("java.lang.System", "out"), "println", new RuntimeValueStatement("42", NumberValue.class));
+    Statement print42 = new JavaCallStatement(new NativeFieldStatement("java.lang.System", "out"), "println", new RuntimeValueStatement("42", NumberValue.class, new String[] {"I"}));
+    Statement print7 = new JavaCallStatement(new NativeFieldStatement("java.lang.System", "out"), "println", new ApplicationStatement(idStatement, new RuntimeValueStatement("7", NumberValue.class, new String[] {"I"})));
 
     statements.add(new ApplicationStatement(new LambdaStatement(identifiers.getIdentifier("input"), new ArrayList<IdentifierValue>(), print42), new LambdaStatement(identifiers.getIdentifier("input"), new ArrayList<IdentifierValue>(), print42)));
 
-    statements.add(new JavaCallStatement(new NativeFieldStatement("java.lang.System", "out"), "println", new ApplicationStatement(idStatement, new RuntimeValueStatement("7", NumberValue.class))));
+    statements.add(print7);
+
+    IdentifierStatement fooIdentifier = new GlobalIdentifierStatement("foo");
+    Statement condBasedOnFoo = new LambdaStatement(identifiers.getIdentifier("input"), new ArrayList<IdentifierValue>(), new IfStatement(fooIdentifier, print7, print42));
+
+    statements.add(new SetStatement(fooIdentifier, new RuntimeValueStatement("0", BooleanValue.class, new String[] {"Z"})));
+
+    statements.add(new ApplicationStatement(condBasedOnFoo, idStatement));
+
+    statements.add(new SetStatement(fooIdentifier, new RuntimeValueStatement("1", BooleanValue.class, new String[] {"Z"})));
+    statements.add(new ApplicationStatement(condBasedOnFoo, idStatement));
 
     generateOutput("test", statements, identifiers).saveToDisk();
   }

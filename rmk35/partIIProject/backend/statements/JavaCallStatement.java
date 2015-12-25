@@ -32,7 +32,8 @@ public class JavaCallStatement extends Statement
   public void generateOutput(Map<IdentifierValue, Definition> definitions,
                                       Map<IdentifierValue, Macro> macros,
                                       OutputClass output)
-  { field.generateOutput(definitions, macros, output);
+  { output.addToPrimaryMethod("  ; JavaCallStatement\n");
+    field.generateOutput(definitions, macros, output);
     for (Statement s : parameters)
     { s.generateOutput(definitions, macros, output);
     }
@@ -51,5 +52,6 @@ public class JavaCallStatement extends Statement
     if (method.getReturnType() == void.class)
     { output.addToPrimaryMethod("  aconst_null\n");
     }
+    output.addToPrimaryMethod("\n");
   }
 }

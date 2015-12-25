@@ -1,20 +1,22 @@
 package rmk35.partIIProject.backend;
 
+import java.util.Set;
+import java.util.HashSet;
 import java.util.List;
 import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
 public class InnerClass extends OutputClass
 { String name;
-  StringBuilder fields;
+  Set<String> fields;
   StringBuilder runMethod;
   List<IdentifierValue> closureVariables;
   int uniqueNumber = 0;
   MainClass mainClass;
 
   public InnerClass(String name, List<IdentifierValue> closureVariables, MainClass mainClass)
-  { this(name, closureVariables, new StringBuilder(), new StringBuilder(), mainClass);
+  { this(name, closureVariables, new HashSet<String>(), new StringBuilder(), mainClass);
   }
-  public InnerClass(String name, List<IdentifierValue> closureVariables, StringBuilder fields, StringBuilder runMethod, MainClass mainClass)
+  public InnerClass(String name, List<IdentifierValue> closureVariables, Set<String> fields, StringBuilder runMethod, MainClass mainClass)
   { super(1, 2); // One local for 'this' and one for argument
     this.name = name;
     this.closureVariables = closureVariables;
@@ -34,11 +36,16 @@ public class InnerClass extends OutputClass
   }
 
   @Override
+  public void ensureFieldExists(String modifier, String name, String type)
+  { fields.add(".field " + modifier + " " + name + " " + type);
+  }
+
+  @Override
   public String getAssembly()
   { return
       ".class " + name + "\n" +
       ".super rmk35/partIIProject/backend/runtimeValues/LambdaValue\n" +
-      fields.toString() + "\n" +
+      String.join("\n", fields) + "\n" +
 
       ".method public <init>()V\n" +
       "  aload_0\n" +
@@ -56,8 +63,8 @@ public class InnerClass extends OutputClass
   }
 
   @Override
-  public String getOutputFileName()
-  { return name + ".j";
+  public String getName()
+  { return name;
   }
 
   @Override

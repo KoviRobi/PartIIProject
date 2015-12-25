@@ -34,16 +34,17 @@ public abstract class OutputClass
 
   /** Either the main() methiod for main class, or the run(args) method for the inner class */
   public abstract void addToPrimaryMethod(String value);
+  public abstract void ensureFieldExists(String modifier, String name, String type);
   /** Generates a unique ID that does not start with a number */
   public abstract String uniqueID();
-  public abstract String getOutputFileName();
+  public abstract String getName();
   public abstract String getAssembly();
   public abstract MainClass getMainClass();
 
   public void saveToDisk() throws IOException
   { try (BufferedWriter writer =
             new BufferedWriter
-              (new FileWriter(getOutputFileName())))
+              (new FileWriter(getName() + ".j")))
     { writer.append(this.getAssembly());
     }
   }

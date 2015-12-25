@@ -1,5 +1,7 @@
 package rmk35.partIIProject.backend;
 
+import java.util.Set;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 import java.io.BufferedWriter;
@@ -8,7 +10,7 @@ import java.io.IOException;
 
 public class MainClass extends OutputClass
 { String name;
-  StringBuilder fields;
+  Set<String> fields;
   StringBuilder mainMethod;
   List<InnerClass> innerClasses;
   int uniqueNumber = 0;
@@ -17,9 +19,9 @@ public class MainClass extends OutputClass
   { this("anonymous");
   }
   public MainClass(String name)
-  { this(name, new StringBuilder(), new StringBuilder(), new ArrayList<InnerClass>());
+  { this(name, new HashSet<String>(), new StringBuilder(), new ArrayList<InnerClass>());
   }
-  public MainClass(String name, StringBuilder fields, StringBuilder mainMethod, List<InnerClass> innerClasses)
+  public MainClass(String name, Set<String> fields, StringBuilder mainMethod, List<InnerClass> innerClasses)
   { super(1, 1); // One local for main argument
     this.name = name;
     this.fields = fields;
@@ -27,20 +29,28 @@ public class MainClass extends OutputClass
     this.innerClasses = innerClasses;
   }
 
+  @Override
   public void addToPrimaryMethod(String value)
   { mainMethod.append(value);
   }
 
+  @Override
+  public void ensureFieldExists(String modifier, String name, String type)
+  { fields.add(".field " + modifier + " " + name + " " + type);
+  }
+
+  @Override
   public String uniqueID()
   { uniqueNumber++;
     return "Main" + Integer.toString(uniqueNumber);
   }
 
+  @Override
   public String getAssembly()
   { return
       ".class " + name + "\n" +
       ".super java/lang/Object\n" +
-      fields.toString() + "\n" +
+      String.join("\n", fields) + "\n" +
 
       ".method public <init>()V\n" +
       "  aload_0\n" +
@@ -58,8 +68,8 @@ public class MainClass extends OutputClass
   }
 
   @Override
-  public String getOutputFileName()
-  { return name + ".j";
+  public String getName()
+  { return name;
   }
 
   @Override
@@ -75,7 +85,7 @@ public class MainClass extends OutputClass
   public void saveToDisk() throws IOException
   { try (BufferedWriter writer =
             new BufferedWriter
-              (new FileWriter(getOutputFileName())))
+              (new FileWriter(getName() + ".j")))
     { writer.append(this.getAssembly());
     }
     for (OutputClass oc : innerClasses)

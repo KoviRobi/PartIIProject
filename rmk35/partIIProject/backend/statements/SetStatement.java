@@ -18,7 +18,8 @@ public class SetStatement extends Statement
   public void generateOutput(Map<IdentifierValue, Definition> definitions,
                              Map<IdentifierValue, Macro> macros,
                              OutputClass output)
-  { if (value == null)
+  { output.addToPrimaryMethod("  ; SetStatement\n");
+    if (value == null)
     { output.addToPrimaryMethod("  aconst_null\n");
     } else
     { value.generateOutput(definitions, macros, output);
@@ -26,5 +27,6 @@ public class SetStatement extends Statement
     output.incrementStackCount(1);
     variable.generateSetOutput(definitions, macros, output);
     output.decrementStackCount(1);
+    output.addToPrimaryMethod("\n");
   }
 }

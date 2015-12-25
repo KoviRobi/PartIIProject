@@ -19,12 +19,14 @@ public class ApplicationStatement extends Statement
   public void generateOutput(Map<IdentifierValue, Definition> definitions,
                              Map<IdentifierValue, Macro> macros,
                              OutputClass output)
-  { operator.generateOutput(definitions, macros, output);
+  { output.addToPrimaryMethod("  ; ApplicationStatement\n");
+    operator.generateOutput(definitions, macros, output);
     // FIXME: checkcast for LambdaValue
     operand.generateOutput(definitions, macros, output);
     // Invoke operator.run with argument of operand
     // FIXME: do we need this? output.addToPrimaryMethod("  astore_1\n");
     output.addToPrimaryMethod("  invokevirtual rmk35/partIIProject/backend/runtimeValues/LambdaValue/run(Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;)Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;\n");
     output.decrementStackCount(1);
+    output.addToPrimaryMethod("\n");
   }
 }

@@ -20,11 +20,13 @@ public class NativeFieldStatement extends Statement
   public void generateOutput(Map<IdentifierValue, Definition> definitions,
                                       Map<IdentifierValue, Macro> macros,
                                       OutputClass output)
-  { output.addToPrimaryMethod("  getstatic " +
+  { output.addToPrimaryMethod("  ; NativeFieldStatement\n");
+    output.addToPrimaryMethod("  getstatic " +
       classs.getName().replaceAll("\\.", "/") + "/" + field.getName() +
        " " +
       toBinaryName(field.getType().getName()) + "\n");
     output.incrementStackCount(1);
+    output.addToPrimaryMethod("\n");
   }
 
   static String toBinaryName(String typeName)

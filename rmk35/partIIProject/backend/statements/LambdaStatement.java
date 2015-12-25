@@ -23,7 +23,8 @@ public class LambdaStatement extends Statement
   public void generateOutput(Map<IdentifierValue, Definition> definitions,
                              Map<IdentifierValue, Macro> macros,
                              OutputClass output)
-  { String innerClassName = output.uniqueID() + "$Lambda";
+  { output.addToPrimaryMethod("  ; LambdaStatement\n");
+    String innerClassName = output.uniqueID() + "$Lambda";
     InnerClass innerClass = new InnerClass(innerClassName, closureVariables, output.getMainClass());
     body.generateOutput(definitions, macros, innerClass);
     output.getMainClass().addInnerClass(innerClass);
@@ -35,5 +36,6 @@ public class LambdaStatement extends Statement
     // FIXME: Pass in closure variables here to the constructor
     output.addToPrimaryMethod("  invokenonvirtual " + innerClassName + "/<init>()V\n");
     output.decrementStackCount(1);
+    output.addToPrimaryMethod("\n");
   }
 }

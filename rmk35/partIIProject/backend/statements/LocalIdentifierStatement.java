@@ -16,15 +16,19 @@ public class LocalIdentifierStatement extends IdentifierStatement
   public void generateOutput(Map<IdentifierValue, Definition> definitions,
                              Map<IdentifierValue, Macro> macros,
                              OutputClass output)
-  { output.addToPrimaryMethod("  aload_1\n");
+  { output.addToPrimaryMethod("  ; LocalIdentifier Get\n");
+    output.addToPrimaryMethod("  aload_1\n");
     output.incrementStackCount(1);
+    output.addToPrimaryMethod("\n");
   }
 
   /* Assumes variable to set to is on top of the stack */
   public void generateSetOutput(Map<IdentifierValue, Definition> definitions,
                                 Map<IdentifierValue, Macro> macros,
                                 OutputClass output)
-  { output.addToPrimaryMethod("  astore_1\n");
+  { output.addToPrimaryMethod("  ; LocalIdentifier Set\n");
+    output.addToPrimaryMethod("  astore_1\n");
     output.decrementStackCount(1);
+    output.addToPrimaryMethod("\n");
   }
 }
