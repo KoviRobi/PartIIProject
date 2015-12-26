@@ -50,7 +50,7 @@ public class MainClass extends OutputClass
   { return
       ".class " + name + "\n" +
       ".super java/lang/Object\n" +
-      String.join("\n", fields) + "\n" +
+      String.join("\n", fields) + "\n\n" +
 
       ".method public <init>()V\n" +
       "  aload_0\n" +

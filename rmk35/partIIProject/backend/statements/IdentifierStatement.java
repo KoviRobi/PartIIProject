@@ -11,4 +11,5 @@ public abstract class IdentifierStatement extends Statement
   public abstract void generateSetOutput(Map<IdentifierValue, Definition> definitions,
                                          Map<IdentifierValue, Macro> macros,
                                          OutputClass output);
+  public abstract String getName();
 }

@@ -7,12 +7,13 @@ import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
 public class LocalIdentifierStatement extends IdentifierStatement
-{ IdentifierValue value;
+{ String name;
 
-  public LocalIdentifierStatement(IdentifierValue value)
-  { this.value = value;
+  public LocalIdentifierStatement(String name)
+  { this.name = name;
   }
 
+  @Override
   public void generateOutput(Map<IdentifierValue, Definition> definitions,
                              Map<IdentifierValue, Macro> macros,
                              OutputClass output)
@@ -23,6 +24,7 @@ public class LocalIdentifierStatement extends IdentifierStatement
   }
 
   /* Assumes variable to set to is on top of the stack */
+  @Override
   public void generateSetOutput(Map<IdentifierValue, Definition> definitions,
                                 Map<IdentifierValue, Macro> macros,
                                 OutputClass output)
@@ -30,5 +32,10 @@ public class LocalIdentifierStatement extends IdentifierStatement
     output.addToPrimaryMethod("  astore_1\n");
     output.decrementStackCount(1);
     output.addToPrimaryMethod("\n");
+  }
+
+  @Override
+  public String getName()
+  { return name;
   }
 }

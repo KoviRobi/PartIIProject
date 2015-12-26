@@ -11,10 +11,10 @@ import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 public class LambdaStatement extends Statement
 { // FIXME: Single formal at the moment
   IdentifierValue formals;
-  List<IdentifierValue> closureVariables;
+  List<IdentifierStatement> closureVariables;
   Statement body;
 
-  public LambdaStatement(IdentifierValue formals, List<IdentifierValue> closureVariables, Statement body)
+  public LambdaStatement(IdentifierValue formals, List<IdentifierStatement> closureVariables, Statement body)
   { this.formals = formals;
     this.closureVariables = closureVariables;
     this.body = body;
@@ -34,7 +34,8 @@ public class LambdaStatement extends Statement
     output.addToPrimaryMethod("  dup\n"); // For invokenonvirtual, need 'this' pointer
     output.incrementStackCount(1);
     // FIXME: Pass in closure variables here to the constructor
-    output.addToPrimaryMethod("  invokenonvirtual " + innerClassName + "/<init>()V\n");
+    innerClass.invokeConstructor(definitions, macros, output);
+    // FIXME: delete output.addToPrimaryMethod("  invokenonvirtual " + innerClassName + "/<init>()V\n");
     output.decrementStackCount(1);
     output.addToPrimaryMethod("\n");
   }

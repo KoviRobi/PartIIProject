@@ -16,6 +16,7 @@ public class GlobalIdentifierStatement extends IdentifierStatement
     this.type = "Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;";//type;
   }
 
+  @Override
   public void generateOutput(Map<IdentifierValue, Definition> definitions,
                              Map<IdentifierValue, Macro> macros,
                              OutputClass output)
@@ -25,6 +26,7 @@ public class GlobalIdentifierStatement extends IdentifierStatement
     output.addToPrimaryMethod("\n");
   }
 
+  @Override
   public void generateSetOutput(Map<IdentifierValue, Definition> definitions,
                                 Map<IdentifierValue, Macro> macros,
                                 OutputClass output)
@@ -33,5 +35,10 @@ public class GlobalIdentifierStatement extends IdentifierStatement
     output.addToPrimaryMethod("  putstatic " + output.getMainClass().getName() + "/" + name + " " + type + "\n");
     output.decrementStackCount(1);
     output.addToPrimaryMethod("\n");
+  }
+
+  @Override
+  public String getName()
+  { return name;
   }
 }

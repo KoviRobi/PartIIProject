@@ -48,5 +48,4 @@ public abstract class OutputClass
     { writer.append(this.getAssembly());
     }
   }
-  
 }

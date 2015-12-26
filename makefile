@@ -20,7 +20,7 @@ bugs:
 release: all tests bugs
 
 %.class: %.java
-	javac $<
+	javac -g $<
 
 # If interested, you can look at dependences using
 # >xargs javac -verbose

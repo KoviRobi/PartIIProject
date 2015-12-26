@@ -21,6 +21,7 @@ public class ApplicationStatement extends Statement
                              OutputClass output)
   { output.addToPrimaryMethod("  ; ApplicationStatement\n");
     operator.generateOutput(definitions, macros, output);
+    output.addToPrimaryMethod("  checkcast rmk35/partIIProject/backend/runtimeValues/LambdaValue");
     // FIXME: checkcast for LambdaValue
     operand.generateOutput(definitions, macros, output);
     // Invoke operator.run with argument of operand

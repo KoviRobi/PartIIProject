@@ -27,17 +27,17 @@ public class JavaBytecodeGenerator
 
     Statement idStatement = new LambdaStatement
         ( identifiers.getIdentifier("x")
-        , new ArrayList<IdentifierValue>()
-        , new LocalIdentifierStatement(identifiers.getIdentifier("x")));
+        , new ArrayList<IdentifierStatement>()
+        , new LocalIdentifierStatement("x"));
     Statement print42 = new JavaCallStatement(new NativeFieldStatement("java.lang.System", "out"), "println", new RuntimeValueStatement("42", NumberValue.class, new String[] {"I"}));
     Statement print7 = new JavaCallStatement(new NativeFieldStatement("java.lang.System", "out"), "println", new ApplicationStatement(idStatement, new RuntimeValueStatement("7", NumberValue.class, new String[] {"I"})));
 
-    statements.add(new ApplicationStatement(new LambdaStatement(identifiers.getIdentifier("input"), new ArrayList<IdentifierValue>(), print42), new LambdaStatement(identifiers.getIdentifier("input"), new ArrayList<IdentifierValue>(), print42)));
+    statements.add(new ApplicationStatement(new LambdaStatement(identifiers.getIdentifier("input"), new ArrayList<IdentifierStatement>(), print42), new LambdaStatement(identifiers.getIdentifier("input"), new ArrayList<IdentifierStatement>(), print42)));
 
     statements.add(print7);
 
     IdentifierStatement fooIdentifier = new GlobalIdentifierStatement("foo");
-    Statement condBasedOnFoo = new LambdaStatement(identifiers.getIdentifier("input"), new ArrayList<IdentifierValue>(), new IfStatement(fooIdentifier, print7, print42));
+    Statement condBasedOnFoo = new LambdaStatement(identifiers.getIdentifier("input"), new ArrayList<IdentifierStatement>(), new IfStatement(fooIdentifier, print7, print42));
 
     statements.add(new SetStatement(fooIdentifier, new RuntimeValueStatement("0", BooleanValue.class, new String[] {"Z"})));
 
@@ -45,6 +45,17 @@ public class JavaBytecodeGenerator
 
     statements.add(new SetStatement(fooIdentifier, new RuntimeValueStatement("1", BooleanValue.class, new String[] {"Z"})));
     statements.add(new ApplicationStatement(condBasedOnFoo, idStatement));
+
+    // TODO: Closure variables
+    Statement closure = new LambdaStatement
+    (identifiers.getIdentifier("x")
+    ,new ArrayList<IdentifierStatement>()
+    ,new LambdaStatement
+      (identifiers.getIdentifier("y")
+      ,Arrays.asList(new IdentifierStatement[] {new LocalIdentifierStatement("x")})
+      ,new ClosureIdentifierStatement("x")));
+
+    statements.add(new JavaCallStatement(new NativeFieldStatement("java.lang.System", "out"), "println", new ApplicationStatement(new ApplicationStatement(closure, new RuntimeValueStatement("42", NumberValue.class, new String[] {"I"})), new RuntimeValueStatement("7", NumberValue.class, new String[] {"I"}))));
 
     generateOutput("test", statements, identifiers).saveToDisk();
   }

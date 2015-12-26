@@ -19,26 +19,33 @@ public class ClosureIdentifierStatement extends IdentifierStatement
     this.type = "Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;";//type;
   }
 
+  @Override
   public void generateOutput(Map<IdentifierValue, Definition> definitions,
                              Map<IdentifierValue, Macro> macros,
                              OutputClass output)
   { output.addToPrimaryMethod("  ; ClosureIdentifierStatement Get\n");
-    output.addToPrimaryMethod("  aload_0"); // 'this', the current object
+    output.addToPrimaryMethod("  aload_0\n"); // 'this', the current object
     output.incrementStackCount(1);
     output.addToPrimaryMethod("  getfield " + output.getName() + "/" + name + " " + type + "\n");
     output.incrementStackCount(2);
     output.addToPrimaryMethod("\n");
   }
 
+  @Override
   public void generateSetOutput(Map<IdentifierValue, Definition> definitions,
                                 Map<IdentifierValue, Macro> macros,
                                 OutputClass output)
   { output.addToPrimaryMethod("  ; ClosureIdentifierStatement Set\n");
     output.ensureFieldExists("private", name, type);
-    output.addToPrimaryMethod("  aload_0"); // 'this', the current object
+    output.addToPrimaryMethod("  aload_0\n"); // 'this', the current object
     output.incrementStackCount(1);
     output.addToPrimaryMethod("  putfield " + output.getName() + "/" + name + " " + type + "\n");
     output.decrementStackCount(2); // Object, value popped
     output.addToPrimaryMethod("\n");
+  }
+
+  @Override
+  public String getName()
+  { return name;
   }
 }
