@@ -1,6 +1,10 @@
 package rmk35.partIIProject.frontend.AST;
 
-public class SchemeIdentifier
+import rmk35.partIIProject.middle.AST;
+import rmk35.partIIProject.middle.ASTVisitor;
+import rmk35.partIIProject.backend.statements.Statement;
+
+public class SchemeIdentifier implements AST
 { String identifier;
   
   public SchemeIdentifier(String text, String file, long line, long character)
@@ -18,5 +22,10 @@ public class SchemeIdentifier
 
   public String toString()
   { return identifier;
+  }
+
+  @Override
+  public Statement accept(ASTVisitor visitor)
+  { return visitor.visit(this);
   }
 }
