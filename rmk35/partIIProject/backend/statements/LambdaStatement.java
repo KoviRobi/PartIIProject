@@ -9,12 +9,11 @@ import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
 public class LambdaStatement extends Statement
-{ // FIXME: Single formal at the moment
-  IdentifierValue formals;
+{ List<IdentifierValue> formals;
   List<IdentifierStatement> closureVariables;
   Statement body;
 
-  public LambdaStatement(IdentifierValue formals, List<IdentifierStatement> closureVariables, Statement body)
+  public LambdaStatement(List<IdentifierValue> formals, List<IdentifierStatement> closureVariables, Statement body)
   { this.formals = formals;
     this.closureVariables = closureVariables;
     this.body = body;
@@ -25,7 +24,7 @@ public class LambdaStatement extends Statement
                              OutputClass output)
   { output.addToPrimaryMethod("  ; LambdaStatement\n");
     String innerClassName = output.uniqueID() + "$Lambda";
-    InnerClass innerClass = new InnerClass(innerClassName, closureVariables, output.getMainClass());
+    InnerClass innerClass = new InnerClass(innerClassName, closureVariables, output.getMainClass(), formals.size());
     body.generateOutput(definitions, macros, innerClass);
     output.getMainClass().addInnerClass(innerClass);
 

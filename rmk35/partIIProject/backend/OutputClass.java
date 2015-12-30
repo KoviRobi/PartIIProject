@@ -1,5 +1,7 @@
 package rmk35.partIIProject.backend;
 
+import rmk35.partIIProject.InternalCompilerException;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.io.BufferedWriter;

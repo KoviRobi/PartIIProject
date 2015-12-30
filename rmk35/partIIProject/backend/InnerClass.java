@@ -14,17 +14,19 @@ public class InnerClass extends OutputClass
   List<IdentifierStatement> closureVariables;
   int uniqueNumber = 0;
   MainClass mainClass;
+  int variableCount;
 
-  public InnerClass(String name, List<IdentifierStatement> closureVariables, MainClass mainClass)
-  { this(name, closureVariables, new HashSet<String>(), new StringBuilder(), mainClass);
+  public InnerClass(String name, List<IdentifierStatement> closureVariables, MainClass mainClass, int variableCount)
+  { this(name, closureVariables, new HashSet<String>(), new StringBuilder(), mainClass, variableCount);
   }
-  public InnerClass(String name, List<IdentifierStatement> closureVariables, Set<String> fields, StringBuilder runMethod, MainClass mainClass)
-  { super(0, 2); // One local for 'this' and one for argument
+  public InnerClass(String name, List<IdentifierStatement> closureVariables, Set<String> fields, StringBuilder runMethod, MainClass mainClass, int variableCount)
+  { super(3, 1 + variableCount); // One local for 'this' and then arguments. Three stack for storeArrayIntoLocals
     this.name = name;
     this.closureVariables = closureVariables;
     this.fields = fields;
     this.runMethod = runMethod;
     this.mainClass = mainClass;
+    this.variableCount = variableCount;
 
     for (IdentifierStatement identifier : closureVariables)
     { ensureFieldExists("private", identifier.getName(), "Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;");
@@ -62,10 +64,11 @@ public class InnerClass extends OutputClass
       "  return\n" +
       ".end method\n" +
       "\n" +
-      ".method public run(Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;)Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;\n" +
+      ".method public run(Ljava/util/ArrayList;)Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;\n" +
       "  .limit stack  " + stackLimit + "\n" +
       "  .limit locals " + localLimit + "\n" +
-     runMethod.toString() +
+      storeArrayIntoLocals() +
+      runMethod.toString() +
       "  areturn\n" +
       ".end method\n"
     ;
@@ -113,5 +116,26 @@ public class InnerClass extends OutputClass
     }
     output.addToPrimaryMethod("  invokenonvirtual " + getName() + "/<init>(" + constructorTypes(closureVariables) + ")V\n");
 
+  }
+
+  public String storeArrayIntoLocals()
+  { StringBuilder returnValue = new StringBuilder();
+    returnValue.append("  aload_1\n"); // Array
+    for (int i = 0; i < variableCount; i++)
+    { returnValue.append("  dup\n");
+      if (i < 6)
+      { returnValue.append("  iconst_" + i + "\n");
+      } else
+      { returnValue.append("  ldc " + i + "\n");
+      }
+      returnValue.append("  invokeinterface java/util/List/get(I)Ljava/lang/Object; 2\n");
+      if (i < 4)
+      { returnValue.append("  astore_" + (i + 1) + "\n");
+      } else
+      { returnValue.append("  astore " + (i + 1) + "\n");
+      }
+    }
+    returnValue.append("  pop\n"); // Pop array
+    return returnValue.toString();
   }
 }

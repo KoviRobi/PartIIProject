@@ -8,9 +8,11 @@ import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
 public class LocalIdentifierStatement extends IdentifierStatement
 { String name;
+  int localIndex;
 
-  public LocalIdentifierStatement(String name)
+  public LocalIdentifierStatement(String name, int localIndex)
   { this.name = name;
+    this.localIndex = localIndex;
   }
 
   @Override
@@ -18,7 +20,11 @@ public class LocalIdentifierStatement extends IdentifierStatement
                              Map<IdentifierValue, Macro> macros,
                              OutputClass output)
   { output.addToPrimaryMethod("  ; LocalIdentifier Get\n");
-    output.addToPrimaryMethod("  aload_1\n");
+    if (localIndex < 4)
+    { output.addToPrimaryMethod("  aload_" + localIndex + "\n");
+    } else
+    { output.addToPrimaryMethod("  aload " + localIndex + "\n");
+    }
     output.incrementStackCount(1);
     output.addToPrimaryMethod("\n");
   }
@@ -29,7 +35,11 @@ public class LocalIdentifierStatement extends IdentifierStatement
                                 Map<IdentifierValue, Macro> macros,
                                 OutputClass output)
   { output.addToPrimaryMethod("  ; LocalIdentifier Set\n");
-    output.addToPrimaryMethod("  astore_1\n");
+    if (localIndex < 4)
+    { output.addToPrimaryMethod("  astore_" + localIndex + "\n");
+    } else
+    { output.addToPrimaryMethod("  astore " + localIndex + "\n");
+    }
     output.decrementStackCount(1);
     output.addToPrimaryMethod("\n");
   }
