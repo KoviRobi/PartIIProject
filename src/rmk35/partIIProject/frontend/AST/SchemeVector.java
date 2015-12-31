@@ -2,10 +2,19 @@ package rmk35.partIIProject.frontend.AST;
 
 import java.util.List;
 
-public class SchemeVector
+import rmk35.partIIProject.middle.AST;
+import rmk35.partIIProject.middle.ASTVisitor;
+import rmk35.partIIProject.backend.statements.Statement;
+
+public class SchemeVector implements SchemeObject
 { Object[] data;
   public SchemeVector(Object[] data, String file, long line, long character)
   { this.data = data;
+  }
+
+  @Override
+  public boolean mutable()
+  { return true;
   }
 
   public boolean eqv(Object other)
@@ -24,5 +33,10 @@ public class SchemeVector
       sb.append(o.toString() + " ");
     sb.append(") ");
     return sb.toString();
+  }
+
+  @Override
+  public Statement accept(ASTVisitor visitor)
+  { return visitor.visit(this);
   }
 }

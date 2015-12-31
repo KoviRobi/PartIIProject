@@ -1,5 +1,9 @@
 package rmk35.partIIProject.frontend.AST;
 
+import rmk35.partIIProject.middle.AST;
+import rmk35.partIIProject.middle.ASTVisitor;
+import rmk35.partIIProject.backend.statements.Statement;
+
 import rmk35.partIIProject.frontend.SchemeParserException;
 
 public class SchemeBoolean extends SchemeEquality implements SchemeObject
@@ -33,5 +37,10 @@ public class SchemeBoolean extends SchemeEquality implements SchemeObject
 
   public String toString()
   { return value?"#true":"#false";
+  }
+
+  @Override
+  public Statement accept(ASTVisitor visitor)
+  { return visitor.visit(this);
   }
 }

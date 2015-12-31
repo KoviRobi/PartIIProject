@@ -4,6 +4,10 @@ import java.math.BigDecimal;
 
 import rmk35.partIIProject.frontend.SchemeParserException;
 
+import rmk35.partIIProject.middle.AST;
+import rmk35.partIIProject.middle.ASTVisitor;
+import rmk35.partIIProject.backend.statements.Statement;
+
 public class SchemeSimpleNumber extends SchemeNumber
 { BigDecimal bigdec;
 
@@ -24,5 +28,10 @@ public class SchemeSimpleNumber extends SchemeNumber
 
   public String toString()
   { return bigdec.toString();
+  }
+
+  @Override
+  public Statement accept(ASTVisitor visitor)
+  { return visitor.visit(this);
   }
 }

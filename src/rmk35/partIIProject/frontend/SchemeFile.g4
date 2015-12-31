@@ -18,14 +18,17 @@ import rmk35.partIIProject.frontend.AST.SchemeList;
 import rmk35.partIIProject.frontend.AST.SchemeVector;
 import rmk35.partIIProject.frontend.AST.SchemeAbbreviation;
 import rmk35.partIIProject.frontend.AST.SchemeLabelledData;
+import rmk35.partIIProject.frontend.AST.SchemeLabelReference;
+
+import rmk35.partIIProject.middle.AST;
 }
 
 import SchemeExternalRepresentation;
 
-file[String filename] returns [List<Object> data]
+file[String filename] returns [List<AST> data]
   @init {
    $data = new LinkedList<>();
   }
   :
-  (datum[$filename] {System.out.println("Found: " + $data); $data.add($datum.expr);})* EOF
+  (datum[$filename] {$data.add($datum.expr);})* EOF
   ;

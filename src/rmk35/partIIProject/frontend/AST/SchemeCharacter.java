@@ -2,6 +2,10 @@ package rmk35.partIIProject.frontend.AST;
 
 import rmk35.partIIProject.frontend.SchemeParserException;
 
+import rmk35.partIIProject.middle.AST;
+import rmk35.partIIProject.middle.ASTVisitor;
+import rmk35.partIIProject.backend.statements.Statement;
+
 public class SchemeCharacter extends SchemeEquality implements SchemeObject
 { public boolean mutable() { return false; }
 
@@ -51,5 +55,10 @@ public class SchemeCharacter extends SchemeEquality implements SchemeObject
 
   public String toString()
   { return "#\\" + Character.toString(value);
+  }
+
+  @Override
+  public Statement accept(ASTVisitor visitor)
+  { return visitor.visit(this);
   }
 }

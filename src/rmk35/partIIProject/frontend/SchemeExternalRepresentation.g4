@@ -6,21 +6,21 @@ grammar SchemeExternalRepresentation;
 
 import SchemeLexicalStructure;
 
-datum[String filename] returns [Object expr]
+datum[String filename] returns [AST expr]
   : simpleDatum[$filename] { $expr = $simpleDatum.expr; }
   | compoundDatum[$filename] { $expr = $compoundDatum.expr; }
-	| LabelCreate datum[$filename] { $expr = new SchemeLabelledData($LabelCreate.text, $datum.expr, $filename, $LabelCreate.line, $LabelCreate.pos); }
-  | LabelReference { $expr = "label " + $LabelReference.text; }
-	;
+  | LabelCreate child=datum[$filename] { $expr = new SchemeLabelledData($LabelCreate.text, $child.expr, $filename, $LabelCreate.line, $LabelCreate.pos); }
+  | LabelReference { $expr = new SchemeLabelReference($LabelReference.text); } // FIXME: Error from here.
+  ;
 
-simpleDatum[String filename] returns [Object expr]
+simpleDatum[String filename] returns [AST expr]
   : bool[$filename] { $expr = $bool.expr; }
   | number[$filename] { $expr = $number.expr; }
-	| character[$filename] { $expr = $character.expr; }
+  | character[$filename] { $expr = $character.expr; }
   | string[$filename] { $expr = $string.expr; }
   | symbol[$filename] { $expr = $symbol.expr; }
   | bytevector[$filename] { $expr = $bytevector.expr; }
-	;
+  ;
 
 bool[String filename] returns [SchemeBoolean expr] : Boolean { $expr = new SchemeBoolean($Boolean.text, $filename, $Boolean.line, $Boolean.pos); } ;
 number[String filename] returns [SchemeNumber expr]: Number { $expr = new SchemeSimpleNumber($Number.text, $filename, $Number.line, $Number.pos); } ;
@@ -30,7 +30,7 @@ symbol[String filename] returns [SchemeIdentifier expr] : Identifier { $expr = n
 
 bytevector[String filename]
   returns [SchemeBytevector expr]
-  locals [Stack<Object> acc, long line, long col]
+  locals [Stack<String> acc, long line, long col]
   @init {
    $acc = new Stack<>();
   }
@@ -42,7 +42,7 @@ bytevector[String filename]
     ')'
   ;
 
-compoundDatum[String filename] returns [Object expr]
+compoundDatum[String filename] returns [AST expr]
   : list[$filename] { $expr = $list.expr; }
   | vector[$filename] { $expr = $vector.expr; }
   | abbreviation[$filename] { $expr = $abbreviation.expr; }
@@ -50,7 +50,7 @@ compoundDatum[String filename] returns [Object expr]
 
 list[String filename]
   returns [SchemeList expr]
-  locals [List<Object> acc]
+  locals [List<AST> acc]
   @init {
    $acc = new LinkedList<>();
   }
@@ -63,7 +63,7 @@ list[String filename]
 
 vector[String filename]
   returns [SchemeVector expr]
-  locals [List<Object> acc]
+  locals [List<AST> acc]
   @init {
    $acc = new ArrayList<>();
   }
@@ -74,7 +74,7 @@ vector[String filename]
   ;
 
 abbreviation[String filename]
-  returns [Object expr]
+  returns [AST expr]
   : AbbrevPrefix datum[$filename] 
   { $expr = new SchemeAbbreviation($AbbrevPrefix.text, $datum.expr, $filename, $AbbrevPrefix.line, $AbbrevPrefix.pos); }; //FIXME:
 
