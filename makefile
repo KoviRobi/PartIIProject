@@ -1,16 +1,24 @@
-.PHONY: all frontend backend
-all: frontend backend
-frontend: rmk35/partIIProject/frontend/SchemeParser.class
-backend: rmk35/partIIProject/backend/JavaBytecodeGenerator.class
-
+.PHONY: all frontend backend middle shared delombok
+all: frontend backend middle shared
+frontend: delombok shared \
+ out/rmk35/partIIProject/frontend/SchemeParser.class
+backend: delombok shared \
+ out/rmk35/partIIProject/backend/JavaBytecodeGenerator.class
+middle: delombok shared \
+ out/rmk35/partIIProject/middle/Interconnect.class
+shared: out/rmk35/partIIProject/InternalCompilerException.class
+delombok:
+	java -cp .:libraries/* -jar libraries/lombok.jar delombok --quiet src --target=out --classpath=.:libraries/* 2> /dev/null
 
 # TODO: Make check automatic
-.PHONY: frontendtest backendtest tests
+.PHONY: frontendtest backendtest middletest tests
 frontendtest: frontend
-	java rmk35.partIIProject.frontend.SchemeParser test.txt
+	cd out; java -cp .:../libraries/* rmk35.partIIProject.frontend.SchemeParser test.txt
 backendtest: backend
-	java rmk35.partIIProject.backend.JavaBytecodeGenerator
-tests: frontendtest backendtest
+	cd out; java -cp .:../libraries/* rmk35.partIIProject.backend.JavaBytecodeGenerator
+middletest: middle
+	cd out; java -cp .:../libraries/* rmk35.partIIProject.middle.Interconnect
+tests: frontendtest backendtest middletest
 
 .PHONY: bugs
 bugs:
@@ -19,153 +27,22 @@ bugs:
 .PHONY: release
 release: all tests bugs
 
-%.class: %.java
-	javac -g $<
-
-# If interested, you can look at dependences using
-# >xargs javac -verbose
-# Edit ,y/\[\.\/rmk.*\.class\]/d
-# Edit ,s/\[\.\//\n/g
-# Edit ,s/\]/ \\/g
-# Edit ,d
-#
-# for each .java file.
-
-rmk35/partIIProject/frontend/SchemeParser.class: \
- rmk35/partIIProject/frontend/SchemeFileParser.class \
- rmk35/partIIProject/frontend/SchemeFileLexer.class \
- rmk35/partIIProject/frontend/AST/SchemeList.class \
- rmk35/partIIProject/frontend/AST/SchemeIdentifier.class \
- rmk35/partIIProject/frontend/AST/SchemeSimpleNumber.class \
- rmk35/partIIProject/frontend/AST/SchemeEquality.class \
- rmk35/partIIProject/frontend/AST/SchemeCharacter.class \
- rmk35/partIIProject/frontend/AST/SchemeVector.class \
- rmk35/partIIProject/frontend/AST/SchemeString.class \
- rmk35/partIIProject/frontend/AST/SchemeObject.class \
- rmk35/partIIProject/frontend/AST/SchemeNumber.class \
- rmk35/partIIProject/frontend/AST/SchemeBoolean.class \
- rmk35/partIIProject/frontend/AST/SchemeBytevector.class \
- rmk35/partIIProject/frontend/AST/SchemeAbbreviation.class \
- rmk35/partIIProject/frontend/AST/SchemeLabelledData.class \
- rmk35/partIIProject/frontend/SchemeParserException.class
-
-rmk35/partIIProject/backend/JavaBytecodeGenerator.class: \
- rmk35/partIIProject/backend/Definition.class \
- rmk35/partIIProject/backend/IdentifierFactory.class \
- rmk35/partIIProject/backend/InnerClass.class \
- rmk35/partIIProject/backend/InternalCompilerException.class \
- rmk35/partIIProject/backend/Macro.class \
- rmk35/partIIProject/backend/MainClass.class \
- rmk35/partIIProject/backend/OutputClass.class \
- rmk35/partIIProject/backend/runtimeValues/BooleanValue.class \
- rmk35/partIIProject/backend/runtimeValues/IdentifierValue.class \
- rmk35/partIIProject/backend/runtimeValues/LambdaValue.class \
- rmk35/partIIProject/backend/runtimeValues/NumberValue.class \
- rmk35/partIIProject/backend/runtimeValues/RuntimeValue.class \
- rmk35/partIIProject/backend/statements/ApplicationStatement.class \
- rmk35/partIIProject/backend/statements/ClosureIdentifierStatement.class \
- rmk35/partIIProject/backend/statements/GlobalIdentifierStatement.class \
- rmk35/partIIProject/backend/statements/IdentifierStatement.class \
- rmk35/partIIProject/backend/statements/IfStatement.class \
- rmk35/partIIProject/backend/statements/JavaCallStatement.class \
- rmk35/partIIProject/backend/statements/LambdaStatement.class \
- rmk35/partIIProject/backend/statements/LocalIdentifierStatement.class \
- rmk35/partIIProject/backend/statements/NativeFieldStatement.class \
- rmk35/partIIProject/backend/statements/RuntimeValueStatement.class \
- rmk35/partIIProject/backend/statements/SetStatement.class \
- rmk35/partIIProject/backend/statements/Statement.class \
+out/%.class: out/%.java
+	cd out; javac -implicit:class -cp .:../libraries/* -g $*.java
 
 %BaseListener.java %Lexer.java %Listener.java %Parser.java: %.g4
-	java -jar antlr-4.5.1-complete.jar $<
+	java -jar libraries/antlr-4.5.1-complete.jar $<
 
 %GrammarTest: %BaseListener.java %Lexer.java %Listener.java %Parser.java
-	javac $?
-	java org.antlr.v4.gui.TestRig $* datum -gui
+	javac -cp .:libraries/* $?
+	java -cp .:libraries/* org.antlr.v4.gui.TestRig $* datum -gui
+
+# Dependency graph removed as lombok updates the timestamps, so we will
+# recompile all
 
 rmk35/partIIProject/frontend/SchemeFile.g4: rmk35/partIIProject/frontend/SchemeExternalRepresentation.g4
 rmk35/partIIProject/frontend/SchemeExternalRepresentation.g4: rmk35/partIIProject/frontend/SchemeLexicalStructure.g4
 
 .PHONY: clean
 clean:
-	-rm -f \
-	rmk35/partIIProject/frontend/AST/SchemeAbbreviation.class \
-	rmk35/partIIProject/frontend/AST/SchemeBoolean.class \
-	rmk35/partIIProject/frontend/AST/SchemeBytevector.class \
-	rmk35/partIIProject/frontend/AST/SchemeCharacter.class \
-	rmk35/partIIProject/frontend/AST/SchemeEquality.class \
-	rmk35/partIIProject/frontend/AST/SchemeIdentifier.class \
-	rmk35/partIIProject/frontend/AST/SchemeLabelledData.class \
-	rmk35/partIIProject/frontend/AST/SchemeList.class \
-	rmk35/partIIProject/frontend/AST/SchemeNumber.class \
-	rmk35/partIIProject/frontend/AST/SchemeObject.class \
-	rmk35/partIIProject/frontend/AST/SchemeSimpleNumber.class \
-	rmk35/partIIProject/frontend/AST/SchemeString.class \
-	rmk35/partIIProject/frontend/AST/SchemeVector.class \
-	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$AbbrevPrefixContext.class \
-	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$AbbreviationContext.class \
-	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$BoolContext.class \
-	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$BytevectorContext.class \
-	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$CharacterContext.class \
-	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$CompoundDatumContext.class \
-	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$DatumContext.class \
-	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$LabelContext.class \
-	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$ListContext.class \
-	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$NumberContext.class \
-	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$SimpleDatumContext.class \
-	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$StringContext.class \
-	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$SymbolContext.class \
-	rmk35/partIIProject/frontend/SchemeExternalRepresentationParser\$$VectorContext.class \
-	rmk35/partIIProject/frontend/SchemeFile.tokens \
-	rmk35/partIIProject/frontend/SchemeFileBaseListener.class \
-	rmk35/partIIProject/frontend/SchemeFileBaseListener.java \
-	rmk35/partIIProject/frontend/SchemeFileLexer.class \
-	rmk35/partIIProject/frontend/SchemeFileLexer.java \
-	rmk35/partIIProject/frontend/SchemeFileLexer.tokens \
-	rmk35/partIIProject/frontend/SchemeFileListener.class \
-	rmk35/partIIProject/frontend/SchemeFileListener.java \
-	rmk35/partIIProject/frontend/SchemeFileParser.class \
-	rmk35/partIIProject/frontend/SchemeFileParser.java \
-	rmk35/partIIProject/frontend/SchemeFileParser\$$AbbrevPrefixContext.class \
-	rmk35/partIIProject/frontend/SchemeFileParser\$$AbbreviationContext.class \
-	rmk35/partIIProject/frontend/SchemeFileParser\$$BoolContext.class \
-	rmk35/partIIProject/frontend/SchemeFileParser\$$BytevectorContext.class \
-	rmk35/partIIProject/frontend/SchemeFileParser\$$CharacterContext.class \
-	rmk35/partIIProject/frontend/SchemeFileParser\$$CompoundDatumContext.class \
-	rmk35/partIIProject/frontend/SchemeFileParser\$$DatumContext.class \
-	rmk35/partIIProject/frontend/SchemeFileParser\$$FileContext.class \
-	rmk35/partIIProject/frontend/SchemeFileParser\$$LabelContext.class \
-	rmk35/partIIProject/frontend/SchemeFileParser\$$ListContext.class \
-	rmk35/partIIProject/frontend/SchemeFileParser\$$NumberContext.class \
-	rmk35/partIIProject/frontend/SchemeFileParser\$$SimpleDatumContext.class \
-	rmk35/partIIProject/frontend/SchemeFileParser\$$StringContext.class \
-	rmk35/partIIProject/frontend/SchemeFileParser\$$SymbolContext.class \
-	rmk35/partIIProject/frontend/SchemeFileParser\$$VectorContext.class \
-	rmk35/partIIProject/frontend/SchemeParser.class \
-	rmk35/partIIProject/frontend/SchemeParserException.class \
-	rmk35/partIIProject/backend/Definition.class \
-	rmk35/partIIProject/backend/IdentifierFactory.class \
-	rmk35/partIIProject/backend/InnerClass.class \
-	rmk35/partIIProject/backend/InternalCompilerException.class \
-	rmk35/partIIProject/backend/JavaBytecodeGenerator.class \
-	rmk35/partIIProject/backend/Macro.class \
-	rmk35/partIIProject/backend/MainClass.class \
-	rmk35/partIIProject/backend/OutputClass.class \
-	rmk35/partIIProject/backend/runtimeValues/BooleanValue.class \
-	rmk35/partIIProject/backend/runtimeValues/IdentifierValue.class \
-	rmk35/partIIProject/backend/runtimeValues/LambdaValue.class \
-	rmk35/partIIProject/backend/runtimeValues/NumberValue.class \
-	rmk35/partIIProject/backend/runtimeValues/RuntimeValue.class \
-	rmk35/partIIProject/backend/statements/ApplicationStatement.class \
-	rmk35/partIIProject/backend/statements/ClosureIdentifierStatement.class \
-	rmk35/partIIProject/backend/statements/GlobalIdentifierStatement.class \
-	rmk35/partIIProject/backend/statements/IdentifierStatement.class \
-	rmk35/partIIProject/backend/statements/IfStatement.class \
-	rmk35/partIIProject/backend/statements/JavaCallStatement.class \
-	rmk35/partIIProject/backend/statements/LambdaStatement.class \
-	rmk35/partIIProject/backend/statements/LocalIdentifierStatement.class \
-	rmk35/partIIProject/backend/statements/NativeFieldStatement.class \
-	rmk35/partIIProject/backend/statements/RuntimeValueStatement.class \
-	rmk35/partIIProject/backend/statements/SetStatement.class \
-	rmk35/partIIProject/backend/statements/Statement.class \
-
-	find rmk35 -name '*.class' -or -name '*.tokens' # Check if everything has been removed
+	-rm -rf out
