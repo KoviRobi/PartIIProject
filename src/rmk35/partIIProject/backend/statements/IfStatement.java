@@ -7,6 +7,9 @@ import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.runtimeValues.BooleanValue;
 import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
+import lombok.ToString;
+
+@ToString
 public class IfStatement extends Statement
 { Statement predicate;
   Statement trueCase;

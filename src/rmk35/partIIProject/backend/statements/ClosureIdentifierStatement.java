@@ -6,9 +6,12 @@ import rmk35.partIIProject.backend.Definition;
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
+import lombok.ToString;
+
 /**
  * Closure variables are stored in the current object's field
  */
+@ToString
 public class ClosureIdentifierStatement extends IdentifierStatement
 { String name;
   String type;

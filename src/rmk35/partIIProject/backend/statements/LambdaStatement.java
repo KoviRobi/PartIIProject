@@ -8,6 +8,9 @@ import rmk35.partIIProject.backend.InnerClass;
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
+import lombok.ToString;
+
+@ToString
 public class LambdaStatement extends Statement
 { List<IdentifierValue> formals;
   List<IdentifierStatement> closureVariables;

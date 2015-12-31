@@ -8,6 +8,9 @@ import rmk35.partIIProject.backend.Definition;
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
+import lombok.ToString;
+
+@ToString
 public class NativeFieldStatement extends Statement
 { Class<?> classs;
   Field field;
