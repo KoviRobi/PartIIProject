@@ -1,22 +1,23 @@
-.PHONY: all frontend backend middle shared delombok
+.PHONY: all frontend backend middle shared parser delombok
 all: frontend backend middle shared
-frontend: delombok shared \
+frontend: parser delombok shared \
  out/rmk35/partIIProject/frontend/SchemeParser.class
 backend: delombok shared \
  out/rmk35/partIIProject/backend/JavaBytecodeGenerator.class
 middle: delombok shared \
  out/rmk35/partIIProject/middle/Interconnect.class
 shared: out/rmk35/partIIProject/InternalCompilerException.class
+parser: out/rmk35/partIIProject/frontend/SchemeFileLexer.java out/rmk35/partIIProject/frontend/SchemeFileParser.java
 delombok:
 	java -cp .:libraries/* -jar libraries/lombok.jar delombok --quiet src --target=out --classpath=.:libraries/* 2> /dev/null
 
 # TODO: Make check automatic
 .PHONY: frontendtest backendtest middletest tests
 frontendtest: frontend
-	cd out; java -cp .:../libraries/* rmk35.partIIProject.frontend.SchemeParser test.txt
+	cd out; java -cp .:../libraries/* rmk35.partIIProject.frontend.SchemeParser ../test.txt
 backendtest: backend
 	cd out; java -cp .:../libraries/* rmk35.partIIProject.backend.JavaBytecodeGenerator
-middletest: middle
+middletest: frontend middle
 	cd out; java -cp .:../libraries/* rmk35.partIIProject.middle.Interconnect
 tests: frontendtest backendtest middletest
 
@@ -30,8 +31,8 @@ release: all tests bugs
 out/%.class: out/%.java
 	cd out; javac -implicit:class -cp .:../libraries/* -g $*.java
 
-%BaseListener.java %Lexer.java %Listener.java %Parser.java: %.g4
-	java -jar libraries/antlr-4.5.1-complete.jar $<
+out/%BaseListener.java out/%Lexer.java out/%Listener.java out/%Parser.java: src/%.g4
+	cd src; java -jar ../libraries/antlr-4.5.1-complete.jar $*.g4 -o ../out
 
 %GrammarTest: %BaseListener.java %Lexer.java %Listener.java %Parser.java
 	javac -cp .:libraries/* $?

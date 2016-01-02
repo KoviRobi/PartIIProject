@@ -1,4 +1,9 @@
+package rmk35.partIIProject.middle.bindings;
+
+import lombok.Value;
+
+@Value
 public class LambdaBinding implements Binding
-{ @Value List<String> formals;
-  @Value Statement body;
+{ List<String> formals;
+  Statement body;
 }

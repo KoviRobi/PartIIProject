@@ -4,11 +4,15 @@ import rmk35.partIIProject.middle.AST;
 import rmk35.partIIProject.middle.ASTVisitor;
 import rmk35.partIIProject.backend.statements.Statement;
 
-public class SchemeAbbreviation implements AST
+public class SchemeAbbreviation implements SchemeObject
 { String value;
   
   public SchemeAbbreviation(String prefix, Object datum, String file, long line, long character)
   { value = prefix + datum.toString();
+  }
+
+  public boolean mutable()
+  { return false;
   }
 
   public boolean eqv(Object other)

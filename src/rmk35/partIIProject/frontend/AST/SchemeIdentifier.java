@@ -21,11 +21,15 @@ public class SchemeIdentifier implements AST
   }
 
   public String toString()
-  { return identifier;
+  { return identifier; // This may change, hence separate getData
   }
 
   @Override
   public Statement accept(ASTVisitor visitor)
   { return visitor.visit(this);
+  }
+
+  public String getData()
+  { return identifier;
   }
 }
