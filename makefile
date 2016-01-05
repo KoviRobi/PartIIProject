@@ -3,7 +3,11 @@ all: frontend backend middle shared
 frontend: parser delombok shared \
  out/rmk35/partIIProject/frontend/SchemeParser.class
 backend: delombok shared \
- out/rmk35/partIIProject/backend/JavaBytecodeGenerator.class
+ out/rmk35/partIIProject/backend/JavaBytecodeGenerator.class \
+ out/rmk35/partIIProject/backend/runtimeValues/LambdaValue.class \
+ out/rmk35/partIIProject/backend/runtimeValues/RuntimeValue.class \
+ out/rmk35/partIIProject/backend/runtimeValues/NumberValue.class \
+ out/rmk35/partIIProject/backend/runtimeValues/BooleanValue.class
 middle: delombok frontend shared \
  out/rmk35/partIIProject/middle/Interconnect.class
 shared: out/rmk35/partIIProject/InternalCompilerException.class
