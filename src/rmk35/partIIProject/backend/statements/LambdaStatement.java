@@ -35,7 +35,7 @@ public class LambdaStatement extends Statement
     output.addToPrimaryMethod("  dup\n"); // For invokenonvirtual, need 'this' pointer
     output.incrementStackCount(1);
     // FIXME: Pass in closure variables here to the constructor
-    innerClass.invokeConstructor(definitions, macros, output);
+    innerClass.invokeConstructor(output);
     // FIXME: delete output.addToPrimaryMethod("  invokenonvirtual " + innerClassName + "/<init>()V\n");
     output.decrementStackCount(1);
     output.addToPrimaryMethod("\n");

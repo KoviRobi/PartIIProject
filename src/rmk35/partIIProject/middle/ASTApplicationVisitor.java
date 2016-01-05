@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 @Value
-public class ASTApplicationVisitor implements ASTVisitor
+public class ASTApplicationVisitor implements ASTVisitor<Statement>
 { Environment environment;
   List<AST> application;
 
