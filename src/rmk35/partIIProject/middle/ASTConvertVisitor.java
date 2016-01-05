@@ -21,6 +21,10 @@ import java.util.List;
 public class ASTConvertVisitor implements ASTVisitor
 { Environment environment;
 
+  public ASTConvertVisitor(Environment environment)
+  { this.environment =  environment;
+  }
+
   @Override
   public Statement visit(SchemeList list)
   { List<AST> innerList = list.getData();

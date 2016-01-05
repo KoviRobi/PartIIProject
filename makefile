@@ -4,7 +4,7 @@ frontend: parser delombok shared \
  out/rmk35/partIIProject/frontend/SchemeParser.class
 backend: delombok shared \
  out/rmk35/partIIProject/backend/JavaBytecodeGenerator.class
-middle: delombok shared \
+middle: delombok frontend shared \
  out/rmk35/partIIProject/middle/Interconnect.class
 shared: out/rmk35/partIIProject/InternalCompilerException.class
 parser: out/rmk35/partIIProject/frontend/SchemeFileLexer.java out/rmk35/partIIProject/frontend/SchemeFileParser.java

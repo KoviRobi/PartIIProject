@@ -1,10 +1,11 @@
 package rmk35.partIIProject.backend.statements;
 
+import java.util.Collection;
+import java.util.TreeSet;
 import java.util.Map;
 import rmk35.partIIProject.backend.Macro;
 import rmk35.partIIProject.backend.Definition;
 import rmk35.partIIProject.backend.OutputClass;
-import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
 import lombok.ToString;
 
@@ -19,9 +20,7 @@ public class LocalIdentifierStatement extends IdentifierStatement
   }
 
   @Override
-  public void generateOutput(Map<IdentifierValue, Definition> definitions,
-                             Map<IdentifierValue, Macro> macros,
-                             OutputClass output)
+  public void generateOutput(OutputClass output)
   { output.addToPrimaryMethod("  ; LocalIdentifier Get\n");
     if (localIndex < 4)
     { output.addToPrimaryMethod("  aload_" + localIndex + "\n");
@@ -34,9 +33,7 @@ public class LocalIdentifierStatement extends IdentifierStatement
 
   /* Assumes variable to set to is on top of the stack */
   @Override
-  public void generateSetOutput(Map<IdentifierValue, Definition> definitions,
-                                Map<IdentifierValue, Macro> macros,
-                                OutputClass output)
+  public void generateSetOutput(OutputClass output)
   { output.addToPrimaryMethod("  ; LocalIdentifier Set\n");
     if (localIndex < 4)
     { output.addToPrimaryMethod("  astore_" + localIndex + "\n");
@@ -50,5 +47,10 @@ public class LocalIdentifierStatement extends IdentifierStatement
   @Override
   public String getName()
   { return name;
+  }
+
+  @Override
+  public Collection<String> getFreeIdentifiers()
+  { return new TreeSet<String>();
   }
 }

@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
 import rmk35.partIIProject.backend.statements.IdentifierStatement;
-import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
 public class InnerClass extends OutputClass
 { String name;
@@ -108,11 +107,9 @@ public class InnerClass extends OutputClass
   { return mainClass;
   }
 
-  public void invokeConstructor(Map<IdentifierValue, Definition> definitions,
-                                Map<IdentifierValue, Macro> macros,
-                                OutputClass output)
+  public void invokeConstructor(OutputClass output)
   { for (IdentifierStatement identifier : closureVariables)
-    { identifier.generateOutput(definitions, macros, output);
+    { identifier.generateOutput(output);
     }
     output.addToPrimaryMethod("  invokenonvirtual " + getName() + "/<init>(" + constructorTypes(closureVariables) + ")V\n");
 

@@ -1,10 +1,11 @@
 package rmk35.partIIProject.backend.statements;
 
+import java.util.Collection;
+import java.util.TreeSet;
 import java.util.Map;
 import rmk35.partIIProject.backend.Macro;
 import rmk35.partIIProject.backend.Definition;
 import rmk35.partIIProject.backend.OutputClass;
-import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
 import lombok.ToString;
 
@@ -20,9 +21,7 @@ public class RuntimeValueStatement extends Statement
     this.constructorArgumentTypes = constructorArgumentTypes;
   }
 
-  public void generateOutput(Map<IdentifierValue, Definition> definitions,
-                                      Map<IdentifierValue, Macro> macros,
-                                      OutputClass output)
+  public void generateOutput(OutputClass output)
   { output.addToPrimaryMethod("  ; RuntimeValueStatement\n");
     output.addToPrimaryMethod("  new  rmk35/partIIProject/backend/runtimeValues/" + type.getSimpleName() + "\n");
     output.incrementStackCount(1);
@@ -33,5 +32,10 @@ public class RuntimeValueStatement extends Statement
     output.addToPrimaryMethod("  invokenonvirtual rmk35/partIIProject/backend/runtimeValues/" + type.getSimpleName() + "/<init>(" + String.join("", constructorArgumentTypes) + ")V\n");
     output.decrementStackCount(1 + constructorArgumentTypes.length);
     output.addToPrimaryMethod("\n");
+  }
+
+  @Override
+  public Collection<String> getFreeIdentifiers()
+  { return new TreeSet<String>();
   }
 }

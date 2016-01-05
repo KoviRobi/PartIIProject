@@ -1,13 +1,14 @@
 package rmk35.partIIProject.backend.statements;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.TreeSet;
 import java.util.Map;
-import java.util.List;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import rmk35.partIIProject.backend.Macro;
 import rmk35.partIIProject.backend.Definition;
 import rmk35.partIIProject.backend.OutputClass;
-import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
 import lombok.ToString;
 
@@ -32,13 +33,11 @@ public class JavaCallStatement extends Statement
     if (method == null) throw new NoSuchMethodException();
   }
 
-  public void generateOutput(Map<IdentifierValue, Definition> definitions,
-                                      Map<IdentifierValue, Macro> macros,
-                                      OutputClass output)
+  public void generateOutput(OutputClass output)
   { output.addToPrimaryMethod("  ; JavaCallStatement\n");
-    field.generateOutput(definitions, macros, output);
+    field.generateOutput(output);
     for (Statement s : parameters)
-    { s.generateOutput(definitions, macros, output);
+    { s.generateOutput(output);
     }
 
     // Create invokation
@@ -59,5 +58,14 @@ public class JavaCallStatement extends Statement
     { output.addToPrimaryMethod("  aconst_null\n"); // Which we always ensure
     }
     output.addToPrimaryMethod("\n");
+  }
+
+  @Override
+  public Collection<String> getFreeIdentifiers()
+  { Collection<String> returnValue = new TreeSet<>();
+    Arrays.asList(parameters).parallelStream()
+                              .map(statement -> statement.getFreeIdentifiers())
+                              .forEach(collection -> returnValue.addAll(collection));
+    return returnValue;
   }
 }

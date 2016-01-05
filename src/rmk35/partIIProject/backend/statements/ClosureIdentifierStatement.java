@@ -1,10 +1,11 @@
 package rmk35.partIIProject.backend.statements;
 
+import java.util.Collection;
+import java.util.TreeSet;
 import java.util.Map;
 import rmk35.partIIProject.backend.Macro;
 import rmk35.partIIProject.backend.Definition;
 import rmk35.partIIProject.backend.OutputClass;
-import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
 import lombok.ToString;
 
@@ -23,9 +24,7 @@ public class ClosureIdentifierStatement extends IdentifierStatement
   }
 
   @Override
-  public void generateOutput(Map<IdentifierValue, Definition> definitions,
-                             Map<IdentifierValue, Macro> macros,
-                             OutputClass output)
+  public void generateOutput(OutputClass output)
   { output.addToPrimaryMethod("  ; ClosureIdentifierStatement Get\n");
     output.addToPrimaryMethod("  aload_0\n"); // 'this', the current object
     output.incrementStackCount(1);
@@ -35,9 +34,7 @@ public class ClosureIdentifierStatement extends IdentifierStatement
   }
 
   @Override
-  public void generateSetOutput(Map<IdentifierValue, Definition> definitions,
-                                Map<IdentifierValue, Macro> macros,
-                                OutputClass output)
+  public void generateSetOutput(OutputClass output)
   { output.addToPrimaryMethod("  ; ClosureIdentifierStatement Set\n");
     output.ensureFieldExists("private", name, type);
     output.addToPrimaryMethod("  aload_0\n"); // 'this', the current object
@@ -50,5 +47,12 @@ public class ClosureIdentifierStatement extends IdentifierStatement
   @Override
   public String getName()
   { return name;
+  }
+
+  @Override
+  public Collection<String> getFreeIdentifiers()
+  { Collection<String> returnValue = new TreeSet<>();
+    returnValue.add(getName());
+    return returnValue;
   }
 }

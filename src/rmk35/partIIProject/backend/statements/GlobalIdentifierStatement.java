@@ -1,10 +1,11 @@
 package rmk35.partIIProject.backend.statements;
 
+import java.util.Collection;
+import java.util.TreeSet;
 import java.util.Map;
 import rmk35.partIIProject.backend.Macro;
 import rmk35.partIIProject.backend.Definition;
 import rmk35.partIIProject.backend.OutputClass;
-import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
 import lombok.ToString;
 
@@ -20,9 +21,7 @@ public class GlobalIdentifierStatement extends IdentifierStatement
   }
 
   @Override
-  public void generateOutput(Map<IdentifierValue, Definition> definitions,
-                             Map<IdentifierValue, Macro> macros,
-                             OutputClass output)
+  public void generateOutput(OutputClass output)
   { output.addToPrimaryMethod("  ; GlobalIdentifierStatement Get\n");
     output.addToPrimaryMethod("  getstatic " + output.getMainClass().getName() + "/" + name + " " + type + "\n");
     output.incrementStackCount(1);
@@ -30,9 +29,7 @@ public class GlobalIdentifierStatement extends IdentifierStatement
   }
 
   @Override
-  public void generateSetOutput(Map<IdentifierValue, Definition> definitions,
-                                Map<IdentifierValue, Macro> macros,
-                                OutputClass output)
+  public void generateSetOutput(OutputClass output)
   { output.addToPrimaryMethod("  ; GlobalIdentifierStatement Set\n");
     output.ensureFieldExists("private static", name, type);
     output.addToPrimaryMethod("  putstatic " + output.getMainClass().getName() + "/" + name + " " + type + "\n");
@@ -43,5 +40,10 @@ public class GlobalIdentifierStatement extends IdentifierStatement
   @Override
   public String getName()
   { return name;
+  }
+
+  @Override
+  public Collection<String> getFreeIdentifiers()
+  { return new TreeSet<String>();
   }
 }

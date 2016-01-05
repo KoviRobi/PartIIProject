@@ -1,12 +1,13 @@
 package rmk35.partIIProject.backend.statements;
 
+import java.util.Collection;
+import java.util.TreeSet;
 import java.util.Map;
 import java.util.List;
 import java.lang.reflect.Field;
 import rmk35.partIIProject.backend.Macro;
 import rmk35.partIIProject.backend.Definition;
 import rmk35.partIIProject.backend.OutputClass;
-import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
 import lombok.ToString;
 
@@ -20,9 +21,7 @@ public class NativeFieldStatement extends Statement
     this.field =  this.classs.getField(field);
   }
 
-  public void generateOutput(Map<IdentifierValue, Definition> definitions,
-                                      Map<IdentifierValue, Macro> macros,
-                                      OutputClass output)
+  public void generateOutput(OutputClass output)
   { output.addToPrimaryMethod("  ; NativeFieldStatement\n");
     output.addToPrimaryMethod("  getstatic " +
       classs.getName().replaceAll("\\.", "/") + "/" + field.getName() +
@@ -56,5 +55,10 @@ public class NativeFieldStatement extends Statement
     } else
     { return "L" + typeName.replaceAll("\\.", "/") + ";";
     }
+  }
+
+  @Override
+  public Collection<String> getFreeIdentifiers()
+  { return new TreeSet<String>();
   }
 }

@@ -1,10 +1,11 @@
 package rmk35.partIIProject.backend.statements;
 
+import java.util.Collection;
+import java.util.TreeSet;
 import java.util.Map;
 import rmk35.partIIProject.backend.Macro;
 import rmk35.partIIProject.backend.Definition;
 import rmk35.partIIProject.backend.OutputClass;
-import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
 import lombok.ToString;
 
@@ -18,17 +19,20 @@ public class SetStatement extends Statement
     this.value = value;
   }
 
-  public void generateOutput(Map<IdentifierValue, Definition> definitions,
-                             Map<IdentifierValue, Macro> macros,
-                             OutputClass output)
+  public void generateOutput(OutputClass output)
   { output.addToPrimaryMethod("  ; SetStatement\n");
     if (value == null)
     { output.addToPrimaryMethod("  aconst_null\n");
     } else
-    { value.generateOutput(definitions, macros, output);
+    { value.generateOutput(output);
     }
     output.incrementStackCount(1);
-    variable.generateSetOutput(definitions, macros, output); // Decrements stack count
+    variable.generateSetOutput(output); // Decrements stack count
     output.addToPrimaryMethod("\n");
+  }
+
+  @Override
+  public Collection<String> getFreeIdentifiers()
+  { return new TreeSet<String>();
   }
 }

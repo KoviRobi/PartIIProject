@@ -1,17 +1,18 @@
 package rmk35.partIIProject.backend.statements;
 
+import java.util.Collection;
 import java.util.Map;
 import rmk35.partIIProject.backend.Macro;
 import rmk35.partIIProject.backend.Definition;
 import rmk35.partIIProject.backend.OutputClass;
-import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
 import lombok.ToString;
 
 @ToString
 public abstract class Statement
-{ // FIXME: Do we actually need definitions?
-  public abstract void generateOutput(Map<IdentifierValue, Definition> definitions,
-                                      Map<IdentifierValue, Macro> macros,
-                                      OutputClass output);
+{ public abstract void generateOutput(OutputClass output);
+  // Gets the free variables that need to be copied to the closure
+  // Note, this excludes the globals, as they are not copied into the closure
+  // And also the locals, as they are already copied at application time
+  public abstract Collection<String> getFreeIdentifiers();
 }

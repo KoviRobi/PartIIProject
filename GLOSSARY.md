@@ -2,6 +2,7 @@
   - SchemeObject: Something that ends up being a value, such as a vector or a quotation.
 
 * rmk35.partIIProject.middle
+ - bindings.SyntaxStatement: Also called special forms, for example (lambda (x) x) has lambda as a special form
 
 * rmk35.partIIProject.backend
   - Statement: Input datastructure from front-end, superclass is Statement

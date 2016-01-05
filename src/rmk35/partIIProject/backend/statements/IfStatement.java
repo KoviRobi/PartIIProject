@@ -1,11 +1,12 @@
 package rmk35.partIIProject.backend.statements;
 
+import java.util.Collection;
+import java.util.TreeSet;
 import java.util.Map;
 import rmk35.partIIProject.backend.Macro;
 import rmk35.partIIProject.backend.Definition;
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.runtimeValues.BooleanValue;
-import rmk35.partIIProject.backend.runtimeValues.IdentifierValue;
 
 import lombok.ToString;
 
@@ -21,14 +22,12 @@ public class IfStatement extends Statement
     this.falseCase = falseCase;
   }
 
-  public void generateOutput(Map<IdentifierValue, Definition> definitions,
-                             Map<IdentifierValue, Macro> macros,
-                             OutputClass output)
+  public void generateOutput(OutputClass output)
   { output.addToPrimaryMethod("  ; IfStatement\n");
-    predicate.generateOutput(definitions, macros, output);
+    predicate.generateOutput(output);
     // Top of stack is now predicate's value
     // XXX Speed: if we make booleans unique, we could use "if_acmpeq" to compare false
-    (new RuntimeValueStatement("0", BooleanValue.class, new String[] {"Z"})).generateOutput(definitions, macros, output);
+    (new RuntimeValueStatement("0", BooleanValue.class, new String[] {"Z"})).generateOutput(output);
     output.addToPrimaryMethod("  invokeinterface rmk35/partIIProject/backend/runtimeValues/RuntimeValue/eq(Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;)Z 2\n");
     output.decrementStackCount(1); // Values compared for equality popped, result pushed
 
@@ -38,13 +37,22 @@ public class IfStatement extends Statement
     String endLabel = "IfEnd" + uniqueID;
     output.addToPrimaryMethod("  ifne " + falseLabel + "\n"); // ifne branches if 0, but 0 is boolean false
     output.decrementStackCount(1); // Boolean popped
-    trueCase.generateOutput(definitions, macros, output);
+    trueCase.generateOutput(output);
     output.addToPrimaryMethod("  goto " + endLabel + "\n");
 
     output.addToPrimaryMethod(falseLabel + ":\n");
-    falseCase.generateOutput(definitions, macros, output);
+    falseCase.generateOutput(output);
 
     output.addToPrimaryMethod(endLabel + ":\n");
     output.addToPrimaryMethod("\n");
+  }
+
+  @Override
+  public Collection<String> getFreeIdentifiers()
+  { Collection<String> returnValue = new TreeSet<>();
+    returnValue.addAll(predicate.getFreeIdentifiers());
+    returnValue.addAll(trueCase.getFreeIdentifiers());
+    returnValue.addAll(falseCase.getFreeIdentifiers());
+    return returnValue;
   }
 }

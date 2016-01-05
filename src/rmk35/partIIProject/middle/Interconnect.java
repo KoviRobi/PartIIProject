@@ -28,6 +28,6 @@ public class Interconnect
   public static void main(String[] arguments)
   { System.out.println
     (ASTToStatement
-      (SchemeParser.parseString("(foo bar baz)").get(0)) );
+      (SchemeParser.parseString("(lambda (x y z) foo bar baz)").get(0)) );
   }
 }
