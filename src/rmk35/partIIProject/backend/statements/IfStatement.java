@@ -3,8 +3,6 @@ package rmk35.partIIProject.backend.statements;
 import java.util.Collection;
 import java.util.TreeSet;
 import java.util.Map;
-import rmk35.partIIProject.backend.Macro;
-import rmk35.partIIProject.backend.Definition;
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.runtimeValues.BooleanValue;
 

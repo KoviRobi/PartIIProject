@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.TreeSet;
 import java.util.List;
 import java.util.Map;
-import rmk35.partIIProject.backend.Macro;
-import rmk35.partIIProject.backend.Definition;
 import rmk35.partIIProject.backend.InnerClass;
 import rmk35.partIIProject.backend.OutputClass;
 

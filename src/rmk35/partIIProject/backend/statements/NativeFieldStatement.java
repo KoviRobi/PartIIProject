@@ -5,8 +5,6 @@ import java.util.TreeSet;
 import java.util.Map;
 import java.util.List;
 import java.lang.reflect.Field;
-import rmk35.partIIProject.backend.Macro;
-import rmk35.partIIProject.backend.Definition;
 import rmk35.partIIProject.backend.OutputClass;
 
 import lombok.ToString;
