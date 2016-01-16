@@ -1,6 +1,6 @@
 package rmk35.partIIProject.frontend.AST;
 
-import rmk35.partIIProject.frontend.SchemeParserException;
+import rmk35.partIIProject.SyntaxErrorException;
 
 import rmk35.partIIProject.middle.AST;
 import rmk35.partIIProject.middle.ASTVisitor;
@@ -10,8 +10,11 @@ public class SchemeCharacter extends SchemeEquality implements SchemeObject
 { public boolean mutable() { return false; }
 
   char value;
+  String file;
+  long line;
+  long character;
 
-  public SchemeCharacter(String text, String file, long line, long character)
+  public SchemeCharacter(String text, String file, long line, long character) throws SyntaxErrorException
   { if (text.length() == 3)
     { value = text.charAt(3);
     } else if (text.startsWith("#\\x"))
@@ -35,8 +38,11 @@ public class SchemeCharacter extends SchemeEquality implements SchemeObject
     } else if (text.equals("#\\tab"))
     { value = '\t';
     } else
-    { throw new SchemeParserException("Failed to parse \"" + text + "\"", file, line, character);
+    { throw new SyntaxErrorException("Failed to parse \"" + text + "\"", file, line, character);
     }
+    this.file = file;
+    this.line = line;
+    this.character = character;
   }
 
   public boolean eqv(Object other)
@@ -58,7 +64,11 @@ public class SchemeCharacter extends SchemeEquality implements SchemeObject
   }
 
   @Override
-  public Statement accept(ASTVisitor visitor)
+  public <T> T accept(ASTVisitor<T> visitor) throws SyntaxErrorException
   { return visitor.visit(this);
   }
+
+  public String file() { return file; }
+  public long line() { return line; }
+  public long character() { return character; }
 }

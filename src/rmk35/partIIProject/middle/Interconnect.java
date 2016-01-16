@@ -8,6 +8,9 @@ import rmk35.partIIProject.middle.bindings.SyntaxBinding;
 import rmk35.partIIProject.backend.runtimeValues.*;
 import rmk35.partIIProject.backend.statements.*;
 
+import java.util.List;
+import java.util.ArrayList;
+
 public class Interconnect
 { static Environment InitialEnvironment;
   static Binding LambdaSyntaxBinding;
@@ -20,14 +23,21 @@ public class Interconnect
     InitialEnvironment.addBinding("lambda", LambdaSyntaxBinding);
   }
 
-  public static Statement ASTToStatement(AST syntax)
-  { ASTVisitor visitor = new ASTConvertVisitor(InitialEnvironment);
-    return syntax.accept(visitor);
+  public static List<Statement> ASTsToStatements(List<AST> datum)
+  { List<Statement> returnValue = new ArrayList<>(datum.size());
+    ASTConvertVisitor visitor = new ASTConvertVisitor(InitialEnvironment);
+
+    for (AST ast : datum)
+    { // Holds state of the environment
+      returnValue.add(ast.accept(visitor));
+    }
+
+    return returnValue;
   }
 
   public static void main(String[] arguments)
   { System.out.println
-    (ASTToStatement
-      (SchemeParser.parseString("(lambda (x y z) foo bar baz)").get(0)) );
+    (ASTsToStatements
+      (SchemeParser.parseString(arguments[0])) );
   }
 }

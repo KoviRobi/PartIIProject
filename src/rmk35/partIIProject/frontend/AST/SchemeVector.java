@@ -1,5 +1,7 @@
 package rmk35.partIIProject.frontend.AST;
 
+import rmk35.partIIProject.SyntaxErrorException;
+
 import java.util.List;
 
 import rmk35.partIIProject.middle.AST;
@@ -8,8 +10,15 @@ import rmk35.partIIProject.backend.statements.Statement;
 
 public class SchemeVector implements SchemeObject
 { Object[] data;
+  String file;
+  long line;
+  long character;
+
   public SchemeVector(Object[] data, String file, long line, long character)
   { this.data = data;
+    this.file = file;
+    this.line = line;
+    this.character = character;
   }
 
   @Override
@@ -36,7 +45,11 @@ public class SchemeVector implements SchemeObject
   }
 
   @Override
-  public Statement accept(ASTVisitor visitor)
+  public <T> T accept(ASTVisitor<T> visitor) throws SyntaxErrorException
   { return visitor.visit(this);
   }
+
+  public String file() { return file; }
+  public long line() { return line; }
+  public long character() { return character; }
 }

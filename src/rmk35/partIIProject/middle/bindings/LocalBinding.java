@@ -14,4 +14,14 @@ public class LocalBinding implements Binding
   public Statement toStatement()
   { return new LocalIdentifierStatement(identifier, localIndex);
   }
+
+  @Override
+  public boolean shouldSaveToClosure()
+  { return false;
+  }
+
+  @Override
+  public Binding subEnvironment()
+  { return new ClosureBinding(identifier);
+  }
 }

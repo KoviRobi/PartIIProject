@@ -13,4 +13,14 @@ public class GlobalBinding implements Binding
   public Statement toStatement()
   { return new GlobalIdentifierStatement(identifier);
   }
+
+  @Override
+  public boolean shouldSaveToClosure()
+  { return false;
+  }
+
+  @Override
+  public Binding subEnvironment()
+  { return this;
+  }
 }

@@ -1,5 +1,16 @@
+javac =  javac
+java = java
+jdb = jdb
+newwin = win
+classpath = -classpath .:../libraries/* 
+javacflags = -implicit:class $(classpath) -g -Xlint:unchecked
+javaflags = $(classpath)
+jdbflags = -launch $(classpath)
+runcommand = $(java) $(javaflags)
+#runcommand = $(newwin) $(jdb) $(jdbflags)
+
 .PHONY: all frontend backend middle shared parser delombok
-all: frontend backend middle shared
+all: frontend backend middle shared out/rmk35/partIIProject/main.class
 frontend: parser delombok shared \
  out/rmk35/partIIProject/frontend/SchemeParser.class
 backend: delombok shared \
@@ -13,16 +24,16 @@ middle: delombok frontend shared \
 shared: out/rmk35/partIIProject/InternalCompilerException.class
 parser: out/rmk35/partIIProject/frontend/SchemeFileLexer.java out/rmk35/partIIProject/frontend/SchemeFileParser.java
 delombok:
-	java -cp .:libraries/* -jar libraries/lombok.jar delombok --quiet src --target=out --classpath=.:libraries/* 2> /dev/null
+	java -cp .:libraries/* -jar libraries/lombok.jar delombok --quiet src --target=out --classpath=.:libraries/*
 
 # TODO: Make check automatic
 .PHONY: frontendtest backendtest middletest tests
 frontendtest: frontend
-	cd out; java -cp .:../libraries/* rmk35.partIIProject.frontend.SchemeParser ../test.txt
+	cd out; $(runcommand) rmk35.partIIProject.frontend.SchemeParser ../test.txt
 backendtest: backend
-	cd out; java -cp .:../libraries/* rmk35.partIIProject.backend.JavaBytecodeGenerator
+	cd out; $(runcommand) rmk35.partIIProject.backend.JavaBytecodeGenerator
 middletest: frontend middle
-	cd out; java -cp .:../libraries/* rmk35.partIIProject.middle.Interconnect
+	cd out; $(runcommand) rmk35.partIIProject.middle.Interconnect
 tests: frontendtest backendtest middletest
 
 .PHONY: bugs
@@ -33,13 +44,13 @@ bugs:
 release: all tests bugs
 
 out/%.class: out/%.java
-	cd out; javac -implicit:class -cp .:../libraries/* -g $*.java
+	cd out; $(javac) $(javacflags) $*.java
 
 out/%BaseListener.java out/%Lexer.java out/%Listener.java out/%Parser.java: src/%.g4
 	cd src; java -jar ../libraries/antlr-4.5.1-complete.jar $*.g4 -o ../out
 
 %GrammarTest: %BaseListener.java %Lexer.java %Listener.java %Parser.java
-	javac -cp .:libraries/* $?
+	$(javac) $(javaflags) $?
 	java -cp .:libraries/* org.antlr.v4.gui.TestRig $* datum -gui
 
 # Dependency graph removed as lombok updates the timestamps, so we will

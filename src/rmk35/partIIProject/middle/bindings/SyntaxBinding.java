@@ -10,4 +10,14 @@ public class SyntaxBinding implements Binding
   public Statement toStatement()
   { throw new UnsupportedOperationException("Don't know how to turn a SyntaxBinding to a Statement, ToDo?");
   }
+
+  @Override
+  public boolean shouldSaveToClosure()
+  { return false;
+  }
+
+  @Override
+  public Binding subEnvironment()
+  { return this;
+  }
 }
