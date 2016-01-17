@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class ASTLambdaFormalsVisitor implements ASTVisitor<List<String>>
+public class ASTLambdaFormalsVisitor extends ASTVisitor<List<String>>
 { private List<String> returnList; // NOTE: returnList get mutated when visiting a list, this is quite subtle and is bad design
 
   public ASTLambdaFormalsVisitor()

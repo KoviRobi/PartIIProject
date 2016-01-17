@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 @Value
-public class ASTApplicationVisitor implements ASTVisitor<Statement>
+public class ASTApplicationVisitor extends ASTVisitor<Statement>
 { Environment environment;
   List<AST> application;
 

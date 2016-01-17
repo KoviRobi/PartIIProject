@@ -20,7 +20,7 @@ import java.util.List;
 /* This is the main visitor, it converts the frontend's AST to the backend's Statement */
 
 @Value
-public class ASTConvertVisitor implements ASTVisitor<Statement>
+public class ASTConvertVisitor extends ASTVisitor<Statement>
 { Environment environment; /* STATE */
 
   public ASTConvertVisitor(Environment environment)
