@@ -6,6 +6,7 @@ import rmk35.partIIProject.frontend.AST.SchemeLiteral;
 import rmk35.partIIProject.frontend.AST.SchemeList;
 import rmk35.partIIProject.frontend.AST.SchemeIdentifier;
 import rmk35.partIIProject.frontend.AST.SchemeLabelReference;
+import rmk35.partIIProject.frontend.AST.SchemeLabelledData;
 
 import rmk35.partIIProject.middle.bindings.Binding;
 
@@ -75,6 +76,10 @@ public class ASTApplicationVisitor implements ASTVisitor<Statement>
   }
 
   public Statement visit(SchemeLabelReference reference) throws SyntaxErrorException
-  { throw new SyntaxErrorException("Don't know how to apply a list as an operand", reference.file(), reference.line(), reference.character());
+  { throw new SyntaxErrorException("Don't know how to apply a label reference", reference.file(), reference.line(), reference.character());
+  }
+
+  public Statement visit(SchemeLabelledData data) throws SyntaxErrorException
+  { throw new SyntaxErrorException("Don't know how to handle non-literal labelled data", data.file(), data.line(), data.character());
   }
 }

@@ -4,6 +4,7 @@ import rmk35.partIIProject.SyntaxErrorException;
 
 import rmk35.partIIProject.frontend.AST.SchemeAbbreviation;
 import rmk35.partIIProject.frontend.AST.SchemeLabelReference;
+import rmk35.partIIProject.frontend.AST.SchemeLabelledData;
 import rmk35.partIIProject.frontend.AST.SchemeList;
 import rmk35.partIIProject.frontend.AST.SchemeIdentifier;
 import rmk35.partIIProject.frontend.AST.SchemeLiteral;
@@ -34,6 +35,10 @@ public class ASTLambdaFormalsVisitor implements ASTVisitor<List<String>>
 
   public List<String> visit(SchemeLabelReference reference)
   { throw new SyntaxErrorException("Don't know how to handle label reference as formal parameter.", reference.file(), reference.line(), reference.character());
+  }
+
+  public List<String> visit(SchemeLabelledData data)
+  { throw new SyntaxErrorException("Don't know how to handle labelled data as formal parameter.", data.file(), data.line(), data.character());
   }
 
   public List<String> visit(SchemeLiteral object)

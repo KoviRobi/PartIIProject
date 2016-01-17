@@ -1,10 +1,11 @@
 package rmk35.partIIProject.middle;
 
-import rmk35.partIIProject.InternalCompilerException;
+import rmk35.partIIProject.SyntaxErrorException;
 
 import rmk35.partIIProject.frontend.AST.SchemeLiteral;
 import rmk35.partIIProject.frontend.AST.SchemeList;
 import rmk35.partIIProject.frontend.AST.SchemeIdentifier;
+import rmk35.partIIProject.frontend.AST.SchemeLabelledData;
 import rmk35.partIIProject.frontend.AST.SchemeLabelReference;
 import rmk35.partIIProject.frontend.AST.SchemeSimpleNumber;
 
@@ -30,9 +31,8 @@ public class ASTConvertVisitor implements ASTVisitor<Statement>
   public Statement visit(SchemeList list)
   { List<AST> innerList = list.getData();
 
-    // FIXME: This is a user exception, not an internal one
     if (innerList.size() == 0)
-    { throw new InternalCompilerException("Application without operator or operands");
+    { throw new SyntaxErrorException("Application without operator or operands", list.file(), list.line(), list.character());
     } else
     { return innerList.get(0)
                       .accept(new ASTApplicationVisitor(environment, list.getData()));
@@ -49,13 +49,13 @@ public class ASTConvertVisitor implements ASTVisitor<Statement>
   { throw new UnsupportedOperationException();
   }
 
-  public Statement visit(SchemeSimpleNumber number)
-  { throw new UnsupportedOperationException("SchemeSimpleNumber");
+  @Override
+  public Statement visit(SchemeLabelReference reference)
+  { throw new SyntaxErrorException("Unexpected label reference", reference.file(), reference.line(), reference.character());
   }
 
   @Override
-  public Statement visit(SchemeLabelReference reference)
-  { throw new UnsupportedOperationException();
-    // This may actually be an error, if we convert SchemeLabelReferences to actual looping references
+  public Statement visit(SchemeLabelledData data)
+  { throw new SyntaxErrorException("Don't know how to handle labelled data in non-literal position", data.file(), data.line(), data.character());
   }
 }
