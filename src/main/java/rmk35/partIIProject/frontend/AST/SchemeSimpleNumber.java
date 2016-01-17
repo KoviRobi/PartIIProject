@@ -28,10 +28,6 @@ public class SchemeSimpleNumber extends SchemeNumber
            bigdec.equals(((SchemeSimpleNumber)other).bigdec):false;
   }
   
-  public boolean equal(Object other)
-  { return eqv(other);
-  }
-
   public String toString()
   { return bigdec.toString();
   }

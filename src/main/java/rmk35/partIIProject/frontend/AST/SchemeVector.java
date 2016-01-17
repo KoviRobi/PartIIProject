@@ -26,15 +26,6 @@ public class SchemeVector implements SchemeObject
   { return true;
   }
 
-  public boolean eqv(Object other)
-  { return other instanceof SchemeIdentifier?
-           true:false;
-  }
-  
-  public boolean equal(Object other)
-  { return eqv(other);
-  }
-
   public String toString()
   { StringBuilder sb = new StringBuilder();
     sb.append(" #( ");

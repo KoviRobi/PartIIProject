@@ -21,16 +21,6 @@ public class SchemeList implements AST
     this.character = character;
   }
 
-  // FIXME: do we actually need the comparison predicates?
-  public boolean eqv(AST other)
-  { return other instanceof SchemeIdentifier?
-           true:false;
-  }
-  
-  public boolean equal(AST other)
-  { return eqv(other);
-  }
-
   public String toString()
   { StringBuilder sb = new StringBuilder();
     sb.append(" ( ");

@@ -19,15 +19,6 @@ public class SchemeIdentifier implements AST
     this.character = character;
   }
 
-  public boolean eqv(Object other)
-  { return other instanceof SchemeIdentifier?
-           true:false;
-  }
-  
-  public boolean equal(Object other)
-  { return eqv(other);
-  }
-
   public String toString()
   { return identifier; // This may change, hence separate getData
   }

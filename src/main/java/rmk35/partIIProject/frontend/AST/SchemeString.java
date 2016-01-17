@@ -6,7 +6,7 @@ import rmk35.partIIProject.middle.AST;
 import rmk35.partIIProject.middle.ASTVisitor;
 import rmk35.partIIProject.backend.statements.Statement;
 
-public class SchemeString extends SchemeEquality implements SchemeObject
+public class SchemeString implements SchemeObject
 { public boolean mutable() { return false; }
 
   String value;
@@ -20,20 +20,6 @@ public class SchemeString extends SchemeEquality implements SchemeObject
     this.file = file;
     this.line = line;
     this.character = character;
-  }
-
-  public boolean eqv(Object other)
-  { if (this.eq(other))
-    { return true;
-    } else if (other instanceof SchemeString)
-    { return value.equals((SchemeString)other);
-    } else
-    { return false;
-    }
-  }
-
-  public boolean equal(Object other)
-  { return eqv(other);
   }
 
   public String toString()

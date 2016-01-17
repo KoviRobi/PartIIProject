@@ -27,15 +27,6 @@ public class SchemeLabelledData implements SchemeObject
   { return false;
   }
 
-  public boolean eqv(Object other)
-  { return other instanceof SchemeIdentifier?
-           true:false;
-  }
-  
-  public boolean equal(Object other)
-  { return eqv(other);
-  }
-
   public String toString()
   { return value;
   }
