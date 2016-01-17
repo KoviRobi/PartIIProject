@@ -11,9 +11,7 @@ import rmk35.partIIProject.backend.JavaBytecodeGenerator;
 import java.util.List;
 import java.io.IOException;
 
-import jasmin.Main as Jasmin;
-
-public class main
+public class App
 { public static void main(String[] arguments) throws IOException
   { if (arguments.length != 1)
     { System.out.println("Expecting only one argument, the file name to parse.");

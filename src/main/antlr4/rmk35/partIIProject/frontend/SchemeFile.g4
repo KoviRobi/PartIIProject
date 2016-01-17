@@ -1,8 +1,6 @@
 grammar SchemeFile;
 
 @header {
-package rmk35.partIIProject.frontend;
-
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Stack;

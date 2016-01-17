@@ -6,6 +6,7 @@ import rmk35.partIIProject.frontend.AST.SchemeObject;
 import rmk35.partIIProject.frontend.AST.SchemeList;
 import rmk35.partIIProject.frontend.AST.SchemeIdentifier;
 import rmk35.partIIProject.frontend.AST.SchemeLabelReference;
+import rmk35.partIIProject.frontend.AST.SchemeSimpleNumber;
 
 import rmk35.partIIProject.middle.bindings.Binding;
 
@@ -46,6 +47,10 @@ public class ASTConvertVisitor implements ASTVisitor<Statement>
   @Override
   public Statement visit(SchemeObject object)
   { throw new UnsupportedOperationException();
+  }
+
+  public Statement visit(SchemeSimpleNumber number)
+  { throw new UnsupportedOperationException("SchemeSimpleNumber");
   }
 
   @Override
