@@ -7,7 +7,8 @@ import rmk35.partIIProject.frontend.AST.SchemeList;
 import rmk35.partIIProject.frontend.AST.SchemeIdentifier;
 import rmk35.partIIProject.frontend.AST.SchemeLabelledData;
 import rmk35.partIIProject.frontend.AST.SchemeLabelReference;
-import rmk35.partIIProject.frontend.AST.SchemeSimpleNumber;
+// Literals
+import rmk35.partIIProject.frontend.AST.SchemeNumber;
 
 import rmk35.partIIProject.middle.bindings.Binding;
 
@@ -46,6 +47,11 @@ public class ASTConvertVisitor extends ASTVisitor<Statement>
 
   @Override
   public Statement visit(SchemeLiteral object)
+  { throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Statement visit(SchemeNumber number)
   { throw new UnsupportedOperationException();
   }
 

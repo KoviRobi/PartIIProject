@@ -7,7 +7,6 @@ import java.util.Stack;
 
 import rmk35.partIIProject.frontend.AST.SchemeBoolean;
 import rmk35.partIIProject.frontend.AST.SchemeNumber;
-import rmk35.partIIProject.frontend.AST.SchemeSimpleNumber;
 import rmk35.partIIProject.frontend.AST.SchemeCharacter;
 import rmk35.partIIProject.frontend.AST.SchemeString;
 import rmk35.partIIProject.frontend.AST.SchemeIdentifier;

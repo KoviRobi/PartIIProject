@@ -23,7 +23,7 @@ simpleDatum[String filename] returns [AST expr]
   ;
 
 bool[String filename] returns [SchemeBoolean expr] : Boolean { $expr = new SchemeBoolean($Boolean.text, $filename, $Boolean.line, $Boolean.pos); } ;
-number[String filename] returns [SchemeNumber expr]: Number { $expr = new SchemeSimpleNumber($Number.text, $filename, $Number.line, $Number.pos); } ;
+number[String filename] returns [SchemeNumber expr]: Number { $expr = new SchemeNumber($Number.text, $filename, $Number.line, $Number.pos); } ;
 character[String filename] returns [SchemeCharacter expr] : Character { $expr = new SchemeCharacter($Character.text, $filename, $Character.line, $Character.pos); } ;
 string[String filename] returns [SchemeString expr]: String { $expr = new SchemeString($String.text, "Filename unknown", $String.line, $String.pos); } ;
 symbol[String filename] returns [SchemeIdentifier expr] : Identifier { $expr = new SchemeIdentifier($Identifier.text, $filename, $Identifier.line, $Identifier.pos); } ;
