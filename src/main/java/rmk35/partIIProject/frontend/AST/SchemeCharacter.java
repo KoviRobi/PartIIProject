@@ -6,7 +6,7 @@ import rmk35.partIIProject.middle.AST;
 import rmk35.partIIProject.middle.ASTVisitor;
 import rmk35.partIIProject.backend.statements.Statement;
 
-public class SchemeCharacter implements SchemeObject
+public class SchemeCharacter implements SchemeLiteral
 { public boolean mutable() { return false; }
 
   char value;

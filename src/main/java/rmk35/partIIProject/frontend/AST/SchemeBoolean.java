@@ -6,7 +6,7 @@ import rmk35.partIIProject.middle.AST;
 import rmk35.partIIProject.middle.ASTVisitor;
 import rmk35.partIIProject.backend.statements.Statement;
 
-public class SchemeBoolean implements SchemeObject
+public class SchemeBoolean implements SchemeLiteral
 { public boolean mutable() { return false; }
 
   boolean value;

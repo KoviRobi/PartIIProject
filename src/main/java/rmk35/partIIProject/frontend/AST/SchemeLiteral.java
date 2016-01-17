@@ -4,6 +4,6 @@ import rmk35.partIIProject.middle.AST;
 
 /** These are autoquoting objects
  */
-public interface SchemeObject extends AST
+public interface SchemeLiteral extends AST
 { public boolean mutable();
 }

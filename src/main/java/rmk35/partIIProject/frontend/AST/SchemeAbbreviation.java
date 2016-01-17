@@ -6,7 +6,7 @@ import rmk35.partIIProject.middle.AST;
 import rmk35.partIIProject.middle.ASTVisitor;
 import rmk35.partIIProject.backend.statements.Statement;
 
-public class SchemeAbbreviation implements SchemeObject
+public class SchemeAbbreviation implements SchemeLiteral
 { String value;
   String file;
   long line;

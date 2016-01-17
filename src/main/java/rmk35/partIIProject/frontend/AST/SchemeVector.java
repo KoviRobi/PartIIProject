@@ -8,7 +8,7 @@ import rmk35.partIIProject.middle.AST;
 import rmk35.partIIProject.middle.ASTVisitor;
 import rmk35.partIIProject.backend.statements.Statement;
 
-public class SchemeVector implements SchemeObject
+public class SchemeVector implements SchemeLiteral
 { Object[] data;
   String file;
   long line;

@@ -6,7 +6,7 @@ import rmk35.partIIProject.middle.AST;
 import rmk35.partIIProject.middle.ASTVisitor;
 import rmk35.partIIProject.backend.statements.Statement;
 
-public class SchemeLabelledData implements SchemeObject
+public class SchemeLabelledData implements SchemeLiteral
 { String value;
   String file;
   long line;

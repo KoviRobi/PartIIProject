@@ -2,7 +2,7 @@ package rmk35.partIIProject.middle;
 
 import rmk35.partIIProject.InternalCompilerException;
 
-import rmk35.partIIProject.frontend.AST.SchemeObject;
+import rmk35.partIIProject.frontend.AST.SchemeLiteral;
 import rmk35.partIIProject.frontend.AST.SchemeList;
 import rmk35.partIIProject.frontend.AST.SchemeIdentifier;
 import rmk35.partIIProject.frontend.AST.SchemeLabelReference;
@@ -45,7 +45,7 @@ public class ASTConvertVisitor implements ASTVisitor<Statement>
   }
 
   @Override
-  public Statement visit(SchemeObject object)
+  public Statement visit(SchemeLiteral object)
   { throw new UnsupportedOperationException();
   }
 

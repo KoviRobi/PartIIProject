@@ -1,5 +1,5 @@
 package rmk35.partIIProject.frontend.AST;
 
-public abstract class SchemeNumber implements SchemeObject
+public abstract class SchemeNumber implements SchemeLiteral
 {
 }

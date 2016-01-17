@@ -2,7 +2,7 @@ package rmk35.partIIProject.middle;
 
 import rmk35.partIIProject.SyntaxErrorException;
 
-import rmk35.partIIProject.frontend.AST.SchemeObject;
+import rmk35.partIIProject.frontend.AST.SchemeLiteral;
 import rmk35.partIIProject.frontend.AST.SchemeList;
 import rmk35.partIIProject.frontend.AST.SchemeIdentifier;
 import rmk35.partIIProject.frontend.AST.SchemeLabelReference;
@@ -70,7 +70,7 @@ public class ASTApplicationVisitor implements ASTVisitor<Statement>
   { throw new SyntaxErrorException("Don't know how to apply a list as an operand", list.file(), list.line(), list.character());
   }
 
-  public Statement visit(SchemeObject abbreviation) throws SyntaxErrorException
+  public Statement visit(SchemeLiteral abbreviation) throws SyntaxErrorException
   { throw new SyntaxErrorException("Don't know how to apply a value as an operand", abbreviation.file(), abbreviation.line(), abbreviation.character());
   }
 

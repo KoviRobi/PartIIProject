@@ -6,7 +6,7 @@ import rmk35.partIIProject.middle.AST;
 import rmk35.partIIProject.middle.ASTVisitor;
 import rmk35.partIIProject.backend.statements.Statement;
 
-public class SchemeBytevector implements SchemeObject
+public class SchemeBytevector implements SchemeLiteral
 { Object[] value;
   String file;
   long line;
