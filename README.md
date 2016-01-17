@@ -2,19 +2,12 @@
 Cambridge Part II Project
 
 ## Front-end
-The entry point to the parser is SchemeParser.java
-To understand the parser, have a look at
-rmk35/partIIProject/frontend/SchemeFile.g4, it includes the other
-parts of the grammar, and uses parser actions to construct abstract
-syntax trees. The abstract syntax tree objects are under
-rmk35/partIIProject/frontend/AST/
-
-All AST items contain working versions of:
-  eq
-  eqv
-  equal
-  mutable
-  toString
+The entry point to the parser is SchemeParser.java To understand the
+parser, have a look at
+src/main/antlr4/rmk35/partIIProject/frontend/SchemeFile.g4, it
+includes the other parts of the grammar, and uses parser actions to
+construct abstract syntax trees. The abstract syntax tree objects are
+under src/main/java/rmk35/partIIProject/frontend/AST/
 
 ## Back-end
 To understand the back-end, start with JavaByteCodeGenerator, which
