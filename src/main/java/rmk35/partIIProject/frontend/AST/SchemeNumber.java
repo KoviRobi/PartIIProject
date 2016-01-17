@@ -20,7 +20,12 @@ public class SchemeNumber implements SchemeLiteral
     this.line = line;
     this.character = character;
   }
+
   public String toString()
+  { return number;
+  }
+
+  public String getData()
   { return number;
   }
 

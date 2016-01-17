@@ -13,6 +13,8 @@ import rmk35.partIIProject.frontend.AST.SchemeNumber;
 import rmk35.partIIProject.middle.bindings.Binding;
 
 import rmk35.partIIProject.backend.statements.Statement;
+import rmk35.partIIProject.backend.statements.RuntimeValueStatement;
+import rmk35.partIIProject.backend.runtimeValues.NumberValue;
 
 import lombok.Value;
 
@@ -52,7 +54,7 @@ public class ASTConvertVisitor extends ASTVisitor<Statement>
 
   @Override
   public Statement visit(SchemeNumber number)
-  { throw new UnsupportedOperationException();
+  { return new RuntimeValueStatement(number.getData(), NumberValue.class, new String[] {"I"});
   }
 
   @Override
