@@ -35,7 +35,7 @@ public class ASTConvertVisitor extends ASTVisitor<Statement>
   { List<AST> innerList = list.getData();
 
     if (innerList.size() == 0)
-    { throw new SyntaxErrorException("Application without operator or operands", list.file(), list.line(), list.character());
+    { throw new SyntaxErrorException("Don't know how to apply nothing", list.file(), list.line(), list.character());
     } else
     { return innerList.get(0)
                       .accept(new ASTApplicationVisitor(environment, list.getData()));
