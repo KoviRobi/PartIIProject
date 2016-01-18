@@ -23,9 +23,11 @@ public abstract class ASTVisitor<T>
   public abstract T visit(SchemeIdentifier identifier) throws SyntaxErrorException;
   public abstract T visit(SchemeLabelledData reference) throws SyntaxErrorException;
   public abstract T visit(SchemeLabelReference reference) throws SyntaxErrorException;
-  public abstract T visit(SchemeLiteral object) throws SyntaxErrorException;
+  // This is default access modifier, as below explicitly lists all literals, and if we add a new literal
+  // then this way we will get a static error rather than a dynamic
+  abstract T visit(SchemeLiteral object) throws SyntaxErrorException;
 
-  // SchemeObject subtypes, in case we want to specialise
+  // SchemeLiteral subtypes, in case we want to specialise
   public T visit(SchemeAbbreviation abbreviation) throws SyntaxErrorException { return visit((SchemeLiteral)abbreviation); }
   public T visit(SchemeBoolean booln) throws SyntaxErrorException { return visit((SchemeLiteral)booln); }
   public T visit(SchemeBytevector bytevector) throws SyntaxErrorException { return visit((SchemeLiteral)bytevector); }

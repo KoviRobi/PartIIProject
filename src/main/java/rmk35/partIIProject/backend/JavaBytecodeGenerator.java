@@ -19,6 +19,7 @@ public class JavaBytecodeGenerator
     return output;
   }
 
+// FIXME: Make this a proper test
   public static void main(String[] args) throws NoSuchFieldException, NoSuchMethodException, ClassNotFoundException, java.io.IOException
   { List<Statement> statements = new ArrayList<>();
 

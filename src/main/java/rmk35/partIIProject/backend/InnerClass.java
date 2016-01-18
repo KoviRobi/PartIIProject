@@ -112,7 +112,7 @@ public class InnerClass extends OutputClass
     { identifier.generateOutput(output);
     }
     output.addToPrimaryMethod("  invokenonvirtual " + getName() + "/<init>(" + constructorTypes(closureVariables) + ")V\n");
-
+    output.decrementStackCount(closureVariables.size() + 1);
   }
 
   public String storeArrayIntoLocals()

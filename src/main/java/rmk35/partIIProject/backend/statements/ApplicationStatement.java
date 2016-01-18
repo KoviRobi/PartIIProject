@@ -33,7 +33,6 @@ public class ApplicationStatement extends Statement
     output.addToPrimaryMethod("  invokenonvirtual java/util/ArrayList/<init>(I)V\n");
     output.decrementStackCount(2);
 
-    // FIXME: multiple arguments
     for (int i = 1; i < application.length; i++)
     { output.addToPrimaryMethod("  dup\n"); // Loop invariant is the list on the top of the stack
       output.incrementStackCount(1);

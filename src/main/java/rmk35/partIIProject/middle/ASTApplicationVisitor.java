@@ -32,6 +32,7 @@ public class ASTApplicationVisitor extends ASTVisitor<Statement>
 
   public Statement visit(SchemeIdentifier identifier) throws SyntaxErrorException
   { Binding head = environment.lookUp(identifier.getData());
+    // FIXME: Dispatch on head, rather than cond on it
     if (head == Interconnect.LambdaSyntaxBinding)
     { if (application.size() < 3)
       { throw new SyntaxErrorException("Too few elements to make a lambda.", identifier.file(), identifier.line(), identifier.character());
@@ -66,7 +67,6 @@ public class ASTApplicationVisitor extends ASTVisitor<Statement>
     }
   }
 
-  // FIXME: These are not internal exceptions, but are bad code
   public Statement visit(SchemeList list) throws SyntaxErrorException
   { throw new SyntaxErrorException("Don't know how to apply a list as an operand", list.file(), list.line(), list.character());
   }
