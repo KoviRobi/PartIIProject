@@ -1,9 +1,11 @@
 package rmk35.partIIProject.middle;
 
 import rmk35.partIIProject.SyntaxErrorException;
+import rmk35.partIIProject.InternalCompilerException;
 
 import rmk35.partIIProject.frontend.AST.SchemeLiteral;
-import rmk35.partIIProject.frontend.AST.SchemeList;
+import rmk35.partIIProject.frontend.AST.SchemeCons;
+import rmk35.partIIProject.frontend.AST.SchemeNil;
 import rmk35.partIIProject.frontend.AST.SchemeIdentifier;
 import rmk35.partIIProject.frontend.AST.SchemeLabelReference;
 import rmk35.partIIProject.frontend.AST.SchemeLabelledData;
@@ -23,62 +25,39 @@ import java.util.ArrayList;
 @Value
 public class ASTApplicationVisitor extends ASTVisitor<Statement>
 { Environment environment;
-  List<AST> application;
+  AST arguments;
 
-  public ASTApplicationVisitor(Environment environment, List<AST> application)
+  public ASTApplicationVisitor(Environment environment, AST arguments)
   { this.environment = environment;
-    this.application = application;
+    this.arguments = arguments;
   }
 
+  @Override
   public Statement visit(SchemeIdentifier identifier) throws SyntaxErrorException
-  { Binding head = environment.lookUp(identifier.getData());
-    // FIXME: Dispatch on head, rather than cond on it
-    if (head == Interconnect.LambdaSyntaxBinding)
-    { if (application.size() < 3)
-      { throw new SyntaxErrorException("Too few elements to make a lambda.", identifier.file(), identifier.line(), identifier.character());
-      } else
-      { Environment bodyEnvironment = new Environment(environment);
-        List<String> formals = application.get(1).accept(new ASTLambdaFormalsVisitor());
-        bodyEnvironment.addLocalVariables(formals);
-        Statement body = application.get(2).accept
-          (new ASTConvertVisitor(bodyEnvironment)); // ToDo: implicit begin
-
-        List<IdentifierStatement> closureVariables = new ArrayList<>();
-        // Look up in the current environment, as these will be used to get the be variable value
-        // to save them in the created function's closure
-        for (String variable : body.getFreeIdentifiers())
-        { if (bodyEnvironment.lookUp(variable).shouldSaveToClosure()) // Note the use of bodyEnvironment here and environment below
-          { closureVariables.add((IdentifierStatement)environment.lookUpAsStatement(variable));
-          }
-        }
-
-        return new LambdaStatement(formals, closureVariables, body);
-      }
-    } else if (head == Interconnect.LetSyntaxBinding)
-    { // Add a macro binding to the environment
-      // NEXT: environment.addBinding();
-      return null;
-    } else
-    { // Actual application, return an application statement
-      return new ApplicationStatement
-      (application.parallelStream()
-                  .map(ast -> ast.accept(new ASTConvertVisitor(environment)))
-                  .toArray(Statement[]::new));
-    }
+  { throw new UnsupportedOperationException("FIXME:");
   }
 
-  public Statement visit(SchemeList list) throws SyntaxErrorException
-  { throw new SyntaxErrorException("Don't know how to apply a list as an operand", list.file(), list.line(), list.character());
+  @Override
+  public Statement visit(SchemeNil nil)
+  { throw new SyntaxErrorException("Don't know how to apply nil", nil.file(), nil.line(), nil.character());
   }
 
+  @Override
+  public Statement visit(SchemeCons consCell) throws SyntaxErrorException
+  { return consCell.accept(new ASTConvertVisitor(environment));
+  }
+
+  @Override
   public Statement visit(SchemeLiteral abbreviation) throws SyntaxErrorException
   { throw new SyntaxErrorException("Don't know how to apply a value as an operand", abbreviation.file(), abbreviation.line(), abbreviation.character());
   }
 
+  @Override
   public Statement visit(SchemeLabelReference reference) throws SyntaxErrorException
   { throw new SyntaxErrorException("Don't know how to apply a label reference", reference.file(), reference.line(), reference.character());
   }
 
+  @Override
   public Statement visit(SchemeLabelledData data) throws SyntaxErrorException
   { throw new SyntaxErrorException("Don't know how to handle non-literal labelled data", data.file(), data.line(), data.character());
   }

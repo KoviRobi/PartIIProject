@@ -1,9 +1,9 @@
-* rmk35.partIIProject.frontend
-  - SchemeObject: Something that ends up being a value, such as a vector or a quotation.
+* rmk35.partIIProject.frontend.AST
+  - Here are the thing that may be parsed as data
 
 * rmk35.partIIProject.middle
- - bindings.SyntaxStatement: Also called special forms, for example (lambda (x) x) has lambda as a special form
-
+  - This contain the macro processor, which is also the engine that looks at keywords as Scheme has no resevered keywords
+  
 * rmk35.partIIProject.backend
   - Statement: Input datastructure from front-end, superclass is Statement
   - Value: Runtime value, output of the back-end, superclass is RuntimeValue

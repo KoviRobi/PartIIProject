@@ -5,7 +5,8 @@ import rmk35.partIIProject.SyntaxErrorException;
 import rmk35.partIIProject.frontend.AST.SchemeAbbreviation;
 import rmk35.partIIProject.frontend.AST.SchemeLabelReference;
 import rmk35.partIIProject.frontend.AST.SchemeLabelledData;
-import rmk35.partIIProject.frontend.AST.SchemeList;
+import rmk35.partIIProject.frontend.AST.SchemeCons;
+import rmk35.partIIProject.frontend.AST.SchemeNil;
 import rmk35.partIIProject.frontend.AST.SchemeIdentifier;
 import rmk35.partIIProject.frontend.AST.SchemeLiteral;
 
@@ -15,21 +16,29 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/* Note: this is not using the functional approach of walk/merge but rather
+   the mutation approach
+ */
 public class ASTLambdaFormalsVisitor extends ASTVisitor<List<String>>
-{ private List<String> returnList; // NOTE: returnList get mutated when visiting a list, this is quite subtle and is bad design
+{ private List<String> returnList; /* STATE */
 
   public ASTLambdaFormalsVisitor()
-  { returnList = new ArrayList<>(); // NOTE: returnList get mutated when visiting a list, this is quite subtle and is bad design
+  { returnList = new ArrayList<>(); // NOTE: returnList get mutated when visiting a list
   }
 
-  public List<String> visit(SchemeList list)
-  { List<AST> underlyingList = list.getData();
-    underlyingList.parallelStream().forEach(ast -> ast.accept(this));
-    return returnList; // NOTE: returnList get mutated when visiting a list, this is quite subtle and is bad design
+  public List<String> visit(SchemeCons consCell)
+  { consCell.car().accept(this);
+    consCell.cdr().accept(this);
+    return returnList;
+  }
+
+  @Override
+  public List<String> visit(SchemeNil nil)
+  { return returnList;
   }
 
   public List<String> visit(SchemeIdentifier identifier)
-  { returnList.add(identifier.getData()); // NOTE: returnList get mutated when visiting a list, this is quite subtle and is bad design
+  { returnList.add(identifier.getData()); // NOTE: returnList get mutated when visiting a list
     return returnList;
   }
 

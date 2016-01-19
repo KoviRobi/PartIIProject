@@ -49,16 +49,22 @@ compoundDatum[String filename] returns [AST expr]
   ;
 
 list[String filename]
-  returns [SchemeList expr]
-  locals [List<AST> acc]
+  returns [AST expr] // For example, '( . a) is just 'a  NOTE: this is a bug in Larceny ;)
+  locals [Stack<SchemeCons> acc, AST end]
   @init {
-   $acc = new LinkedList<>();
+   $acc = new  Stack<>();
   }
   @after {
-   $expr = new SchemeList($acc, $filename, -1, -1);
+   while (!$acc.empty())
+   { // Reverse iterate, append lists
+     SchemeCons tail = $acc.pop();
+     tail.setCdr($end);
+     $end = tail;
+   }
+   $expr = $end;
   }
-  : '(' (datum[$filename] { $acc.add($datum.expr); } )* ')'
-  | '(' (datum[$filename] { $acc.add($datum.expr); } )+ '.' datum[$filename] { $acc.add($datum.expr); } ')'
+  : '(' (datum[$filename] { $acc.push(new SchemeCons($datum.expr, null, $filename, $datum.expr.line(), $datum.expr.character())); } )*  closingParens=')' { $end = new SchemeNil($filename, $closingParens.line, $closingParens.pos); }
+  | '(' (datum[$filename] { $acc.push(new SchemeCons($datum.expr, null, $filename, $datum.expr.line(), $datum.expr.character())); } )+ '.' datum[$filename] { $end = $datum.expr; } ')'
   ;
 
 vector[String filename]

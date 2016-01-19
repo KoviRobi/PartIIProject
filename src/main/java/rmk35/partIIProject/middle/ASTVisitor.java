@@ -4,7 +4,8 @@ import rmk35.partIIProject.SyntaxErrorException;
 
 import rmk35.partIIProject.frontend.AST.SchemeLabelledData;
 import rmk35.partIIProject.frontend.AST.SchemeLabelReference;
-import rmk35.partIIProject.frontend.AST.SchemeList;
+import rmk35.partIIProject.frontend.AST.SchemeCons;
+import rmk35.partIIProject.frontend.AST.SchemeNil;
 import rmk35.partIIProject.frontend.AST.SchemeIdentifier;
 import rmk35.partIIProject.frontend.AST.SchemeLiteral;
 // Literals
@@ -19,7 +20,8 @@ import rmk35.partIIProject.frontend.AST.SchemeVector;
 import rmk35.partIIProject.backend.statements.Statement;
 
 public abstract class ASTVisitor<T>
-{ public abstract T visit(SchemeList list) throws SyntaxErrorException;
+{ public abstract T visit(SchemeCons list) throws SyntaxErrorException;
+  public abstract T visit(SchemeNil nil) throws SyntaxErrorException;
   public abstract T visit(SchemeIdentifier identifier) throws SyntaxErrorException;
   public abstract T visit(SchemeLabelledData reference) throws SyntaxErrorException;
   public abstract T visit(SchemeLabelReference reference) throws SyntaxErrorException;

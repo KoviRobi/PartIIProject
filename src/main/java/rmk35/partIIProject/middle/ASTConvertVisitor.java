@@ -3,7 +3,8 @@ package rmk35.partIIProject.middle;
 import rmk35.partIIProject.SyntaxErrorException;
 
 import rmk35.partIIProject.frontend.AST.SchemeLiteral;
-import rmk35.partIIProject.frontend.AST.SchemeList;
+import rmk35.partIIProject.frontend.AST.SchemeCons;
+import rmk35.partIIProject.frontend.AST.SchemeNil;
 import rmk35.partIIProject.frontend.AST.SchemeIdentifier;
 import rmk35.partIIProject.frontend.AST.SchemeLabelledData;
 import rmk35.partIIProject.frontend.AST.SchemeLabelReference;
@@ -31,15 +32,13 @@ public class ASTConvertVisitor extends ASTVisitor<Statement>
   }
 
   @Override
-  public Statement visit(SchemeList list)
-  { List<AST> innerList = list.getData();
+  public Statement visit(SchemeCons consCell)
+  { return consCell.car().accept(new ASTApplicationVisitor(environment, consCell.cdr()));
+  }
 
-    if (innerList.size() == 0)
-    { throw new SyntaxErrorException("Don't know how to apply nothing", list.file(), list.line(), list.character());
-    } else
-    { return innerList.get(0)
-                      .accept(new ASTApplicationVisitor(environment, list.getData()));
-    }
+  @Override
+  public Statement visit(SchemeNil nil)
+  { throw new SyntaxErrorException("Don't know what to do with nil", nil.file(), nil.line(), nil.character());
   }
 
   @Override
