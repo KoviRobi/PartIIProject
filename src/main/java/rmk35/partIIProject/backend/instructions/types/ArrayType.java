@@ -1,10 +1,10 @@
 package rmk35.partIIProject.backend.instructions.types;
 
-public class ObjectType implements JVMType
-{ String objectClass;
+public class ArrayType implements JVMType
+{ JVMType elementType;
 
-  public ObjectType(Class<?> objectClass)
-  { this.objectClass = objectClass.getName().replace('.', '/');
+  public ArrayType(JVMType elementType)
+  { this.elementType = elementType;
   }
 
   @Override
@@ -14,7 +14,7 @@ public class ObjectType implements JVMType
 
   @Override
   public String toString()
-  { return "L" + objectClass + ";";
+  { return "[" + elementType.toString();
   }
 
   @Override

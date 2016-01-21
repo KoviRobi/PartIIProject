@@ -32,7 +32,7 @@ public class LambdaStatement extends Statement
     body.generateOutput(innerClass);
     output.getMainClass().addInnerClass(innerClass);
 
-    output.addToPrimaryMethod(new NewObjectInstruction(innerClassName)); // Create class
+    output.addToPrimaryMethod(new NewObjectInstruction(innerClassName)); // Create class, need to use Deprecated API as we don't have this class yet
     output.addToPrimaryMethod(new DupInstruction()); // For invokenonvirtual, need 'this' pointer
     innerClass.invokeConstructor(output);
   }

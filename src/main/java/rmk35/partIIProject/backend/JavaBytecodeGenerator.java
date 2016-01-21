@@ -55,10 +55,10 @@ public class JavaBytecodeGenerator
 
     statements.add(new JavaCallStatement(new NativeFieldStatement("java.lang.System", "out"), "println", new ApplicationStatement(new ApplicationStatement(closure, new RuntimeValueStatement("42", NumberValue.class, new String[] {"I"})), new RuntimeValueStatement("7", NumberValue.class, new String[] {"I"}))));
 */
-    Statement systemOut = new JavaStaticFieldStatement(new StringValueStatement("java.lang.System"), new StringValueStatement("java.lang.System"));
+    Statement systemOut = new JavaStaticFieldStatement(new StringValueStatement("java.lang.System"), new StringValueStatement("out"));
     statements.add
     (new JavaCallStatement
-      (new JavaMethodStatement(systemOut, new StringValueStatement("println"), new StringValueStatement("java/lang/Object"))
+      (new JavaMethodStatement(systemOut, new StringValueStatement("println"), new StringValueStatement("java.lang.Object"))
       , systemOut
       , new ApplicationStatement
         (new LambdaStatement

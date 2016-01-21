@@ -12,11 +12,11 @@ public class IntrospectionHelper
     }
   }
 
-  public static Object getStaticField(String class, String fieldName)
+  public static Object getStaticField(String className, String fieldName)
   { try
-    { return Class.forName(class).getField(fieldName).get(Class.forName(class));
+    { return Class.forName(className).getField(fieldName).get(Class.forName(className));
     } catch (NoSuchFieldException | IllegalAccessException | ClassNotFoundException exception)
-    { throw new RuntimeException(exception);
+    { throw new RuntimeException("Can't get static field", exception);
     }
   }
 
@@ -28,7 +28,7 @@ public class IntrospectionHelper
       }
       return object.getClass().getDeclaredMethod(methodName, argumentTypes);
     } catch (NoSuchMethodException | ClassNotFoundException exception)
-    { throw new RuntimeException(exception);
+    { throw new RuntimeException("Can't get method", exception);
     }
   }
 }
