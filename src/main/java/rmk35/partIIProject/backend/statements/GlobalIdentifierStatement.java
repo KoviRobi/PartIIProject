@@ -1,38 +1,41 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.runtimeValues.RuntimeValue;
+import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
+import rmk35.partIIProject.backend.instructions.LocalLoadInstruction;
+import rmk35.partIIProject.backend.instructions.GetStaticInstruction;
+import rmk35.partIIProject.backend.instructions.PutStaticInstruction;
+import rmk35.partIIProject.backend.instructions.types.ObjectType;
+
 import java.util.Collection;
 import java.util.TreeSet;
-import java.util.Map;
-import rmk35.partIIProject.backend.OutputClass;
 
 import lombok.ToString;
 
 @ToString
 public class GlobalIdentifierStatement extends IdentifierStatement
 { String name;
-  String type;
+  private static final ObjectType type = new ObjectType(RuntimeValue.class);
 
   // FIXME: inline type if not needed later
-  public GlobalIdentifierStatement(String name/*, String type*/)
+  public GlobalIdentifierStatement(String name)
   { this.name = name;
-    this.type = "Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;";//type;
   }
 
   @Override
   public void generateOutput(OutputClass output)
-  { output.addToPrimaryMethod("  ; GlobalIdentifierStatement Get\n");
-    output.addToPrimaryMethod("  getstatic " + output.getMainClass().getName() + "/" + name + " " + type + "\n");
-    output.incrementStackCount(1);
-    output.addToPrimaryMethod("\n");
+  { output.addToPrimaryMethod(new CommentPseudoInstruction("GlobalIdentifierStatement Get"));
+    // Note getMainClass, whereas for ClosureIdentifier we have getName
+    output.addToPrimaryMethod(new GetStaticInstruction(type, output.getMainClass() + "/" + name));
   }
 
   @Override
   public void generateSetOutput(OutputClass output)
-  { output.addToPrimaryMethod("  ; GlobalIdentifierStatement Set\n");
+  { output.addToPrimaryMethod(new CommentPseudoInstruction("GlobalIdentifierStatement Set"));
     output.ensureFieldExists("private static", name, type);
-    output.addToPrimaryMethod("  putstatic " + output.getMainClass().getName() + "/" + name + " " + type + "\n");
-    output.decrementStackCount(1);
-    output.addToPrimaryMethod("\n");
+    // Note getMainClass, whereas for ClosureIdentifier we have getName
+    output.addToPrimaryMethod(new PutStaticInstruction(type, output.getMainClass() + "/" + name));
   }
 
   @Override

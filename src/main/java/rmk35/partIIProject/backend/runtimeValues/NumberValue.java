@@ -10,10 +10,9 @@ public class NumberValue implements RuntimeValue
   { this.value = value;
   }
 
-
   public boolean equal(RuntimeValue other)
   { if (other instanceof NumberValue)
-    { return value == ((NumberValue)other).value;
+    { return value.equals(((NumberValue)other).value);
     } else
     { return false;
     }

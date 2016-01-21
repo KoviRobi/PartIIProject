@@ -1,10 +1,26 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.runtimeValues.RuntimeValue;
+import rmk35.partIIProject.backend.runtimeValues.LambdaValue;
+import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
+import rmk35.partIIProject.backend.instructions.CheckCastInstruction;
+import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
+import rmk35.partIIProject.backend.instructions.DupInstruction;
+import rmk35.partIIProject.backend.instructions.IntegerConstantInstruction;
+import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
+import rmk35.partIIProject.backend.instructions.InterfaceCallInstruction;
+import rmk35.partIIProject.backend.instructions.PopInstruction;
+import rmk35.partIIProject.backend.instructions.VirtualCallInstruction;
+import rmk35.partIIProject.backend.instructions.types.ObjectType;
+import rmk35.partIIProject.backend.instructions.types.BooleanType;
+import rmk35.partIIProject.backend.instructions.types.IntegerType;
+import rmk35.partIIProject.backend.instructions.types.VoidType;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.TreeSet;
-import java.util.Map;
-import rmk35.partIIProject.backend.OutputClass;
 
 import lombok.ToString;
 
@@ -17,35 +33,25 @@ public class ApplicationStatement extends Statement
   }
 
   public void generateOutput(OutputClass output)
-  { output.addToPrimaryMethod("  ; ApplicationStatement\n");
+  { output.addToPrimaryMethod(new CommentPseudoInstruction("ApplicationStatement"));
     application[0].generateOutput(output);
-    output.addToPrimaryMethod("  checkcast rmk35/partIIProject/backend/runtimeValues/LambdaValue\n");
+    output.addToPrimaryMethod(new CheckCastInstruction(LambdaValue.class));
     
     // Create new ArrayList for operands
-    output.addToPrimaryMethod("  new java/util/ArrayList\n");
-    output.addToPrimaryMethod("  dup\n");
-    if (application.length - 1 < 6)
-    { output.addToPrimaryMethod("  iconst_" + (application.length - 1) + "\n");
-    } else
-    { output.addToPrimaryMethod("  ldc " + (application.length - 1) + "\n");
-    }
-    output.incrementStackCount(3);
-    output.addToPrimaryMethod("  invokenonvirtual java/util/ArrayList/<init>(I)V\n");
-    output.decrementStackCount(2);
+    output.addToPrimaryMethod(new NewObjectInstruction(ArrayList.class));
+    output.addToPrimaryMethod(new DupInstruction());
+    output.addToPrimaryMethod(new IntegerConstantInstruction(application.length));
+    output.addToPrimaryMethod(new NonVirtualCallInstruction(new VoidType(), "java/util/ArrayList/<init>", new IntegerType()));
 
     for (int i = 1; i < application.length; i++)
-    { output.addToPrimaryMethod("  dup\n"); // Loop invariant is the list on the top of the stack
-      output.incrementStackCount(1);
+    { output.addToPrimaryMethod(new DupInstruction()); // Loop invariant is the list on the top of the stack
       application[i].generateOutput(output);
-      output.addToPrimaryMethod("  invokeinterface java/util/List/add(Ljava/lang/Object;)Z 2\n");
-      output.addToPrimaryMethod("  pop\n");
-      output.decrementStackCount(2);
+      output.addToPrimaryMethod(new InterfaceCallInstruction(/* static */ false, new BooleanType(), "java/util/List/add", new ObjectType(Object.class)));
+      output.addToPrimaryMethod(new PopInstruction());
     }
 
     // Invoke operator.run with argument of operand
-    output.addToPrimaryMethod("  invokevirtual rmk35/partIIProject/backend/runtimeValues/LambdaValue/run(Ljava/util/ArrayList;)Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;\n");
-    output.decrementStackCount(1); // Operator and operand popped, result pushed
-    output.addToPrimaryMethod("\n");
+    output.addToPrimaryMethod(new VirtualCallInstruction(new ObjectType(RuntimeValue.class), "rmk35/partIIProject/backend/runtimeValues/LambdaValue/run", new ObjectType(ArrayList.class)));
   }
 
   @Override

@@ -23,7 +23,7 @@ public class JavaBytecodeGenerator
   public static void main(String[] args) throws NoSuchFieldException, NoSuchMethodException, ClassNotFoundException, java.io.IOException
   { List<Statement> statements = new ArrayList<>();
 
-    Statement idStatement = new LambdaStatement
+/*    Statement idStatement = new LambdaStatement
         ( Arrays.asList(new String[] {"x"})
         , new ArrayList<IdentifierStatement>()
         , new LocalIdentifierStatement("x", 1));
@@ -54,14 +54,19 @@ public class JavaBytecodeGenerator
       ,new ClosureIdentifierStatement("x")));
 
     statements.add(new JavaCallStatement(new NativeFieldStatement("java.lang.System", "out"), "println", new ApplicationStatement(new ApplicationStatement(closure, new RuntimeValueStatement("42", NumberValue.class, new String[] {"I"})), new RuntimeValueStatement("7", NumberValue.class, new String[] {"I"}))));
-
-    statements.add(new JavaCallStatement(new NativeFieldStatement("java.lang.System", "out"), "println", new ApplicationStatement(
-      new LambdaStatement
+*/
+    Statement systemOut = new JavaStaticFieldStatement(new StringValueStatement("java.lang.System"), new StringValueStatement("java.lang.System"));
+    statements.add
+    (new JavaCallStatement
+      (new JavaMethodStatement(systemOut, new StringValueStatement("println"), new StringValueStatement("java/lang/Object"))
+      , systemOut
+      , new ApplicationStatement
+        (new LambdaStatement
           ( Arrays.asList(new String[] {"x", "y"})
           , new ArrayList<IdentifierStatement>()
           , new LocalIdentifierStatement("y", 2))
-        , new RuntimeValueStatement("3", NumberValue.class, new String[] {"I"})
-        , new RuntimeValueStatement("4", NumberValue.class, new String[] {"I"}))));
+        , new NumberValueStatement(3)
+        , new NumberValueStatement(4))));
     generateOutput("test", statements).saveToDisk();
   }
 }

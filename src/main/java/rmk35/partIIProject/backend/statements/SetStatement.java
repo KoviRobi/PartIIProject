@@ -1,9 +1,11 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
+import rmk35.partIIProject.backend.instructions.NullConstantInstruction;
+
 import java.util.Collection;
 import java.util.TreeSet;
-import java.util.Map;
-import rmk35.partIIProject.backend.OutputClass;
 
 import lombok.ToString;
 
@@ -18,15 +20,13 @@ public class SetStatement extends Statement
   }
 
   public void generateOutput(OutputClass output)
-  { output.addToPrimaryMethod("  ; SetStatement\n");
+  { output.addToPrimaryMethod(new CommentPseudoInstruction("SetStatement"));
     if (value == null)
-    { output.addToPrimaryMethod("  aconst_null\n");
+    { output.addToPrimaryMethod(new NullConstantInstruction());
     } else
     { value.generateOutput(output);
     }
-    output.incrementStackCount(1);
-    variable.generateSetOutput(output); // Decrements stack count
-    output.addToPrimaryMethod("\n");
+    variable.generateSetOutput(output);
   }
 
   @Override

@@ -1,7 +1,7 @@
 package rmk35.partIIProject.backend.runtimeValues;
 
 public class BooleanValue implements RuntimeValue
-{  boolean  value;
+{ boolean value;
 
   public BooleanValue(boolean value)
   { this.value =  value;

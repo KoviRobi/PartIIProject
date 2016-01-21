@@ -2,6 +2,9 @@ package rmk35.partIIProject.backend;
 
 import rmk35.partIIProject.InternalCompilerException;
 
+import rmk35.partIIProject.backend.instructions.Instruction;
+import rmk35.partIIProject.backend.instructions.types.JVMType;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.io.BufferedWriter;
@@ -35,8 +38,12 @@ public abstract class OutputClass
   }
 
   /** Either the main() methiod for main class, or the run(args) method for the inner class */
-  public abstract void addToPrimaryMethod(String value);
-  public abstract void ensureFieldExists(String modifier, String name, String type);
+  public final void addToPrimaryMethod(Instruction instruction)
+  { instruction.simulateLimits(this);
+    addInstruction(instruction);
+  }
+  protected abstract void addInstruction(Instruction instruction);
+  public abstract void ensureFieldExists(String modifier, String name, JVMType type);
   /** Generates a unique ID that does not start with a number */
   public abstract String uniqueID();
   public abstract String getName();

@@ -1,9 +1,14 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.runtimeValues.RuntimeValue;
+import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
+import rmk35.partIIProject.backend.instructions.LocalLoadInstruction;
+import rmk35.partIIProject.backend.instructions.LocalStoreInstruction;
+import rmk35.partIIProject.backend.instructions.types.ObjectType;
+
 import java.util.Collection;
 import java.util.TreeSet;
-import java.util.Map;
-import rmk35.partIIProject.backend.OutputClass;
 
 import lombok.ToString;
 
@@ -11,6 +16,7 @@ import lombok.ToString;
 public class LocalIdentifierStatement extends IdentifierStatement
 { String name;
   int localIndex;
+  private static final ObjectType type = new ObjectType(RuntimeValue.class);
 
   public LocalIdentifierStatement(String name, int localIndex)
   { this.name = name;
@@ -19,27 +25,15 @@ public class LocalIdentifierStatement extends IdentifierStatement
 
   @Override
   public void generateOutput(OutputClass output)
-  { output.addToPrimaryMethod("  ; LocalIdentifier Get\n");
-    if (localIndex < 4)
-    { output.addToPrimaryMethod("  aload_" + localIndex + "\n");
-    } else
-    { output.addToPrimaryMethod("  aload " + localIndex + "\n");
-    }
-    output.incrementStackCount(1);
-    output.addToPrimaryMethod("\n");
+  { output.addToPrimaryMethod(new CommentPseudoInstruction("LocalIdentifier Get"));
+    output.addToPrimaryMethod(new LocalLoadInstruction(type, localIndex));
   }
 
   /* Assumes variable to set to is on top of the stack */
   @Override
   public void generateSetOutput(OutputClass output)
-  { output.addToPrimaryMethod("  ; LocalIdentifier Set\n");
-    if (localIndex < 4)
-    { output.addToPrimaryMethod("  astore_" + localIndex + "\n");
-    } else
-    { output.addToPrimaryMethod("  astore " + localIndex + "\n");
-    }
-    output.decrementStackCount(1);
-    output.addToPrimaryMethod("\n");
+  { output.addToPrimaryMethod(new CommentPseudoInstruction("LocalIdentifier Set"));
+    output.addToPrimaryMethod(new LocalStoreInstruction(type, localIndex));
   }
 
   @Override

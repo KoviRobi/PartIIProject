@@ -1,5 +1,8 @@
 package rmk35.partIIProject.backend;
 
+import rmk35.partIIProject.backend.instructions.Instruction;
+import rmk35.partIIProject.backend.instructions.types.JVMType;
+
 import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
@@ -11,7 +14,7 @@ import java.io.IOException;
 public class MainClass extends OutputClass
 { String name;
   Set<String> fields;
-  StringBuilder mainMethod;
+  List<String> mainMethod;
   List<InnerClass> innerClasses;
   int uniqueNumber = 0;
 
@@ -19,9 +22,9 @@ public class MainClass extends OutputClass
   { this("anonymous");
   }
   public MainClass(String name)
-  { this(name, new HashSet<String>(), new StringBuilder(), new ArrayList<InnerClass>());
+  { this(name, new HashSet<String>(), new ArrayList<>(), new ArrayList<>());
   }
-  public MainClass(String name, Set<String> fields, StringBuilder mainMethod, List<InnerClass> innerClasses)
+  public MainClass(String name, Set<String> fields, List<String> mainMethod, List<InnerClass> innerClasses)
   { super(0, 1); // One local for main argument
     this.name = name;
     this.fields = fields;
@@ -30,13 +33,13 @@ public class MainClass extends OutputClass
   }
 
   @Override
-  public void addToPrimaryMethod(String value)
-  { mainMethod.append(value);
+  public void addInstruction(Instruction instruction)
+  { mainMethod.add(instruction.byteCode());
   }
 
   @Override
-  public void ensureFieldExists(String modifier, String name, String type)
-  { fields.add(".field " + modifier + " " + name + " " + type);
+  public void ensureFieldExists(String modifier, String name, JVMType type)
+  { fields.add(".field " + modifier + " " + name + " " + type.toString());
   }
 
   @Override
@@ -61,7 +64,7 @@ public class MainClass extends OutputClass
       ".method public static main([Ljava/lang/String;)V\n" +
       "  .limit stack " + stackLimit + "\n" +
       "  .limit locals " + localLimit + "\n" +
-      mainMethod.toString() +
+      String.join("\n", mainMethod) + "\n" +
       "  return\n" +
       ".end method\n"
     ;

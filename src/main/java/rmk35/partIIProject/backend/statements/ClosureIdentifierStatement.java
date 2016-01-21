@@ -1,9 +1,15 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.runtimeValues.RuntimeValue;
+import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
+import rmk35.partIIProject.backend.instructions.LocalLoadInstruction;
+import rmk35.partIIProject.backend.instructions.GetFieldInstruction;
+import rmk35.partIIProject.backend.instructions.PutFieldInstruction;
+import rmk35.partIIProject.backend.instructions.types.ObjectType;
+
 import java.util.Collection;
 import java.util.TreeSet;
-import java.util.Map;
-import rmk35.partIIProject.backend.OutputClass;
 
 import lombok.ToString;
 
@@ -13,33 +19,27 @@ import lombok.ToString;
 @ToString
 public class ClosureIdentifierStatement extends IdentifierStatement
 { String name;
-  String type;
+  private static final ObjectType type = new ObjectType(RuntimeValue.class);
 
-  // FIXME: inline type if not needed later
-  public ClosureIdentifierStatement(String name/*, String type*/)
+  public ClosureIdentifierStatement(String name)
   { this.name = name;
-    this.type = "Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;";//type;
   }
 
   @Override
   public void generateOutput(OutputClass output)
-  { output.addToPrimaryMethod("  ; ClosureIdentifierStatement Get\n");
-    output.addToPrimaryMethod("  aload_0\n"); // 'this', the current object
-    output.incrementStackCount(1);
-    output.addToPrimaryMethod("  getfield " + output.getName() + "/" + name + " " + type + "\n");
-    output.incrementStackCount(2);
-    output.addToPrimaryMethod("\n");
+  { output.addToPrimaryMethod(new CommentPseudoInstruction("ClosureIdentifierStatement Get"));
+    output.addToPrimaryMethod(new LocalLoadInstruction(type, 0)); // 'this', the current object
+    // Note getClass, whereas for GlobalIdentifier we have getMainClass
+    output.addToPrimaryMethod(new GetFieldInstruction(type, output.getName() + "/" + name));
   }
 
   @Override
   public void generateSetOutput(OutputClass output)
-  { output.addToPrimaryMethod("  ; ClosureIdentifierStatement Set\n");
+  { output.addToPrimaryMethod(new CommentPseudoInstruction("ClosureIdentifierStatement Set"));
     output.ensureFieldExists("private", name, type);
-    output.addToPrimaryMethod("  aload_0\n"); // 'this', the current object
-    output.incrementStackCount(1);
-    output.addToPrimaryMethod("  putfield " + output.getName() + "/" + name + " " + type + "\n");
-    output.decrementStackCount(2); // Object, value popped
-    output.addToPrimaryMethod("\n");
+    output.addToPrimaryMethod(new LocalLoadInstruction(type, 0)); // 'this', the current object
+    // Note getClass, whereas for GlobalIdentifier we have getMainClass
+    output.addToPrimaryMethod(new PutFieldInstruction(type, output.getName() + "/" + name));
   }
 
   @Override

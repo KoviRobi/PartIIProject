@@ -1,67 +1,54 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
+import rmk35.partIIProject.backend.instructions.CheckCastInstruction;
+import rmk35.partIIProject.backend.instructions.VirtualCallInstruction;
+import rmk35.partIIProject.backend.instructions.types.ObjectType;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.TreeSet;
-import java.util.Map;
-import java.lang.reflect.Field;
+
 import java.lang.reflect.Method;
-import rmk35.partIIProject.backend.OutputClass;
 
 import lombok.ToString;
 
 @ToString
 public class JavaCallStatement extends Statement
-{ NativeFieldStatement field;
-  Statement[] parameters;
-  Method method;
+{ Statement method;
+  Statement thisObject;
+  Statement[] arguments;
 
-  public JavaCallStatement(NativeFieldStatement field, String methodName, Statement... parameters) throws NoSuchMethodException
-  { this.field = field;
-    this.parameters = parameters;
-    for (Method m : field.field.getType().getMethods())
-    { if (m.getName() == methodName && m.getParameterTypes().length == parameters.length)
-      { boolean acc = true;
-        for (Class t : m.getParameterTypes())
-        { if (t != Object.class) acc = false;
-        }
-        if (acc) method = m;
-      }
-    }
-    if (method == null) throw new NoSuchMethodException();
+  private ObjectType[] argumentTypes;
+
+  private static final ObjectType objectType = new ObjectType(Object.class);
+
+  public JavaCallStatement(Statement method, Statement thisObject, Statement... arguments)
+  { this.method = method;
+    this.thisObject = thisObject;
+    this.arguments = arguments;
+    argumentTypes = new ObjectType[arguments.length];
+    Arrays.fill(argumentTypes, objectType);
   }
 
   public void generateOutput(OutputClass output)
-  { output.addToPrimaryMethod("  ; JavaCallStatement\n");
-    field.generateOutput(output);
-    for (Statement s : parameters)
-    { s.generateOutput(output);
+  { output.addToPrimaryMethod(new CommentPseudoInstruction("JavaCallStatement"));
+    method.generateOutput(output);
+    output.addToPrimaryMethod(new CheckCastInstruction(Method.class));
+    thisObject.generateOutput(output);
+    for (Statement argument : arguments)
+    { argument.generateOutput(output);
     }
-
-    // Create invokation
-    output.addToPrimaryMethod((method.getDeclaringClass().isInterface())? "  invokeinterface " : "  invokevirtual ");
-    output.addToPrimaryMethod(method.getDeclaringClass().getName().replaceAll("\\.", "/") + "/" + method.getName() + "(");
-    for (Class<?> argument : method.getParameterTypes())
-    { output.addToPrimaryMethod(NativeFieldStatement.toBinaryName(argument.getName()));
-    }
-    output.addToPrimaryMethod(")" + NativeFieldStatement.toBinaryName(method.getReturnType().getName()));
-    if (method.getDeclaringClass().isInterface())
-    { output.addToPrimaryMethod(" " +  (method.getParameterTypes().length + 1)); // +1 because of 'this'
-    }
-    output.addToPrimaryMethod("\n");
-    // End create invokation
-
-    output.decrementStackCount(method.getParameterTypes().length); // No +1 because of return value
-    if (method.getReturnType() == void.class)
-    { output.addToPrimaryMethod("  aconst_null\n"); // Which we always ensure
-    }
-    output.addToPrimaryMethod("\n");
+    output.addToPrimaryMethod(new VirtualCallInstruction(objectType, "java/lang/reflect/Method/invoke", argumentTypes));
   }
 
   @Override
   public Collection<String> getFreeIdentifiers()
   { Collection<String> returnValue = new TreeSet<>();
-    Arrays.asList(parameters).parallelStream()
+    returnValue.addAll(method.getFreeIdentifiers());
+    returnValue.addAll(thisObject.getFreeIdentifiers());
+    Arrays.asList(arguments).parallelStream()
                               .map(statement -> statement.getFreeIdentifiers())
                               .forEach(collection -> returnValue.addAll(collection));
     return returnValue;

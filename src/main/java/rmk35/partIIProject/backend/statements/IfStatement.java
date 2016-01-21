@@ -1,10 +1,17 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.runtimeValues.RuntimeValue;
+import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
+import rmk35.partIIProject.backend.instructions.InterfaceCallInstruction;
+import rmk35.partIIProject.backend.instructions.IfNotEqualsInstruction;
+import rmk35.partIIProject.backend.instructions.GotoInstruction;
+import rmk35.partIIProject.backend.instructions.LabelPseudoInstruction;
+import rmk35.partIIProject.backend.instructions.types.ObjectType;
+import rmk35.partIIProject.backend.instructions.types.BooleanType;
+
 import java.util.Collection;
 import java.util.TreeSet;
-import java.util.Map;
-import rmk35.partIIProject.backend.OutputClass;
-import rmk35.partIIProject.backend.runtimeValues.BooleanValue;
 
 import lombok.ToString;
 
@@ -13,6 +20,7 @@ public class IfStatement extends Statement
 { Statement predicate;
   Statement trueCase;
   Statement falseCase;
+  private static final ObjectType runtimeValueType = new ObjectType(RuntimeValue.class);
 
   public IfStatement(Statement predicate, Statement trueCase, Statement falseCase)
   { this.predicate = predicate;
@@ -21,28 +29,25 @@ public class IfStatement extends Statement
   }
 
   public void generateOutput(OutputClass output)
-  { output.addToPrimaryMethod("  ; IfStatement\n");
+  { output.addToPrimaryMethod(new CommentPseudoInstruction("IfStatement"));
     predicate.generateOutput(output);
     // Top of stack is now predicate's value
     // XXX Speed: if we make booleans unique, we could use "if_acmpeq" to compare false
-    (new RuntimeValueStatement("0", BooleanValue.class, new String[] {"Z"})).generateOutput(output);
-    output.addToPrimaryMethod("  invokeinterface rmk35/partIIProject/backend/runtimeValues/RuntimeValue/eq(Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;)Z 2\n");
-    output.decrementStackCount(1); // Values compared for equality popped, result pushed
+    (new BooleanValueStatement(false)).generateOutput(output);
+    output.addToPrimaryMethod(new InterfaceCallInstruction(/* static */ false, new BooleanType(), "rmk35/partIIProject/backend/runtimeValues/RuntimeValue/eq", runtimeValueType));
 
     // Stack now contains 1 if predicate is false, otherwise 0.
     String uniqueID = output.uniqueID();
     String falseLabel = "FalseCase" + uniqueID;
     String endLabel = "IfEnd" + uniqueID;
-    output.addToPrimaryMethod("  ifne " + falseLabel + "\n"); // ifne branches if 0, but 0 is boolean false
-    output.decrementStackCount(1); // Boolean popped
+    output.addToPrimaryMethod(new IfNotEqualsInstruction(falseLabel)); // ifne branches if non 0, but 0 is boolean false (hence predicate true by above)
     trueCase.generateOutput(output);
-    output.addToPrimaryMethod("  goto " + endLabel + "\n");
+    output.addToPrimaryMethod(new GotoInstruction(endLabel));
 
-    output.addToPrimaryMethod(falseLabel + ":\n");
+    output.addToPrimaryMethod(new LabelPseudoInstruction(falseLabel));
     falseCase.generateOutput(output);
 
-    output.addToPrimaryMethod(endLabel + ":\n");
-    output.addToPrimaryMethod("\n");
+    output.addToPrimaryMethod(new LabelPseudoInstruction(endLabel));
   }
 
   @Override
