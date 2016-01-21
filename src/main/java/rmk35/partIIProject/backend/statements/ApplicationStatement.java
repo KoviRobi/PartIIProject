@@ -17,8 +17,8 @@ import rmk35.partIIProject.backend.instructions.types.BooleanType;
 import rmk35.partIIProject.backend.instructions.types.IntegerType;
 import rmk35.partIIProject.backend.instructions.types.VoidType;
 
+import java.util.List;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.TreeSet;
 
@@ -26,26 +26,26 @@ import lombok.ToString;
 
 @ToString
 public class ApplicationStatement extends Statement
-{ Statement[] application;
+{ List<Statement> application;
 
-  public ApplicationStatement(Statement... application)
+  public ApplicationStatement(List<Statement> application)
   { this.application =  application;
   }
 
   public void generateOutput(OutputClass output)
   { output.addToPrimaryMethod(new CommentPseudoInstruction("ApplicationStatement"));
-    application[0].generateOutput(output);
+    application.get(0).generateOutput(output);
     output.addToPrimaryMethod(new CheckCastInstruction(LambdaValue.class));
     
     // Create new ArrayList for operands
     output.addToPrimaryMethod(new NewObjectInstruction(ArrayList.class));
     output.addToPrimaryMethod(new DupInstruction());
-    output.addToPrimaryMethod(new IntegerConstantInstruction(application.length));
+    output.addToPrimaryMethod(new IntegerConstantInstruction(application.size()));
     output.addToPrimaryMethod(new NonVirtualCallInstruction(new VoidType(), "java/util/ArrayList/<init>", new IntegerType()));
 
-    for (int i = 1; i < application.length; i++)
+    for (Statement statement : application)
     { output.addToPrimaryMethod(new DupInstruction()); // Loop invariant is the list on the top of the stack
-      application[i].generateOutput(output);
+      statement.generateOutput(output);
       output.addToPrimaryMethod(new InterfaceCallInstruction(/* static */ false, new BooleanType(), "java/util/List/add", new ObjectType(Object.class)));
       output.addToPrimaryMethod(new PopInstruction());
     }
@@ -57,9 +57,9 @@ public class ApplicationStatement extends Statement
   @Override
   public Collection<String> getFreeIdentifiers()
   { Collection<String> returnValue = new TreeSet<>();
-    Arrays.asList(application).parallelStream()
-                              .map(statement -> statement.getFreeIdentifiers())
-                              .forEach(collection -> returnValue.addAll(collection));
+    application.parallelStream()
+               .map(statement -> statement.getFreeIdentifiers())
+               .forEach(collection -> returnValue.addAll(collection));
     return returnValue;
   }
 }

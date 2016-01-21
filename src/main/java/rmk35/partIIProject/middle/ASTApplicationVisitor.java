@@ -10,17 +10,9 @@ import rmk35.partIIProject.frontend.AST.SchemeIdentifier;
 import rmk35.partIIProject.frontend.AST.SchemeLabelReference;
 import rmk35.partIIProject.frontend.AST.SchemeLabelledData;
 
-import rmk35.partIIProject.middle.bindings.Binding;
-
 import rmk35.partIIProject.backend.statements.Statement;
-import rmk35.partIIProject.backend.statements.ApplicationStatement;
-import rmk35.partIIProject.backend.statements.IdentifierStatement;
-import rmk35.partIIProject.backend.statements.LambdaStatement;
 
 import lombok.Value;
-
-import java.util.List;
-import java.util.ArrayList;
 
 @Value
 public class ASTApplicationVisitor extends ASTVisitor<Statement>
@@ -33,8 +25,8 @@ public class ASTApplicationVisitor extends ASTVisitor<Statement>
   }
 
   @Override
-  public Statement visit(SchemeIdentifier identifier) throws SyntaxErrorException
-  { throw new UnsupportedOperationException("FIXME:");
+  public Statement visit(SchemeCons consCell) throws SyntaxErrorException
+  { return consCell.accept(new ASTConvertVisitor(environment));
   }
 
   @Override
@@ -43,13 +35,13 @@ public class ASTApplicationVisitor extends ASTVisitor<Statement>
   }
 
   @Override
-  public Statement visit(SchemeCons consCell) throws SyntaxErrorException
-  { return consCell.accept(new ASTConvertVisitor(environment));
+  public Statement visit(SchemeIdentifier identifier) throws SyntaxErrorException
+  { return environment.lookUp(identifier.getData()).applicate(environment, arguments, identifier.file(), identifier.line(), identifier.character());
   }
 
   @Override
-  public Statement visit(SchemeLiteral abbreviation) throws SyntaxErrorException
-  { throw new SyntaxErrorException("Don't know how to apply a value as an operand", abbreviation.file(), abbreviation.line(), abbreviation.character());
+  public Statement visit(SchemeLiteral object) throws SyntaxErrorException
+  { throw new SyntaxErrorException("Don't know how to apply a value as an operand", object.file(), object.line(), object.character());
   }
 
   @Override

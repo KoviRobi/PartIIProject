@@ -10,15 +10,15 @@ import rmk35.partIIProject.backend.statements.Statement;
 import lombok.Value;
 
 @Value
-public class SyntaxBinding implements Binding
+public class LetSyntaxBinding implements Binding
 { @Override
   public Statement toStatement(String file, long line, long character)
   { throw new SyntaxErrorException("Don't know how to use a syntactic variable in a run time context", file, line, character);
   }
-
+  
   @Override
   public Statement applicate(Environment environment, AST arguments, String file, long line, long character)
-  { return null; // NEXT 2
+  { return null; // NEXT 1
   }
 
   @Override

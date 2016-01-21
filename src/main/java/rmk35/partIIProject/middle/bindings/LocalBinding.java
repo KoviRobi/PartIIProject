@@ -6,12 +6,12 @@ import rmk35.partIIProject.backend.statements.LocalIdentifierStatement;
 import lombok.Value;
 
 @Value
-public class LocalBinding implements Binding
+public class LocalBinding extends VariableBinding
 { String identifier;
   int localIndex;
 
   @Override
-  public Statement toStatement()
+  public Statement toStatement(String file, long line, long character)
   { return new LocalIdentifierStatement(identifier, localIndex);
   }
 

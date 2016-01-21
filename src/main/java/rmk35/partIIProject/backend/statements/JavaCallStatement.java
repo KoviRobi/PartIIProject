@@ -12,7 +12,7 @@ import rmk35.partIIProject.backend.instructions.types.JVMType;
 import rmk35.partIIProject.backend.instructions.types.ObjectType;
 import rmk35.partIIProject.backend.instructions.types.ArrayType;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Collection;
 import java.util.TreeSet;
 
@@ -24,11 +24,11 @@ import lombok.ToString;
 public class JavaCallStatement extends Statement
 { Statement method;
   Statement thisObject;
-  Statement[] arguments;
+  List<Statement> arguments;
 
   private static final ObjectType objectType = new ObjectType(Object.class);
 
-  public JavaCallStatement(Statement method, Statement thisObject, Statement... arguments)
+  public JavaCallStatement(Statement method, Statement thisObject, List<Statement> arguments)
   { this.method = method;
     this.thisObject = thisObject;
     this.arguments = arguments;
@@ -41,13 +41,15 @@ public class JavaCallStatement extends Statement
     thisObject.generateOutput(output);
 
     // Make array for variadic arguments
-    output.addToPrimaryMethod(new IntegerConstantInstruction(arguments.length));
+    output.addToPrimaryMethod(new IntegerConstantInstruction(arguments.size()));
     output.addToPrimaryMethod(new NewReferenceArrayInstruction(Object.class));
-    for (int i = 0; i < arguments.length; i++)
+    int i = 0;
+    for (Statement argument : arguments)
     { output.addToPrimaryMethod(new DupInstruction()); // Invariant: Array on top of stack
       output.addToPrimaryMethod(new IntegerConstantInstruction(i));
-      arguments[i].generateOutput(output);
+      argument.generateOutput(output);
       output.addToPrimaryMethod(new ReferenceArrayStoreInstruction());
+      i++;
     }
     output.addToPrimaryMethod(new VirtualCallInstruction(objectType, "java/lang/reflect/Method/invoke", objectType, new ArrayType(objectType)));
   }
@@ -57,9 +59,9 @@ public class JavaCallStatement extends Statement
   { Collection<String> returnValue = new TreeSet<>();
     returnValue.addAll(method.getFreeIdentifiers());
     returnValue.addAll(thisObject.getFreeIdentifiers());
-    Arrays.asList(arguments).parallelStream()
-                              .map(statement -> statement.getFreeIdentifiers())
-                              .forEach(collection -> returnValue.addAll(collection));
+    arguments.parallelStream()
+             .map(statement -> statement.getFreeIdentifiers())
+             .forEach(collection -> returnValue.addAll(collection));
     return returnValue;
   }
 }

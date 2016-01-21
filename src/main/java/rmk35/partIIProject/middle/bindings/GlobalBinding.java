@@ -6,11 +6,11 @@ import rmk35.partIIProject.backend.statements.GlobalIdentifierStatement;
 import lombok.Value;
 
 @Value
-public class GlobalBinding implements Binding
+public class GlobalBinding extends VariableBinding
 { String identifier;
 
   @Override
-  public Statement toStatement()
+  public Statement toStatement(String file, long line, long character)
   { return new GlobalIdentifierStatement(identifier);
   }
 

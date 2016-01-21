@@ -1,0 +1,9 @@
+ find . -name '*.java' | xargs g '[Tt][Oo][Dd][Oo]'
+ find . -name '*.java' | xargs g '[Ff][Ii][Xx][Mm][Ee]'
+ find . -name '*.java' | xargs g '[Nn][Ee][Xx][Tt]'
+
+Macros
+Call java externally
+  - use invokedynamic, find out if it works with both invoke(non)virtual and invokeinterface
+  - invokedynamic does not seem to work, so make the compile time reflection run time
+Improper lists

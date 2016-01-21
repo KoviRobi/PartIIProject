@@ -15,7 +15,7 @@ import rmk35.partIIProject.backend.instructions.types.ObjectType;
 import rmk35.partIIProject.backend.instructions.types.ArrayType;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Collection;
 import java.util.TreeSet;
 
@@ -25,13 +25,13 @@ import lombok.ToString;
 public class JavaMethodStatement extends Statement
 { Statement object;
   Statement methodName;
-  Statement[] arguments;
+  List<Statement> arguments;
 
   private static final ObjectType objectType = new ObjectType(Object.class);
   private static final ObjectType stringType = new ObjectType(String.class);
   private static final ObjectType methodType = new ObjectType(Method.class);
 
-  public JavaMethodStatement(Statement object, Statement methodName, Statement... arguments)
+  public JavaMethodStatement(Statement object, Statement methodName, List<Statement> arguments)
   { this.object = object;
     this.methodName = methodName;
     this.arguments = arguments;
@@ -45,15 +45,17 @@ public class JavaMethodStatement extends Statement
     output.addToPrimaryMethod(new VirtualCallInstruction(stringType, "java/lang/Object/toString"));
 
     // Make array for variadic arguments
-    output.addToPrimaryMethod(new IntegerConstantInstruction(arguments.length));
+    output.addToPrimaryMethod(new IntegerConstantInstruction(arguments.size()));
     output.addToPrimaryMethod(new NewReferenceArrayInstruction(String.class));
-    for (int i = 0; i < arguments.length; i++)
+    int i = 0;
+    for (Statement argument : arguments)
     { output.addToPrimaryMethod(new DupInstruction()); // Invariant: Array on top of stack
       output.addToPrimaryMethod(new IntegerConstantInstruction(i));
-      arguments[i].generateOutput(output);
+      argument.generateOutput(output);
       output.addToPrimaryMethod(new CheckCastInstruction(StringValue.class));
       output.addToPrimaryMethod(new VirtualCallInstruction(stringType, "java/lang/Object/toString"));
       output.addToPrimaryMethod(new ReferenceArrayStoreInstruction());
+      i++;
     }
 
     output.addToPrimaryMethod(new StaticCallInstruction(methodType, "rmk35/partIIProject/backend/runtimeValues/IntrospectionHelper/getMethod", objectType, stringType, new ArrayType(stringType)));
@@ -64,9 +66,9 @@ public class JavaMethodStatement extends Statement
   { Collection<String> returnValue = new TreeSet<>();
     returnValue.addAll(object.getFreeIdentifiers());
     returnValue.addAll(methodName.getFreeIdentifiers());
-    Arrays.asList(arguments).parallelStream()
-                              .map(statement -> statement.getFreeIdentifiers())
-                              .forEach(collection -> returnValue.addAll(collection));
+    arguments.parallelStream()
+             .map(statement -> statement.getFreeIdentifiers())
+             .forEach(collection -> returnValue.addAll(collection));
     return returnValue;
   }
 }

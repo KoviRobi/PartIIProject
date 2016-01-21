@@ -37,8 +37,8 @@ public class Environment
     }
   }
 
-  public Statement lookUpAsStatement(String identifier)
-  { return lookUp(identifier).toStatement();
+  public Statement lookUpAsStatement(String identifier, String file, long line, long character)
+  { return lookUp(identifier).toStatement(file, line, character);
   }
 
   public void addGlobalVariable(String identifier)

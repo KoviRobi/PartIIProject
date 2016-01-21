@@ -18,8 +18,6 @@ import rmk35.partIIProject.backend.statements.NumberValueStatement;
 
 import lombok.Value;
 
-import java.util.List;
-
 /* This is the main visitor, it converts the frontend's AST to the backend's Statement */
 
 @Value
@@ -42,7 +40,7 @@ public class ASTConvertVisitor extends ASTVisitor<Statement>
 
   @Override
   public Statement visit(SchemeIdentifier identifier)
-  { return environment.lookUpAsStatement(identifier.getData());
+  { return environment.lookUpAsStatement(identifier.getData(), identifier.file(), identifier.line(), identifier.character());
   }
 
   @Override

@@ -6,11 +6,11 @@ import rmk35.partIIProject.backend.statements.ClosureIdentifierStatement;
 import lombok.Value;
 
 @Value
-public class ClosureBinding implements Binding
+public class ClosureBinding extends VariableBinding
 { String identifier;
 
   @Override
-  public Statement toStatement()
+  public Statement toStatement(String file, long line, long character)
   { return new ClosureIdentifierStatement(identifier);
   }
 
