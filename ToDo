@@ -1,5 +1,10 @@
  find . -name '*.java' | xargs g '[Tt][Oo][Dd][Oo]'
  find . -name '*.java' | xargs g '[Ff][Ii][Xx][Mm][Ee]'
  find . -name '*.java' | xargs g '[Nn][Ee][Xx][Tt]'
+ find . -name '*.java' | xargs g '[Xx][Xx][Xx]'
 
 Macros
+  - Make ASTMatchVisitor?
+  - Make ASTTranscribeVisitor?
+If
+Throw/Catch

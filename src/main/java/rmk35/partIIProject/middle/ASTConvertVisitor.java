@@ -10,17 +10,21 @@ import rmk35.partIIProject.frontend.AST.SchemeLabelledData;
 import rmk35.partIIProject.frontend.AST.SchemeLabelReference;
 // Literals
 import rmk35.partIIProject.frontend.AST.SchemeNumber;
+import rmk35.partIIProject.frontend.AST.SchemeBoolean;
+import rmk35.partIIProject.frontend.AST.SchemeString;
 
 import rmk35.partIIProject.middle.bindings.Binding;
 
 import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.statements.NumberValueStatement;
+import rmk35.partIIProject.backend.statements.BooleanValueStatement;
+import rmk35.partIIProject.backend.statements.StringValueStatement;
 
-import lombok.Value;
+import lombok.Data;
 
 /* This is the main visitor, it converts the frontend's AST to the backend's Statement */
 
-@Value
+@Data
 public class ASTConvertVisitor extends ASTVisitor<Statement>
 { Environment environment; /* STATE */
 
@@ -51,6 +55,16 @@ public class ASTConvertVisitor extends ASTVisitor<Statement>
   @Override
   public Statement visit(SchemeNumber number)
   { return new NumberValueStatement(Integer.parseInt(number.getData()));
+  }
+
+  @Override
+  public Statement visit(SchemeBoolean booleanValue)
+  { return new BooleanValueStatement(booleanValue.getData());
+  }
+
+  @Override
+  public Statement visit(SchemeString string)
+  { return new StringValueStatement(string.getData());
   }
 
   @Override

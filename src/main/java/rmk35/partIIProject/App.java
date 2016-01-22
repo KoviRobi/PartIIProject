@@ -7,6 +7,7 @@ import rmk35.partIIProject.middle.Interconnect;
 
 import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.JavaBytecodeGenerator;
+import rmk35.partIIProject.backend.OutputClass;
 
 import java.util.List;
 import java.io.IOException;
@@ -19,8 +20,10 @@ public class App
     }
 
     String fileName = arguments[0];
+    String className = fileName.substring(0, fileName.lastIndexOf('.'));
     List<AST> parsedFile = SchemeParser.parseFile(fileName);
     List<Statement> statements = Interconnect.ASTsToStatements(parsedFile);
-    JavaBytecodeGenerator.generateOutput(fileName, statements);
+    OutputClass output = JavaBytecodeGenerator.generateOutput(className, statements);
+    output.saveToDisk();
   }
 }

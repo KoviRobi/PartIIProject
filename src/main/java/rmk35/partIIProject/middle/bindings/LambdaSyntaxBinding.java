@@ -8,7 +8,8 @@ import rmk35.partIIProject.middle.Environment;
 import rmk35.partIIProject.middle.AST;
 import rmk35.partIIProject.middle.ASTListElementVisitor;
 import rmk35.partIIProject.middle.ASTLambdaFormalsVisitor;
-import rmk35.partIIProject.middle.ASTBeginVisitor;
+import rmk35.partIIProject.middle.ASTListFoldVisitor;
+import rmk35.partIIProject.middle.ASTConvertVisitor;
 
 import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.statements.IdentifierStatement;
@@ -29,15 +30,16 @@ public class LambdaSyntaxBinding implements Binding
   @Override
   public Statement applicate(Environment environment, AST arguments, String file, long line, long character)
   { SchemeCons first = arguments.accept(new ASTListElementVisitor());
-    Environment bodyEnvironment = new Environment(environment);
+    Environment bodyEnvironment = new Environment(environment, /* subEnvironment */ true);
     List<String> formals = first.car().accept(new ASTLambdaFormalsVisitor());
     bodyEnvironment.addLocalVariables(formals);
 
-    List<Statement> bodyList = first.cdr().accept(new ASTBeginVisitor(bodyEnvironment));
-    if (bodyList.size() == 0)
+    Statement body = first.cdr().accept
+      (new ASTListFoldVisitor<Statement>(null,
+        (previous, ast) -> ast.accept(new ASTConvertVisitor(bodyEnvironment)) ));
+    if (body == null)
     { throw new SyntaxErrorException("Empty lambda body", file, line, character);
     }
-     Statement body = bodyList.get(bodyList.size() - 1);
 
     List<IdentifierStatement> closureVariables = new ArrayList<>();
     // Look up in the current environment, as these will be used to get the be variable value

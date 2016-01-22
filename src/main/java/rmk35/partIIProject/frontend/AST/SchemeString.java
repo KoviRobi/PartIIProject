@@ -26,6 +26,10 @@ public class SchemeString implements SchemeLiteral
   { return value;
   }
 
+  public String getData()
+  { return value.substring(1, value.lastIndexOf('"'));
+  }
+
   @Override
   public <T> T accept(ASTVisitor<T> visitor) throws SyntaxErrorException
   { return visitor.visit(this);

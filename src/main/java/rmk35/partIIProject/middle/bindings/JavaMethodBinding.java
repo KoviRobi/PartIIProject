@@ -8,12 +8,13 @@ import rmk35.partIIProject.middle.Environment;
 import rmk35.partIIProject.middle.AST;
 import rmk35.partIIProject.middle.ASTConvertVisitor;
 import rmk35.partIIProject.middle.ASTListElementVisitor;
-import rmk35.partIIProject.middle.ASTBeginVisitor;
+import rmk35.partIIProject.middle.ASTListFoldVisitor;
 
 import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.statements.JavaMethodStatement;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import lombok.Value;
 
@@ -30,7 +31,9 @@ public class JavaMethodBinding implements Binding
     Statement object = first.car().accept(new ASTConvertVisitor(environment));
     SchemeCons second = first.cdr().accept(new ASTListElementVisitor());
     Statement methodName = second.car().accept(new ASTConvertVisitor(environment));
-    List<Statement> methodArguments = second.cdr().accept(new ASTBeginVisitor(environment));
+    List<Statement> methodArguments = second.cdr().accept
+      (new ASTListFoldVisitor<List<Statement>>(new ArrayList<>(),
+        (list, ast) -> { list.add(ast.accept(new ASTConvertVisitor(environment))); return list; } ));
     return new JavaMethodStatement(object, methodName, methodArguments);
   }
 

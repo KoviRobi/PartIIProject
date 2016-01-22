@@ -31,6 +31,10 @@ public class SchemeBoolean implements SchemeLiteral
   { return value?"#true":"#false";
   }
 
+  public boolean getData()
+  { return value;
+  }
+
   @Override
   public <T> T accept(ASTVisitor<T> visitor) throws SyntaxErrorException
   { return visitor.visit(this);
