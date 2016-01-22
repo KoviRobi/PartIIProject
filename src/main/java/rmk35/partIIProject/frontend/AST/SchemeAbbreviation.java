@@ -7,13 +7,15 @@ import rmk35.partIIProject.middle.ASTVisitor;
 import rmk35.partIIProject.backend.statements.Statement;
 
 public class SchemeAbbreviation implements SchemeLiteral
-{ String value;
+{ String prefix;
+  AST data;
   String file;
   long line;
   long character;
 
-  public SchemeAbbreviation(String prefix, Object datum, String file, long line, long character)
-  { value = prefix + datum.toString();
+  public SchemeAbbreviation(String prefix, AST data, String file, long line, long character)
+  { this.prefix = prefix;
+    this.data = data;
     this.file = file;
     this.line = line;
     this.character = character;
@@ -24,7 +26,7 @@ public class SchemeAbbreviation implements SchemeLiteral
   }
 
   public String toString()
-  { return value;
+  { return prefix + data.toString();
   }
 
   @Override

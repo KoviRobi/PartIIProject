@@ -28,10 +28,10 @@ public class SchemeVector implements SchemeLiteral
 
   public String toString()
   { StringBuilder sb = new StringBuilder();
-    sb.append(" #( ");
+    sb.append("#(");
     for (Object o : data)
       sb.append(o.toString() + " ");
-    sb.append(") ");
+    sb.append(")");
     return sb.toString();
   }
 

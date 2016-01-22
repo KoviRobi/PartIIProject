@@ -39,6 +39,24 @@ public class SchemeCons implements AST
   { this.cdr = cdr;
   }
 
+  public String toString()
+  { StringBuilder returnValue = new StringBuilder("(");
+    returnValue.append(car());
+    AST cell = cdr();
+    while (cell instanceof SchemeCons)
+    { returnValue.append(" ");
+      returnValue.append(((SchemeCons)cell).car());
+      cell = ((SchemeCons)cell).cdr();
+    }
+
+    if (! (cell instanceof SchemeNil))
+    { returnValue.append(" . ");
+      returnValue.append(cell);
+    }
+    returnValue.append(")");
+    return returnValue.toString();
+  }
+
   @Override
   public <T> T accept(ASTVisitor<T> visitor) throws SyntaxErrorException
   { return visitor.visit(this);

@@ -20,8 +20,7 @@ import java.util.ArrayList;
 public class Interconnect
 { static Environment InitialEnvironment;
   static
-  { // ToDo: initialize Bindings
-    Binding LambdaSyntaxBinding = new LambdaSyntaxBinding();
+  { Binding LambdaSyntaxBinding = new LambdaSyntaxBinding();
     Binding LetSyntaxBinding = new LetSyntaxBinding();
     Binding JavaCallBinding = new JavaCallBinding();
     Binding JavaClassBinding = new JavaClassBinding();

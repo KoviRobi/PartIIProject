@@ -18,7 +18,6 @@ public class GlobalIdentifierStatement extends IdentifierStatement
 { String name;
   private static final ObjectType type = new ObjectType(RuntimeValue.class);
 
-  // FIXME: inline type if not needed later
   public GlobalIdentifierStatement(String name)
   { this.name = name;
   }

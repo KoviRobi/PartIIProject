@@ -24,6 +24,10 @@ public class SchemeNil implements AST
   { return visitor.visit(this);
   }
 
+  public String toString()
+  { return "'()";
+  }
+
   public String file() { return file; }
   public long line() { return line; }
   public long character() { return character; }
