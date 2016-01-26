@@ -3,15 +3,13 @@ package rmk35.partIIProject.backend;
 import java.util.List;
 import rmk35.partIIProject.backend.statements.Statement;
 
-public class JavaBytecodeGenerator
-{ public static OutputClass generateOutput(String name, List<Statement> statements)
-  { OutputClass output = new MainClass(name);
-
-    for (Statement statement : statements)
-    { statement.generateOutput(output);
+public class JavaByteCodeGenerator
+{ public static OutputClass generateOutput(MainClass mainClass, List<Statement> statements)
+  { for (Statement statement : statements)
+    { statement.generateOutput(mainClass, mainClass, mainClass.getPrimaryMethod());
     }
 
-    return output;
+    return mainClass;
   }
 
 // FIXME: Make this a proper test

@@ -1,6 +1,8 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.CheckCastInstruction;
 import rmk35.partIIProject.backend.instructions.IntegerConstantInstruction;
@@ -22,42 +24,42 @@ import lombok.ToString;
 
 @ToString
 public class JavaCallStatement extends Statement
-{ Statement method;
+{ Statement methodToCall;
   Statement thisObject;
   List<Statement> arguments;
 
   private static final ObjectType objectType = new ObjectType(Object.class);
 
-  public JavaCallStatement(Statement method, Statement thisObject, List<Statement> arguments)
-  { this.method = method;
+  public JavaCallStatement(Statement methodToCall, Statement thisObject, List<Statement> arguments)
+  { this.methodToCall = methodToCall;
     this.thisObject = thisObject;
     this.arguments = arguments;
   }
 
-  public void generateOutput(OutputClass output)
-  { output.addToPrimaryMethod(new CommentPseudoInstruction("JavaCallStatement"));
-    method.generateOutput(output);
-    output.addToPrimaryMethod(new CheckCastInstruction(Method.class));
-    thisObject.generateOutput(output);
+  public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
+  { method.addInstruction(new CommentPseudoInstruction("JavaCallStatement"));
+    methodToCall.generateOutput(mainClass, outputClass, method);
+    method.addInstruction(new CheckCastInstruction(Method.class));
+    thisObject.generateOutput(mainClass, outputClass, method);
 
     // Make array for variadic arguments
-    output.addToPrimaryMethod(new IntegerConstantInstruction(arguments.size()));
-    output.addToPrimaryMethod(new NewReferenceArrayInstruction(Object.class));
+    method.addInstruction(new IntegerConstantInstruction(arguments.size()));
+    method.addInstruction(new NewReferenceArrayInstruction(Object.class));
     int i = 0;
     for (Statement argument : arguments)
-    { output.addToPrimaryMethod(new DupInstruction()); // Invariant: Array on top of stack
-      output.addToPrimaryMethod(new IntegerConstantInstruction(i));
-      argument.generateOutput(output);
-      output.addToPrimaryMethod(new ReferenceArrayStoreInstruction());
+    { method.addInstruction(new DupInstruction()); // Invariant: Array on top of stack
+      method.addInstruction(new IntegerConstantInstruction(i));
+      argument.generateOutput(mainClass, outputClass, method);
+      method.addInstruction(new ReferenceArrayStoreInstruction());
       i++;
     }
-    output.addToPrimaryMethod(new VirtualCallInstruction(objectType, "java/lang/reflect/Method/invoke", objectType, new ArrayType(objectType)));
+    method.addInstruction(new VirtualCallInstruction(objectType, "java/lang/reflect/Method/invoke", objectType, new ArrayType(objectType)));
   }
 
   @Override
   public Collection<String> getFreeIdentifiers()
   { Collection<String> returnValue = new TreeSet<>();
-    returnValue.addAll(method.getFreeIdentifiers());
+    returnValue.addAll(methodToCall.getFreeIdentifiers());
     returnValue.addAll(thisObject.getFreeIdentifiers());
     arguments.parallelStream()
              .map(statement -> statement.getFreeIdentifiers())

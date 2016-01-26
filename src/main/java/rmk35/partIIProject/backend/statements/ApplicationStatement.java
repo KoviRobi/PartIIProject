@@ -1,6 +1,8 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.runtimeValues.RuntimeValue;
 import rmk35.partIIProject.backend.runtimeValues.LambdaValue;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
@@ -26,38 +28,41 @@ import lombok.ToString;
 
 @ToString
 public class ApplicationStatement extends Statement
-{ List<Statement> application;
+{ Statement operator;
+  List<Statement> operands;
 
-  public ApplicationStatement(List<Statement> application)
-  { this.application =  application;
+  public ApplicationStatement(Statement operator, List<Statement> operands)
+  { this.operator = operator;
+    this.operands = operands;
   }
 
-  public void generateOutput(OutputClass output)
-  { output.addToPrimaryMethod(new CommentPseudoInstruction("ApplicationStatement"));
-    application.get(0).generateOutput(output);
-    output.addToPrimaryMethod(new CheckCastInstruction(LambdaValue.class));
+  public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
+  { method.addInstruction(new CommentPseudoInstruction("ApplicationStatement"));
+    operator.generateOutput(mainClass, outputClass, method);
+    method.addInstruction(new CheckCastInstruction(LambdaValue.class));
     
     // Create new ArrayList for operands
-    output.addToPrimaryMethod(new NewObjectInstruction(ArrayList.class));
-    output.addToPrimaryMethod(new DupInstruction());
-    output.addToPrimaryMethod(new IntegerConstantInstruction(application.size()));
-    output.addToPrimaryMethod(new NonVirtualCallInstruction(new VoidType(), "java/util/ArrayList/<init>", new IntegerType()));
+    method.addInstruction(new NewObjectInstruction(ArrayList.class));
+    method.addInstruction(new DupInstruction());
+    method.addInstruction(new IntegerConstantInstruction(operands.size()));
+    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), "java/util/ArrayList/<init>", new IntegerType()));
 
-    for (Statement statement : application)
-    { output.addToPrimaryMethod(new DupInstruction()); // Loop invariant is the list on the top of the stack
-      statement.generateOutput(output);
-      output.addToPrimaryMethod(new InterfaceCallInstruction(/* static */ false, new BooleanType(), "java/util/List/add", new ObjectType(Object.class)));
-      output.addToPrimaryMethod(new PopInstruction());
+    for (Statement operand : operands)
+    { method.addInstruction(new DupInstruction()); // Loop invariant is the list on the top of the stack
+      operand.generateOutput(mainClass, outputClass, method);
+      method.addInstruction(new InterfaceCallInstruction(/* static */ false, new BooleanType(), "java/util/List/add", new ObjectType(Object.class)));
+      method.addInstruction(new PopInstruction()); // Pop returned boolean
     }
 
     // Invoke operator.run with argument of operand
-    output.addToPrimaryMethod(new VirtualCallInstruction(new ObjectType(RuntimeValue.class), "rmk35/partIIProject/backend/runtimeValues/LambdaValue/run", new ObjectType(ArrayList.class)));
+    method.addInstruction(new VirtualCallInstruction(new ObjectType(RuntimeValue.class), "rmk35/partIIProject/backend/runtimeValues/LambdaValue/run", new ObjectType(ArrayList.class)));
   }
 
   @Override
   public Collection<String> getFreeIdentifiers()
   { Collection<String> returnValue = new TreeSet<>();
-    application.parallelStream()
+    returnValue.addAll(operator.getFreeIdentifiers());
+    operands.parallelStream()
                .map(statement -> statement.getFreeIdentifiers())
                .forEach(collection -> returnValue.addAll(collection));
     return returnValue;

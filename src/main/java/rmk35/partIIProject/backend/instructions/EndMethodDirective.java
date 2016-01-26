@@ -2,13 +2,13 @@ package rmk35.partIIProject.backend.instructions;
 
 import rmk35.partIIProject.backend.ByteCodeMethod;
 
-public class ReferenceArrayStoreInstruction implements Instruction
+public class EndMethodDirective implements Instruction
 { // Called when adding to primary method
   public void simulateLimits(ByteCodeMethod outputClass)
-  { outputClass.decrementStackCount(3);
+  {
   }
 
   public String byteCode()
-  { return "  aastore";
+  { return ".end method";
   }
 }

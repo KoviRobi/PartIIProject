@@ -1,6 +1,8 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.runtimeValues.BooleanValue;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
@@ -23,12 +25,12 @@ public class BooleanValueStatement extends Statement
   { this.value = value;
   }
 
-  public void generateOutput(OutputClass output)
-  { output.addToPrimaryMethod(new CommentPseudoInstruction("BooleanValueStatement"));
-    output.addToPrimaryMethod(new NewObjectInstruction(BooleanValue.class));
-    output.addToPrimaryMethod(new DupInstruction());
-    output.addToPrimaryMethod(new IntegerConstantInstruction(value? 1 : 0));
-    output.addToPrimaryMethod(new NonVirtualCallInstruction(new VoidType(), "rmk35/partIIProject/backend/runtimeValues/BooleanValue/<init>", new BooleanType()));
+  public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
+  { method.addInstruction(new CommentPseudoInstruction("BooleanValueStatement"));
+    method.addInstruction(new NewObjectInstruction(BooleanValue.class));
+    method.addInstruction(new DupInstruction());
+    method.addInstruction(new IntegerConstantInstruction(value? 1 : 0));
+    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), "rmk35/partIIProject/backend/runtimeValues/BooleanValue/<init>", new BooleanType()));
   }
 
   @Override

@@ -1,6 +1,8 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.runtimeValues.StringValue;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.CheckCastInstruction;
@@ -26,15 +28,15 @@ public class JavaStaticFieldStatement extends Statement
     this.fieldName = fieldName;
   }
 
-  public void generateOutput(OutputClass output)
-  { output.addToPrimaryMethod(new CommentPseudoInstruction("JavaFieldStatement"));
-    className.generateOutput(output);
-    output.addToPrimaryMethod(new CheckCastInstruction(StringValue.class));
-    output.addToPrimaryMethod(new VirtualCallInstruction(stringType, "java/lang/Object/toString"));
-    fieldName.generateOutput(output);
-    output.addToPrimaryMethod(new CheckCastInstruction(StringValue.class));
-    output.addToPrimaryMethod(new VirtualCallInstruction(stringType, "java/lang/Object/toString"));
-    output.addToPrimaryMethod(new StaticCallInstruction(objectType, "rmk35/partIIProject/backend/runtimeValues/IntrospectionHelper/getStaticField", stringType, stringType));
+  public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
+  { method.addInstruction(new CommentPseudoInstruction("JavaFieldStatement"));
+    className.generateOutput(mainClass, outputClass, method);
+    method.addInstruction(new CheckCastInstruction(StringValue.class));
+    method.addInstruction(new VirtualCallInstruction(stringType, "java/lang/Object/toString"));
+    fieldName.generateOutput(mainClass, outputClass, method);
+    method.addInstruction(new CheckCastInstruction(StringValue.class));
+    method.addInstruction(new VirtualCallInstruction(stringType, "java/lang/Object/toString"));
+    method.addInstruction(new StaticCallInstruction(objectType, "rmk35/partIIProject/backend/runtimeValues/IntrospectionHelper/getStaticField", stringType, stringType));
   }
 
   @Override

@@ -1,6 +1,8 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.NullConstantInstruction;
 
@@ -19,14 +21,14 @@ public class SetStatement extends Statement
     this.value = value;
   }
 
-  public void generateOutput(OutputClass output)
-  { output.addToPrimaryMethod(new CommentPseudoInstruction("SetStatement"));
+  public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
+  { method.addInstruction(new CommentPseudoInstruction("SetStatement"));
     if (value == null)
-    { output.addToPrimaryMethod(new NullConstantInstruction());
+    { method.addInstruction(new NullConstantInstruction());
     } else
-    { value.generateOutput(output);
+    { value.generateOutput(mainClass, outputClass, method);
     }
-    variable.generateSetOutput(output);
+    variable.generateSetOutput(mainClass, outputClass, method);
   }
 
   @Override

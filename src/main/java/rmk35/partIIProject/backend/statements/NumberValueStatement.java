@@ -1,6 +1,8 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.runtimeValues.NumberValue;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
@@ -23,12 +25,12 @@ public class NumberValueStatement extends Statement
   { this.value = value;
   }
 
-  public void generateOutput(OutputClass output)
-  { output.addToPrimaryMethod(new CommentPseudoInstruction("NumberValueStatement"));
-    output.addToPrimaryMethod(new NewObjectInstruction(NumberValue.class));
-    output.addToPrimaryMethod(new DupInstruction());
-    output.addToPrimaryMethod(new IntegerConstantInstruction(value));
-    output.addToPrimaryMethod(new NonVirtualCallInstruction(new VoidType(), "rmk35/partIIProject/backend/runtimeValues/NumberValue/<init>", new IntegerType()));
+  public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
+  { method.addInstruction(new CommentPseudoInstruction("NumberValueStatement"));
+    method.addInstruction(new NewObjectInstruction(NumberValue.class));
+    method.addInstruction(new DupInstruction());
+    method.addInstruction(new IntegerConstantInstruction(value));
+    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), "rmk35/partIIProject/backend/runtimeValues/NumberValue/<init>", new IntegerType()));
   }
 
   @Override

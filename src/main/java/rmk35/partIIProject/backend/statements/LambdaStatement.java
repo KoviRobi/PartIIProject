@@ -1,7 +1,9 @@
 package rmk35.partIIProject.backend.statements;
 
 import rmk35.partIIProject.backend.InnerClass;
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
 import rmk35.partIIProject.backend.instructions.DupInstruction;
@@ -24,17 +26,17 @@ public class LambdaStatement extends Statement
     this.body = body;
   }
 
-  public void generateOutput(OutputClass output)
-  { output.addToPrimaryMethod(new CommentPseudoInstruction("LambdaStatement"));
+  public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
+  { method.addInstruction(new CommentPseudoInstruction("LambdaStatement"));
 
-    String innerClassName = output.uniqueID() + "$Lambda";
-    InnerClass innerClass = new InnerClass(innerClassName, closureVariables, output.getMainClass(), formals.size());
-    body.generateOutput(innerClass);
-    output.getMainClass().addInnerClass(innerClass);
+    String innerClassName = mainClass.uniqueID() + "$Lambda"; // Using main class' unique ID as that way all files definitely have different names
+    InnerClass innerClass = new InnerClass(innerClassName, closureVariables, formals.size());
+    body.generateOutput(mainClass, innerClass, innerClass.getPrimaryMethod());
+    mainClass.addInnerClass(innerClass);
 
-    output.addToPrimaryMethod(new NewObjectInstruction(innerClassName)); // Create class, need to use Deprecated API as we don't have this class yet
-    output.addToPrimaryMethod(new DupInstruction()); // For invokenonvirtual, need 'this' pointer
-    innerClass.invokeConstructor(output);
+    method.addInstruction(new NewObjectInstruction(innerClassName)); // Create class, need to use Deprecated API as we don't have this class yet
+    method.addInstruction(new DupInstruction()); // For invokenonvirtual, need 'this' pointer
+    innerClass.invokeConstructor(mainClass, outputClass, method);
   }
 
   @Override

@@ -1,6 +1,8 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.runtimeValues.RuntimeValue;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.InterfaceCallInstruction;
@@ -28,26 +30,26 @@ public class IfStatement extends Statement
     this.falseCase = falseCase;
   }
 
-  public void generateOutput(OutputClass output)
-  { output.addToPrimaryMethod(new CommentPseudoInstruction("IfStatement"));
-    predicate.generateOutput(output);
+  public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
+  { method.addInstruction(new CommentPseudoInstruction("IfStatement"));
+    predicate.generateOutput(mainClass, outputClass, method);
     // Top of stack is now predicate's value
     // XXX Speed: if we make booleans unique, we could use "if_acmpeq" to compare false
-    (new BooleanValueStatement(false)).generateOutput(output);
-    output.addToPrimaryMethod(new InterfaceCallInstruction(/* static */ false, new BooleanType(), "rmk35/partIIProject/backend/runtimeValues/RuntimeValue/eq", runtimeValueType));
+    (new BooleanValueStatement(false)).generateOutput(mainClass, outputClass, method);
+    method.addInstruction(new InterfaceCallInstruction(/* static */ false, new BooleanType(), "rmk35/partIIProject/backend/runtimeValues/RuntimeValue/eq", runtimeValueType));
 
     // Stack now contains 1 if predicate is false, otherwise 0.
-    String uniqueID = output.uniqueID();
+    String uniqueID = outputClass.uniqueID();
     String falseLabel = "FalseCase" + uniqueID;
     String endLabel = "IfEnd" + uniqueID;
-    output.addToPrimaryMethod(new IfNotEqualsInstruction(falseLabel)); // ifne branches if non 0, but 0 is boolean false (hence predicate true by above)
-    trueCase.generateOutput(output);
-    output.addToPrimaryMethod(new GotoInstruction(endLabel));
+    method.addInstruction(new IfNotEqualsInstruction(falseLabel)); // ifne branches if non 0, but 0 is boolean false (hence predicate true by above)
+    trueCase.generateOutput(mainClass, outputClass, method);
+    method.addInstruction(new GotoInstruction(endLabel));
 
-    output.addToPrimaryMethod(new LabelPseudoInstruction(falseLabel));
-    falseCase.generateOutput(output);
+    method.addInstruction(new LabelPseudoInstruction(falseLabel));
+    falseCase.generateOutput(mainClass, outputClass, method);
 
-    output.addToPrimaryMethod(new LabelPseudoInstruction(endLabel));
+    method.addInstruction(new LabelPseudoInstruction(endLabel));
   }
 
   @Override

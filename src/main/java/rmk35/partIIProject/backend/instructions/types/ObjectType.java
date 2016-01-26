@@ -1,8 +1,13 @@
 package rmk35.partIIProject.backend.instructions.types;
 
+import rmk35.partIIProject.InternalCompilerException;
+
 public class ObjectType implements JVMType
 { String objectClass;
 
+  public ObjectType()
+  { this.objectClass = null;
+  }
   public ObjectType(Class<?> objectClass)
   { this.objectClass = objectClass.getName().replace('.', '/');
   }
@@ -14,7 +19,11 @@ public class ObjectType implements JVMType
 
   @Override
   public String toString()
-  { return "L" + objectClass + ";";
+  { if (objectClass != null)
+    { return "L" + objectClass + ";";
+    } else
+    { throw new InternalCompilerException("Tried to access objectType's objectClass field, while it is null");
+    }
   }
 
   @Override

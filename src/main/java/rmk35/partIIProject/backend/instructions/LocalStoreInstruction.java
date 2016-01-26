@@ -2,7 +2,7 @@ package rmk35.partIIProject.backend.instructions;
 
 import rmk35.partIIProject.InternalCompilerException;
 
-import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.instructions.types.JVMType;
 
 public class LocalStoreInstruction implements Instruction
@@ -15,7 +15,7 @@ public class LocalStoreInstruction implements Instruction
   }
 
   // Called when adding to primary method
-  public void simulateLimits(OutputClass outputClass)
+  public void simulateLimits(ByteCodeMethod outputClass)
   { outputClass.decrementStackCount(1);
   }
 

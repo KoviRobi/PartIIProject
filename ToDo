@@ -8,3 +8,4 @@ Macros
   - Make ASTTranscribeVisitor?
 If
 Throw/Catch
+Inconsistency: some Statements take other Statements, others just rely on values on top of the stack

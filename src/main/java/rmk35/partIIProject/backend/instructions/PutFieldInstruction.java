@@ -1,6 +1,6 @@
 package rmk35.partIIProject.backend.instructions;
 
-import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.instructions.types.JVMType;
 
 public class PutFieldInstruction implements Instruction
@@ -13,7 +13,7 @@ public class PutFieldInstruction implements Instruction
   }
 
   // Called when adding to primary method
-  public void simulateLimits(OutputClass outputClass)
+  public void simulateLimits(ByteCodeMethod outputClass)
   { outputClass.decrementStackCount(2); // Object (who's field we are setting) and value
   }
 

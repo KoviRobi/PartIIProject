@@ -16,9 +16,9 @@ import java.util.ArrayList;
 public abstract class VariableBinding implements Binding
 { public Statement applicate(Environment environment, AST arguments, String file, long line, long character)
   { List<Statement> applicationList = new ArrayList<>();
-    applicationList.add(this.toStatement(file, line, character));
-    return new ApplicationStatement(arguments.accept
-      (new ASTListFoldVisitor<List<Statement>>(applicationList,
-        (list, ast) -> { list.add(ast.accept(new ASTConvertVisitor(environment))); return list; } )));
+    return new ApplicationStatement(this.toStatement(file, line, character), 
+      arguments.accept
+        (new ASTListFoldVisitor<List<Statement>>(new ArrayList<>(),
+          (list, ast) -> { list.add(ast.accept(new ASTConvertVisitor(environment))); return list; } )));
   }
 }

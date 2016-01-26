@@ -1,6 +1,8 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.runtimeValues.StringValue;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
@@ -23,12 +25,12 @@ public class StringValueStatement extends Statement
   { this.string = string;
   }
 
-  public void generateOutput(OutputClass output)
-  { output.addToPrimaryMethod(new CommentPseudoInstruction("StringValueStatement"));
-    output.addToPrimaryMethod(new NewObjectInstruction(StringValue.class));
-    output.addToPrimaryMethod(new DupInstruction());
-    output.addToPrimaryMethod(new StringConstantInstruction(string));
-    output.addToPrimaryMethod(new NonVirtualCallInstruction(new VoidType(), "rmk35/partIIProject/backend/runtimeValues/StringValue/<init>", new ObjectType(String.class)));
+  public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
+  { method.addInstruction(new CommentPseudoInstruction("StringValueStatement"));
+    method.addInstruction(new NewObjectInstruction(StringValue.class));
+    method.addInstruction(new DupInstruction());
+    method.addInstruction(new StringConstantInstruction(string));
+    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), "rmk35/partIIProject/backend/runtimeValues/StringValue/<init>", new ObjectType(String.class)));
   }
 
   @Override

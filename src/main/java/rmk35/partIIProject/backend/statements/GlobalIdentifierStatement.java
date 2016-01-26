@@ -1,6 +1,8 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.runtimeValues.RuntimeValue;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.LocalLoadInstruction;
@@ -23,18 +25,18 @@ public class GlobalIdentifierStatement extends IdentifierStatement
   }
 
   @Override
-  public void generateOutput(OutputClass output)
-  { output.addToPrimaryMethod(new CommentPseudoInstruction("GlobalIdentifierStatement Get"));
+  public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
+  { method.addInstruction(new CommentPseudoInstruction("GlobalIdentifierStatement Get"));
     // Note getMainClass, whereas for ClosureIdentifier we have getName
-    output.addToPrimaryMethod(new GetStaticInstruction(type, output.getMainClass() + "/" + name));
+    method.addInstruction(new GetStaticInstruction(type, mainClass.getName() + "/" + name));
   }
 
   @Override
-  public void generateSetOutput(OutputClass output)
-  { output.addToPrimaryMethod(new CommentPseudoInstruction("GlobalIdentifierStatement Set"));
-    output.ensureFieldExists("private static", name, type);
+  public void generateSetOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
+  { method.addInstruction(new CommentPseudoInstruction("GlobalIdentifierStatement Set"));
+    mainClass.ensureFieldExists("public static", name, type);
     // Note getMainClass, whereas for ClosureIdentifier we have getName
-    output.addToPrimaryMethod(new PutStaticInstruction(type, output.getMainClass() + "/" + name));
+    method.addInstruction(new PutStaticInstruction(type, mainClass.getName() + "/" + name));
   }
 
   @Override

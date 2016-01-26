@@ -3,8 +3,16 @@ package rmk35.partIIProject.backend;
 import rmk35.partIIProject.InternalCompilerException;
 
 import rmk35.partIIProject.backend.instructions.Instruction;
+import rmk35.partIIProject.backend.instructions.LocalLoadInstruction;
+import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
 import rmk35.partIIProject.backend.instructions.types.JVMType;
+import rmk35.partIIProject.backend.instructions.types.VoidType;
+import rmk35.partIIProject.backend.instructions.types.ObjectType;
 
+import java.util.Map;
+import java.util.Hashtable;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 import java.io.BufferedWriter;
@@ -12,49 +20,78 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public abstract class OutputClass
-{ int stackLimit, stackCount;
-  int localLimit, localCount;
+{ String name;
+  Set<String> fields;
+  Map<String, ByteCodeMethod> methods;
+  int uniqueNumber = 0;
 
-  public OutputClass(int stackCount, int localCount)
-  { this.stackCount = this.stackLimit = stackCount;
-    this.localCount = this.localLimit = localCount;
+  private static final JVMType voidType = new VoidType();
+
+  public OutputClass(String name)
+  { this.name = name;
+    fields = new HashSet<>();
+    methods = new Hashtable<>();
+
+    ByteCodeMethod init = new ByteCodeMethod(voidType, "public", "<init>");
+    init.addInstruction(new LocalLoadInstruction(new ObjectType(), 0));
+    init.addInstruction(new NonVirtualCallInstruction(voidType, getSuperClassName() + "/<init>"));
+
+    methods.put("<init>", init);
+    methods.put("<clinit>", new ByteCodeMethod(voidType, "public static", "<clinit>"));
+ }
+
+  public String getName()
+  { return name;
   }
 
-  public void  incrementStackCount(int n)
-  { stackCount += n;
-    stackLimit = Math.max(stackLimit, stackCount);
-  }
-  public void decrementStackCount(int n)
-  { stackCount -= n;
-    if (stackCount<0) throw new InternalCompilerException("Simulated stack underflown");
-  }
-  public void incrementLocalCount(int n)
-  { localCount += n;
-    localLimit = Math.max(localLimit, localCount);
-  }
-  public void decrementLocalCount(int n)
-  { localCount -= n;
-    if (localCount<0) throw new InternalCompilerException("Simulated locals underflown");
+  public String uniqueID()
+  { uniqueNumber++;
+    return getName() + Integer.toString(uniqueNumber);
   }
 
-  /** Either the main() methiod for main class, or the run(args) method for the inner class */
-  public final void addToPrimaryMethod(Instruction instruction)
-  { instruction.simulateLimits(this);
-    addInstruction(instruction);
+  public void ensureFieldExists(String modifier, String name, JVMType type)
+  { fields.add(".field " + modifier + " " + name + " " + type.toString());
   }
-  protected abstract void addInstruction(Instruction instruction);
-  public abstract void ensureFieldExists(String modifier, String name, JVMType type);
-  /** Generates a unique ID that does not start with a number */
-  public abstract String uniqueID();
-  public abstract String getName();
-  public abstract String getAssembly();
-  public abstract MainClass getMainClass();
+
+  public ByteCodeMethod getInitializer() // Constructor
+  { return methods.get("<init>");
+  }
+
+  public ByteCodeMethod getClassInitializer() // Static block
+  { return methods.get("<clinit>");
+  }
+
+  public String byteCode()
+  { StringBuilder returnValue = new StringBuilder();
+    returnValue.append(".class ");
+    returnValue.append(getName());
+    returnValue.append("\n");
+
+    returnValue.append(".super ");
+    returnValue.append(getSuperClassName());
+    returnValue.append("\n\n");
+
+    returnValue.append(String.join("\n", fields));
+    returnValue.append("\n\n");
+
+    for (ByteCodeMethod method : methods.values())
+    { returnValue.append(method.byteCode());
+      returnValue.append("\n\n");
+    }
+
+    return returnValue.toString();
+  }
 
   public void saveToDisk() throws IOException
   { try (BufferedWriter writer =
             new BufferedWriter
               (new FileWriter(getName() + ".j")))
-    { writer.append(this.getAssembly());
+    { writer.append(byteCode());
     }
   }
+
+  /* Gets the primary method of the class, either the main or the run method (for Main and Inner classes respectively) */
+  public abstract ByteCodeMethod getPrimaryMethod();
+  /** Generates a unique ID that does not start with a number */
+  public abstract String getSuperClassName();
 }

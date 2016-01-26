@@ -1,6 +1,8 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.runtimeValues.StringValue;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.CheckCastInstruction;
@@ -24,12 +26,12 @@ public class JavaClassStatement extends Statement
   { this.className = className;
   }
 
-  public void generateOutput(OutputClass output)
-  { output.addToPrimaryMethod(new CommentPseudoInstruction("JavaClassStatement"));
-    className.generateOutput(output);
-    output.addToPrimaryMethod(new CheckCastInstruction(StringValue.class));
-    output.addToPrimaryMethod(new VirtualCallInstruction(stringType, "java/lang/Object/toString"));
-    output.addToPrimaryMethod(new NonVirtualCallInstruction(classType, "java/lang/Class/forName", stringType));
+  public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
+  { method.addInstruction(new CommentPseudoInstruction("JavaClassStatement"));
+    className.generateOutput(mainClass, outputClass, method);
+    method.addInstruction(new CheckCastInstruction(StringValue.class));
+    method.addInstruction(new VirtualCallInstruction(stringType, "java/lang/Object/toString"));
+    method.addInstruction(new NonVirtualCallInstruction(classType, "java/lang/Class/forName", stringType));
   }
 
   @Override

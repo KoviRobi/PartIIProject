@@ -1,6 +1,8 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.runtimeValues.RuntimeValue;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.LocalLoadInstruction;
@@ -24,16 +26,16 @@ public class LocalIdentifierStatement extends IdentifierStatement
   }
 
   @Override
-  public void generateOutput(OutputClass output)
-  { output.addToPrimaryMethod(new CommentPseudoInstruction("LocalIdentifier Get"));
-    output.addToPrimaryMethod(new LocalLoadInstruction(type, localIndex));
+  public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
+  { method.addInstruction(new CommentPseudoInstruction("LocalIdentifier Get"));
+    method.addInstruction(new LocalLoadInstruction(type, localIndex));
   }
 
   /* Assumes variable to set to is on top of the stack */
   @Override
-  public void generateSetOutput(OutputClass output)
-  { output.addToPrimaryMethod(new CommentPseudoInstruction("LocalIdentifier Set"));
-    output.addToPrimaryMethod(new LocalStoreInstruction(type, localIndex));
+  public void generateSetOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
+  { method.addInstruction(new CommentPseudoInstruction("LocalIdentifier Set"));
+    method.addInstruction(new LocalStoreInstruction(type, localIndex));
   }
 
   @Override

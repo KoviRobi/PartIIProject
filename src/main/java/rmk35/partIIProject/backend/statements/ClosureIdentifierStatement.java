@@ -1,6 +1,8 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.runtimeValues.RuntimeValue;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.LocalLoadInstruction;
@@ -26,20 +28,20 @@ public class ClosureIdentifierStatement extends IdentifierStatement
   }
 
   @Override
-  public void generateOutput(OutputClass output)
-  { output.addToPrimaryMethod(new CommentPseudoInstruction("ClosureIdentifierStatement Get"));
-    output.addToPrimaryMethod(new LocalLoadInstruction(type, 0)); // 'this', the current object
+  public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
+  { method.addInstruction(new CommentPseudoInstruction("ClosureIdentifierStatement Get"));
+    method.addInstruction(new LocalLoadInstruction(type, 0)); // 'this', the current object
     // Note getClass, whereas for GlobalIdentifier we have getMainClass
-    output.addToPrimaryMethod(new GetFieldInstruction(type, output.getName() + "/" + name));
+    method.addInstruction(new GetFieldInstruction(type, outputClass.getName() + "/" + name));
   }
 
   @Override
-  public void generateSetOutput(OutputClass output)
-  { output.addToPrimaryMethod(new CommentPseudoInstruction("ClosureIdentifierStatement Set"));
-    output.ensureFieldExists("private", name, type);
-    output.addToPrimaryMethod(new LocalLoadInstruction(type, 0)); // 'this', the current object
+  public void generateSetOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
+  { method.addInstruction(new CommentPseudoInstruction("ClosureIdentifierStatement Set"));
+    outputClass.ensureFieldExists("private", name, type);
+    method.addInstruction(new LocalLoadInstruction(type, 0)); // 'this', the current object
     // Note getClass, whereas for GlobalIdentifier we have getMainClass
-    output.addToPrimaryMethod(new PutFieldInstruction(type, output.getName() + "/" + name));
+    method.addInstruction(new PutFieldInstruction(type, outputClass.getName() + "/" + name));
   }
 
   @Override

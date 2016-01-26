@@ -1,6 +1,8 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.runtimeValues.StringValue;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.CheckCastInstruction;
@@ -37,28 +39,28 @@ public class JavaMethodStatement extends Statement
     this.arguments = arguments;
  }
 
-  public void generateOutput(OutputClass output)
-  { output.addToPrimaryMethod(new CommentPseudoInstruction("JavaMethodStatement"));
-    object.generateOutput(output);
-    methodName.generateOutput(output);
-    output.addToPrimaryMethod(new CheckCastInstruction(StringValue.class));
-    output.addToPrimaryMethod(new VirtualCallInstruction(stringType, "java/lang/Object/toString"));
+  public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
+  { method.addInstruction(new CommentPseudoInstruction("JavaMethodStatement"));
+    object.generateOutput(mainClass, outputClass, method);
+    methodName.generateOutput(mainClass, outputClass, method);
+    method.addInstruction(new CheckCastInstruction(StringValue.class));
+    method.addInstruction(new VirtualCallInstruction(stringType, "java/lang/Object/toString"));
 
     // Make array for variadic arguments
-    output.addToPrimaryMethod(new IntegerConstantInstruction(arguments.size()));
-    output.addToPrimaryMethod(new NewReferenceArrayInstruction(String.class));
+    method.addInstruction(new IntegerConstantInstruction(arguments.size()));
+    method.addInstruction(new NewReferenceArrayInstruction(String.class));
     int i = 0;
     for (Statement argument : arguments)
-    { output.addToPrimaryMethod(new DupInstruction()); // Invariant: Array on top of stack
-      output.addToPrimaryMethod(new IntegerConstantInstruction(i));
-      argument.generateOutput(output);
-      output.addToPrimaryMethod(new CheckCastInstruction(StringValue.class));
-      output.addToPrimaryMethod(new VirtualCallInstruction(stringType, "java/lang/Object/toString"));
-      output.addToPrimaryMethod(new ReferenceArrayStoreInstruction());
+    { method.addInstruction(new DupInstruction()); // Invariant: Array on top of stack
+      method.addInstruction(new IntegerConstantInstruction(i));
+      argument.generateOutput(mainClass, outputClass, method);
+      method.addInstruction(new CheckCastInstruction(StringValue.class));
+      method.addInstruction(new VirtualCallInstruction(stringType, "java/lang/Object/toString"));
+      method.addInstruction(new ReferenceArrayStoreInstruction());
       i++;
     }
 
-    output.addToPrimaryMethod(new StaticCallInstruction(methodType, "rmk35/partIIProject/backend/runtimeValues/IntrospectionHelper/getMethod", objectType, stringType, new ArrayType(stringType)));
+    method.addInstruction(new StaticCallInstruction(methodType, "rmk35/partIIProject/backend/runtimeValues/IntrospectionHelper/getMethod", objectType, stringType, new ArrayType(stringType)));
   }
 
   @Override

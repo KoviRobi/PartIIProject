@@ -1,27 +1,31 @@
 package rmk35.partIIProject.backend.instructions;
 
-import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.instructions.types.JVMType;
 
 public class BeginMethodDirective implements Instruction
-{ String functionName;
+{ String methodName;
+  String modifier;
   JVMType returnType;
   JVMType[] arguments;
 
-  public BeginMethodDirective(JVMType returnType, String functionName, JVMType... arguments)
+  public BeginMethodDirective(JVMType returnType, String modifier, String methodName, JVMType... arguments)
   { this.returnType = returnType;
-    this.functionName = functionName;
+    this.modifier = modifier;
+    this.methodName = methodName;
     this.arguments = arguments;
   }
 
   // Called when adding to primary method
-  public void simulateLimits(OutputClass outputClass)
-  { outputClass.decrementStackCount(arguments.length + 1 - returnType.stackCount());
+  public void simulateLimits(ByteCodeMethod outputClass)
+  {
   }
 
   public String byteCode()
-  { StringBuilder returnValue = new StringBuilder("  .method public ");
-    returnValue.append(functionName);
+  { StringBuilder returnValue = new StringBuilder(".method ");
+    returnValue.append(modifier);
+    returnValue.append(" ");
+    returnValue.append(methodName);
     returnValue.append("(");
     for (JVMType t : arguments)
     { returnValue.append(t);
