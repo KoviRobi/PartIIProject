@@ -29,8 +29,9 @@ public class InnerClass extends OutputClass
 
   private ObjectType[] constructorTypes;
 
+  private static final JVMType voidType = new VoidType();
   private static final ObjectType runtimeValueType = new ObjectType(RuntimeValue.class);
-  private static final ObjectType arrayListType = new ObjectType(ArrayList.class);
+  private static final ObjectType listType = new ObjectType(List.class);
   private static final ObjectType objectType = new ObjectType(Object.class);
 
   public InnerClass(String name, List<IdentifierStatement> closureVariables, int variableCount)
@@ -51,9 +52,9 @@ public class InnerClass extends OutputClass
     constructorTypes = new ObjectType[closureVariables.size()];
     Arrays.fill(constructorTypes, runtimeValueType);
 
-    ByteCodeMethod runMethod = new ByteCodeMethod(runtimeValueType, "public", "run", arrayListType);
+    ByteCodeMethod runMethod = new ByteCodeMethod(runtimeValueType, "public", "run", listType);
     // Store array into locals
-    runMethod.addInstruction(new LocalLoadInstruction(arrayListType, 1)); // Load ArrayList, will be over written
+    runMethod.addInstruction(new LocalLoadInstruction(listType, 1)); // Load ArrayList, will be over written
     for (int i = 0; i < variableCount; i++)
     { runMethod.addInstruction(new DupInstruction()); // Loop invariant: ArrayList on top of the stack
       runMethod.addInstruction(new IntegerConstantInstruction(i));
@@ -79,6 +80,6 @@ public class InnerClass extends OutputClass
   { for (IdentifierStatement identifier : closureVariables)
     { identifier.generateOutput(mainClass, outputClass, method);
     }
-    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), this.getName() + "/<init>", constructorTypes));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, this.getName() + "/<init>", constructorTypes));
   }
 }

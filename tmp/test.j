@@ -1,85 +1,36 @@
 .class test
 .super java/lang/Object
 
-
+.field public static raise Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;
+.field public static with-exception-handler Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;
 
 .method public static main([Ljava/lang/String;)V
-  .limit stack 10
+  .limit stack 5
   .limit locals 1
+  ; ApplicationStatement
+  ; GlobalIdentifierStatement Get
+  getstatic test/with-exception-handler Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;
+
+  checkcast rmk35/partIIProject/backend/runtimeValues/LambdaValue
+  new java/util/ArrayList
+  dup
+  iconst_2
+  invokenonvirtual java/util/ArrayList/<init>(I)V
+  dup
   ; LambdaStatement
   new test1$Lambda
   dup
   invokenonvirtual test1$Lambda/<init>()V
+  invokeinterface java/util/List/add(Ljava/lang/Object;)Z 2
+  pop
+  dup
   ; LambdaStatement
   new test2$Lambda
   dup
   invokenonvirtual test2$Lambda/<init>()V
-  ; JavaCallStatement
-  ; JavaMethodStatement
-  ; JavaFieldStatement
-  ; StringValueStatement
-  new rmk35/partIIProject/backend/runtimeValues/StringValue
-  dup
-  ldc "java.lang.System"
-  invokenonvirtual rmk35/partIIProject/backend/runtimeValues/StringValue/<init>(Ljava/lang/String;)V
-  checkcast rmk35/partIIProject/backend/runtimeValues/StringValue
-  invokevirtual java/lang/Object/toString()Ljava/lang/String;
-  ; StringValueStatement
-  new rmk35/partIIProject/backend/runtimeValues/StringValue
-  dup
-  ldc "out"
-  invokenonvirtual rmk35/partIIProject/backend/runtimeValues/StringValue/<init>(Ljava/lang/String;)V
-  checkcast rmk35/partIIProject/backend/runtimeValues/StringValue
-  invokevirtual java/lang/Object/toString()Ljava/lang/String;
-  invokestatic rmk35/partIIProject/backend/runtimeValues/IntrospectionHelper/getStaticField(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
-  ; StringValueStatement
-  new rmk35/partIIProject/backend/runtimeValues/StringValue
-  dup
-  ldc "println"
-  invokenonvirtual rmk35/partIIProject/backend/runtimeValues/StringValue/<init>(Ljava/lang/String;)V
-  checkcast rmk35/partIIProject/backend/runtimeValues/StringValue
-  invokevirtual java/lang/Object/toString()Ljava/lang/String;
-  iconst_1
-  anewarray java/lang/String
-  dup
-  iconst_0
-  ; StringValueStatement
-  new rmk35/partIIProject/backend/runtimeValues/StringValue
-  dup
-  ldc "java.lang.Object"
-  invokenonvirtual rmk35/partIIProject/backend/runtimeValues/StringValue/<init>(Ljava/lang/String;)V
-  checkcast rmk35/partIIProject/backend/runtimeValues/StringValue
-  invokevirtual java/lang/Object/toString()Ljava/lang/String;
-  aastore
-  invokestatic rmk35/partIIProject/backend/runtimeValues/IntrospectionHelper/getMethod(Ljava/lang/Object;Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/reflect/Method;
-  checkcast java/lang/reflect/Method
-  ; JavaFieldStatement
-  ; StringValueStatement
-  new rmk35/partIIProject/backend/runtimeValues/StringValue
-  dup
-  ldc "java.lang.System"
-  invokenonvirtual rmk35/partIIProject/backend/runtimeValues/StringValue/<init>(Ljava/lang/String;)V
-  checkcast rmk35/partIIProject/backend/runtimeValues/StringValue
-  invokevirtual java/lang/Object/toString()Ljava/lang/String;
-  ; StringValueStatement
-  new rmk35/partIIProject/backend/runtimeValues/StringValue
-  dup
-  ldc "out"
-  invokenonvirtual rmk35/partIIProject/backend/runtimeValues/StringValue/<init>(Ljava/lang/String;)V
-  checkcast rmk35/partIIProject/backend/runtimeValues/StringValue
-  invokevirtual java/lang/Object/toString()Ljava/lang/String;
-  invokestatic rmk35/partIIProject/backend/runtimeValues/IntrospectionHelper/getStaticField(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;
-  iconst_1
-  anewarray java/lang/Object
-  dup
-  iconst_0
-  ; StringValueStatement
-  new rmk35/partIIProject/backend/runtimeValues/StringValue
-  dup
-  ldc "foo"
-  invokenonvirtual rmk35/partIIProject/backend/runtimeValues/StringValue/<init>(Ljava/lang/String;)V
-  aastore
-  invokevirtual java/lang/reflect/Method/invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
+  invokeinterface java/util/List/add(Ljava/lang/Object;)Z 2
+  pop
+  invokevirtual rmk35/partIIProject/backend/runtimeValues/LambdaValue/run(Ljava/util/List;)Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;
   return
 .end method
 
@@ -92,9 +43,18 @@
 .end method
 
 .method public static <clinit>()V
-  .limit stack 0
+  .limit stack 2
   .limit locals 0
-
+  new rmk35/partIIProject/backend/runtimeValues/RaiseLambda
+  dup
+  invokenonvirtual rmk35/partIIProject/backend/runtimeValues/RaiseLambda/<init>()V
+  ; GlobalIdentifierStatement Set
+  putstatic test/raise Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;
+  new rmk35/partIIProject/backend/runtimeValues/WithExceptionHandler
+  dup
+  invokenonvirtual rmk35/partIIProject/backend/runtimeValues/WithExceptionHandler/<init>()V
+  ; GlobalIdentifierStatement Set
+  putstatic test/with-exception-handler Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;
   return
 .end method
 

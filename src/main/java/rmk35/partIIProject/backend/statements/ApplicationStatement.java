@@ -55,7 +55,7 @@ public class ApplicationStatement extends Statement
     }
 
     // Invoke operator.run with argument of operand
-    method.addInstruction(new VirtualCallInstruction(new ObjectType(RuntimeValue.class), "rmk35/partIIProject/backend/runtimeValues/LambdaValue/run", new ObjectType(ArrayList.class)));
+    method.addInstruction(new VirtualCallInstruction(new ObjectType(RuntimeValue.class), "rmk35/partIIProject/backend/runtimeValues/LambdaValue/run", new ObjectType(List.class)));
   }
 
   @Override

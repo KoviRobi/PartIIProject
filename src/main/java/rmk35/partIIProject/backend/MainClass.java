@@ -1,6 +1,11 @@
 package rmk35.partIIProject.backend;
 
+import rmk35.partIIProject.backend.statements.Statement;
+import rmk35.partIIProject.backend.statements.GlobalIdentifierStatement;
 import rmk35.partIIProject.backend.instructions.Instruction;
+import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
+import rmk35.partIIProject.backend.instructions.DupInstruction;
+import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
 import rmk35.partIIProject.backend.instructions.types.JVMType;
 import rmk35.partIIProject.backend.instructions.types.VoidType;
 import rmk35.partIIProject.backend.instructions.types.ObjectType;
@@ -19,18 +24,28 @@ import java.io.IOException;
 public class MainClass extends OutputClass
 { List<InnerClass> innerClasses;
 
+  private static final JVMType voidType = new VoidType();
+
   public MainClass(String name)
   { this(name, new ArrayList<>());
   }
   public MainClass(String name, List<InnerClass> innerClasses)
   { super(name);
     this.innerClasses = innerClasses;
-    ByteCodeMethod mainMethod = new ByteCodeMethod(new VoidType(), "public static", "main", new ArrayType(new ObjectType(String.class)));
+    ByteCodeMethod mainMethod = new ByteCodeMethod(voidType, "public static", "main", new ArrayType(new ObjectType(String.class)));
     methods.put("main", mainMethod);
   }
 
   public void addInnerClass(InnerClass innerClass)
   { innerClasses.add(innerClass);
+  }
+
+  public void addGlobalBinding(String name, Class<?> binding)
+  { ByteCodeMethod initializer = getClassInitializer();
+    initializer.addInstruction(new NewObjectInstruction(binding));
+    initializer.addInstruction(new DupInstruction());
+    initializer.addInstruction(new NonVirtualCallInstruction(voidType, binding.getName().replace('.', '/') + "/<init>"));
+    (new GlobalIdentifierStatement(name)).generateSetOutput(this, this, initializer);
   }
 
   @Override

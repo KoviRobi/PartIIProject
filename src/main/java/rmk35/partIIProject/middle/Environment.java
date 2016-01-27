@@ -10,10 +10,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
-/* This is an immutable environment, with adding variables returning a new environment.
-    It's immutability is necessary for the operation of the ASTVisitor
-    */
-
 public class Environment
 { Map<String, Binding> bindings = new TreeMap<>();
   int localsCount = 1; // 'this' is local zero
