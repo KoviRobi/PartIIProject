@@ -2,6 +2,7 @@
 ;(lambda (x) (lambda (y) x))
 ;(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") "foo")
 ;(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") raise)
+
 #;(with-exception-handler
   (lambda (x)
     (java
@@ -14,3 +15,7 @@
         "out")
       x))
   (lambda () (raise "help")))
+
+(let-syntax ((foo (syntax-rules ()
+				((foo a) (foo 1 a)) )))
+	(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") "foo"))

@@ -13,6 +13,7 @@ import rmk35.partIIProject.middle.ASTSyntaxSpecificationVisitor;
 import rmk35.partIIProject.middle.ASTConvertVisitor;
 
 import rmk35.partIIProject.backend.statements.Statement;
+import rmk35.partIIProject.backend.statements.BeginStatement;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -41,7 +42,14 @@ public class LetSyntaxBinding implements Binding
     { letEnvironment.addBinding(macro.getFirst(), macro.getSecond());
     }
 
-    return first.cdr().accept(new ASTConvertVisitor(letEnvironment));
+    // ToDo: Implicit begin (superset of the standard but useful)
+    List<Statement> body = first.cdr().accept
+      (new ASTListFoldVisitor<List<Statement>>(new ArrayList<>(),
+        (list, ast) -> { list.add(ast.accept(new ASTConvertVisitor(letEnvironment))); return list; } ));
+    if (body.isEmpty())
+    { throw new SyntaxErrorException("Empty lambda body", operator.file(), operator.line(), operator.character());
+    }
+    return new BeginStatement(body);
   }
 
   @Override

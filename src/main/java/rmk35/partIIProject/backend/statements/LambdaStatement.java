@@ -18,9 +18,9 @@ import lombok.ToString;
 public class LambdaStatement extends Statement
 { List<String> formals;
   List<IdentifierStatement> closureVariables;
-  Statement body;
+  BeginStatement body;
 
-  public LambdaStatement(List<String> formals, List<IdentifierStatement> closureVariables, Statement body)
+  public LambdaStatement(List<String> formals, List<IdentifierStatement> closureVariables, BeginStatement body)
   { this.formals = formals;
     this.closureVariables = closureVariables;
     this.body = body;
@@ -32,6 +32,7 @@ public class LambdaStatement extends Statement
 
     String innerClassName = mainClass.uniqueID() + "$Lambda"; // Using main class' unique ID as that way all files definitely have different names
     InnerClass innerClass = new InnerClass(innerClassName, closureVariables, formals.size());
+    // Implicit begin
     body.generateOutput(mainClass, innerClass, innerClass.getPrimaryMethod());
     mainClass.addInnerClass(innerClass);
 
