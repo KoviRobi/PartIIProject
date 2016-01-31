@@ -13,5 +13,6 @@ Inconsistency: some Statements take other Statements, others just rely on values
   - could be used to ensure right number of arguments on stack
 Improper list lambdas
 Make java calls not syntactic
+Definitions
 
 Refactor to have font end and runtime values the same TODO1

@@ -2,7 +2,7 @@
 ;(lambda (x) (lambda (y) x))
 ;(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") "foo")
 ;(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") raise)
-(with-exception-handler
+#;(with-exception-handler
   (lambda (x)
     (java
       (method

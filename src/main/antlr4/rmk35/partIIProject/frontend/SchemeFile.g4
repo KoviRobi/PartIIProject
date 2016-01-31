@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.Stack;
 
+import rmk35.partIIProject.SyntaxErrorException;
+
 import rmk35.partIIProject.frontend.AST.SchemeBoolean;
 import rmk35.partIIProject.frontend.AST.SchemeNumber;
 import rmk35.partIIProject.frontend.AST.SchemeCharacter;
@@ -28,5 +30,5 @@ file[String filename] returns [List<AST> data]
    $data = new LinkedList<>();
   }
   :
-  (datum[$filename] {$data.add($datum.expr);})* EOF
+  (datum[$filename] { if ($datum.expr != null) $data.add($datum.expr); })* EOF
   ;

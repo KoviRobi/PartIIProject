@@ -26,6 +26,7 @@ public class LambdaStatement extends Statement
     this.body = body;
   }
 
+  @SuppressWarnings("deprecation")
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("LambdaStatement"));
 
@@ -34,7 +35,8 @@ public class LambdaStatement extends Statement
     body.generateOutput(mainClass, innerClass, innerClass.getPrimaryMethod());
     mainClass.addInnerClass(innerClass);
 
-    method.addInstruction(new NewObjectInstruction(innerClassName)); // Create class, need to use Deprecated API as we don't have this class yet
+    // Create class, need to use Deprecated API as we don't have this class compiled yet
+    method.addInstruction(new NewObjectInstruction(innerClassName));
     method.addInstruction(new DupInstruction()); // For invokenonvirtual, need 'this' pointer
     innerClass.invokeConstructor(mainClass, outputClass, method);
   }

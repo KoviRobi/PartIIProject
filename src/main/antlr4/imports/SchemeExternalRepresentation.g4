@@ -11,6 +11,7 @@ datum[String filename] returns [AST expr]
   | compoundDatum[$filename] { $expr = $compoundDatum.expr; }
   | LabelCreate child=datum[$filename] { $expr = new SchemeLabelledData($LabelCreate.text, $child.expr, $filename, $LabelCreate.line, $LabelCreate.pos); }
   | LabelReference { $expr = new SchemeLabelReference($LabelReference.text); } // FIXME: Error from here.
+  | '#;' datum[$filename] { $expr = null; }
   ;
 
 simpleDatum[String filename] returns [AST expr]
@@ -63,8 +64,8 @@ list[String filename]
    }
    $expr = $end;
   }
-  : '(' (datum[$filename] { $acc.push(new SchemeCons($datum.expr, null, $filename, $datum.expr.line(), $datum.expr.character())); } )*  closingParens=')' { $end = new SchemeNil($filename, $closingParens.line, $closingParens.pos); }
-  | '(' (datum[$filename] { $acc.push(new SchemeCons($datum.expr, null, $filename, $datum.expr.line(), $datum.expr.character())); } )+ '.' datum[$filename] { $end = $datum.expr; } ')'
+  : '(' (datum[$filename] { if ($datum.expr != null) $acc.push(new SchemeCons($datum.expr, null, $filename, $datum.expr.line(), $datum.expr.character())); } )*  closingParen=')' { $end = new SchemeNil($filename, $closingParen.line, $closingParen.pos); }
+  | openingParen='(' (datum[$filename] { if ($datum.expr != null) $acc.push(new SchemeCons($datum.expr, null, $filename, $datum.expr.line(), $datum.expr.character())); } )+ '.' datum[$filename] { if ($datum.expr != null) $end = $datum.expr; else throw new SyntaxErrorException("Improper improper list, no end datum", $filename, $openingParen.line, $openingParen.pos); } ')'
   ;
 
 vector[String filename]
@@ -76,7 +77,7 @@ vector[String filename]
   @after {
    $expr = new SchemeVector($acc.toArray(), $filename, -1, -1);
   }
-  : '#(' (datum[$filename] { $acc.add($datum.expr); } )* ')'
+  : '#(' (datum[$filename] { if ($datum.expr != null) $acc.add($datum.expr); } )* ')'
   ;
 
 abbreviation[String filename]
@@ -84,7 +85,7 @@ abbreviation[String filename]
   : AbbrevPrefix datum[$filename] 
   { $expr = new SchemeAbbreviation($AbbrevPrefix.text, $datum.expr, $filename, $AbbrevPrefix.line, $AbbrevPrefix.pos); }; //FIXME:
 
-AbbrevPrefix : '\'' | '`' | ',' | ',@' | '#;' ;
+AbbrevPrefix : '\'' | '`' | ',' | ',@' ;
 
 LabelCreate : '#' UInteger '=' ;
 LabelReference : '#' UInteger '#' ;
