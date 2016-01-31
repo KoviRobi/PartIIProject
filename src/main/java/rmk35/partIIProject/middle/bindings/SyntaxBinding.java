@@ -50,6 +50,7 @@ public class SyntaxBinding implements Binding
     for (Pair<ASTMatchVisitor, AST> pair : patternsAndTemplates)
     { pair.getFirst().setUseEnvironment(useEnvironment);
       Map<String, AST> substitution = (new SchemeCons(operator, operands, operator.file(), operator.line(), operator.character())).accept(pair.getFirst());
+      // NEXT 4 Only iterate until match
     }
     //applicationVisitor.setUseEnvironment(useEnvironment);
     //return null; // NEXT 4: transcribe macro, then evaluate it

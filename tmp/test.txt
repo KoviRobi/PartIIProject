@@ -16,6 +16,11 @@
       x))
   (lambda () (raise "help")))
 
+(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out")
+  ((lambda ()
+   (java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") 0)
+   1)))
+
 (let-syntax ((foo (syntax-rules ()
 				((foo a) (foo 1 a)) )))
 	(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") "foo"))

@@ -10,7 +10,13 @@ import rmk35.partIIProject.frontend.AST.SchemeIdentifier;
 import rmk35.partIIProject.frontend.AST.SchemeLabelReference;
 import rmk35.partIIProject.frontend.AST.SchemeLabelledData;
 
+import rmk35.partIIProject.middle.astExpectVisitor.ASTListFoldVisitor;
+
 import rmk35.partIIProject.backend.statements.Statement;
+import rmk35.partIIProject.backend.statements.ApplicationStatement;
+
+import java.util.List;
+import java.util.ArrayList;
 
 import lombok.Value;
 
@@ -26,7 +32,9 @@ public class ASTApplicationVisitor extends ASTVisitor<Statement>
 
   @Override
   public Statement visit(SchemeCons consCell) throws SyntaxErrorException
-  { return consCell.accept(new ASTConvertVisitor(environment));
+  { return new ApplicationStatement(consCell.accept(new ASTConvertVisitor(environment)),
+      arguments.accept(new ASTListFoldVisitor<List<Statement>>(new ArrayList<>(),
+        (list, ast) -> { list.add(ast.accept(new ASTConvertVisitor(environment))); return list; } )));
   }
 
   @Override
