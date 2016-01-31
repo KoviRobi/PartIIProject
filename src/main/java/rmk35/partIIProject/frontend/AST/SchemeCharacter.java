@@ -49,6 +49,10 @@ public class SchemeCharacter implements SchemeLiteral
   { return "#\\" + Character.toString(value);
   }
 
+  public char getData()
+  { return value;
+  }
+
   @Override
   public <T> T accept(ASTVisitor<T> visitor) throws SyntaxErrorException
   { return visitor.visit(this);

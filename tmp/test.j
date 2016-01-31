@@ -50,9 +50,9 @@
   invokenonvirtual rmk35/partIIProject/backend/runtimeValues/RaiseLambda/<init>()V
   ; GlobalIdentifierStatement Set
   putstatic test/raise Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;
-  new rmk35/partIIProject/backend/runtimeValues/WithExceptionHandler
+  new rmk35/partIIProject/backend/runtimeValues/WithExceptionHandlerLambda
   dup
-  invokenonvirtual rmk35/partIIProject/backend/runtimeValues/WithExceptionHandler/<init>()V
+  invokenonvirtual rmk35/partIIProject/backend/runtimeValues/WithExceptionHandlerLambda/<init>()V
   ; GlobalIdentifierStatement Set
   putstatic test/with-exception-handler Lrmk35/partIIProject/backend/runtimeValues/RuntimeValue;
   return

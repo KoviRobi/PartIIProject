@@ -3,5 +3,14 @@
 ;(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") "foo")
 ;(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") raise)
 (with-exception-handler
-  (lambda (x) (java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") x))
+  (lambda (x)
+    (java
+      (method
+        (static-field "java.lang.System" "out")
+        "println"
+        "java.lang.Object")
+      (static-field
+        "java.lang.System"
+        "out")
+      x))
   (lambda () (raise "help")))

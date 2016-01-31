@@ -36,7 +36,7 @@ public class ASTApplicationVisitor extends ASTVisitor<Statement>
 
   @Override
   public Statement visit(SchemeIdentifier identifier) throws SyntaxErrorException
-  { return environment.lookUp(identifier.getData()).applicate(environment, arguments, identifier.file(), identifier.line(), identifier.character());
+  { return environment.lookUp(identifier.getData()).applicate(environment, identifier, arguments);
   }
 
   @Override

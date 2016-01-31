@@ -3,7 +3,7 @@ package rmk35.partIIProject.backend.runtimeValues;
 import java.util.List;
 import java.util.ArrayList;
 
-public class WithExceptionHandler extends BinaryLambda
+public class WithExceptionHandlerLambda extends BinaryLambda
 { RuntimeValue run(RuntimeValue first, RuntimeValue second)
   { LambdaValue handler = (LambdaValue) first;
     LambdaValue body = (LambdaValue) second;

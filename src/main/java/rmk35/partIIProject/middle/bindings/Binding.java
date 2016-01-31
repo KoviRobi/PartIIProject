@@ -7,7 +7,7 @@ import rmk35.partIIProject.backend.statements.Statement;
 
 public interface Binding
 { public Statement toStatement(String file, long line, long character); // For variable reference
-  public Statement applicate(Environment environment, AST arguments, String file, long line, long character); // For evaluating as a function
+  public Statement applicate(Environment environment, AST operator, AST operands); // For evaluating as a function
 
   // For lexical bindings, e.g. want to save local variables but not global ones
   // This is with respect to function body's environment, so parent's

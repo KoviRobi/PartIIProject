@@ -7,8 +7,8 @@ import rmk35.partIIProject.frontend.AST.SchemeCons;
 import rmk35.partIIProject.middle.Environment;
 import rmk35.partIIProject.middle.AST;
 import rmk35.partIIProject.middle.ASTConvertVisitor;
-import rmk35.partIIProject.middle.ASTListElementVisitor;
-import rmk35.partIIProject.middle.ASTListEndVisitor;
+import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectConsVisitor;
+import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectNilVisitor;
 
 import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.statements.JavaFieldStatement;
@@ -25,12 +25,12 @@ public class JavaFieldBinding implements Binding
   }
 
   @Override
-  public Statement applicate(Environment environment, AST arguments, String file, long line, long character)
-  { SchemeCons first = arguments.accept(new ASTListElementVisitor());
+  public Statement applicate(Environment environment, AST operator, AST operands)
+  { SchemeCons first = operands.accept(new ASTExpectConsVisitor());
     Statement object = first.car().accept(new ASTConvertVisitor(environment));
-    SchemeCons second = first.cdr().accept(new ASTListElementVisitor());
+    SchemeCons second = first.cdr().accept(new ASTExpectConsVisitor());
     Statement fieldName = second.car().accept(new ASTConvertVisitor(environment));
-    second.cdr().accept(new ASTListEndVisitor());
+    second.cdr().accept(new ASTExpectNilVisitor());
     return new JavaFieldStatement(object, fieldName);
   }
 

@@ -8,6 +8,7 @@ import rmk35.partIIProject.middle.Environment;
 import rmk35.partIIProject.middle.bindings.Binding;
 import rmk35.partIIProject.middle.bindings.LambdaSyntaxBinding;
 import rmk35.partIIProject.middle.bindings.LetSyntaxBinding;
+import rmk35.partIIProject.middle.bindings.SyntaxRulesBinding;
 import rmk35.partIIProject.middle.bindings.JavaCallBinding;
 import rmk35.partIIProject.middle.bindings.JavaClassBinding;
 import rmk35.partIIProject.middle.bindings.JavaFieldBinding;
@@ -15,7 +16,7 @@ import rmk35.partIIProject.middle.bindings.JavaMethodBinding;
 import rmk35.partIIProject.middle.bindings.JavaStaticFieldBinding;
 
 import rmk35.partIIProject.backend.runtimeValues.RaiseLambda;
-import rmk35.partIIProject.backend.runtimeValues.WithExceptionHandler;
+import rmk35.partIIProject.backend.runtimeValues.WithExceptionHandlerLambda;
 
 import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.JavaByteCodeGenerator;
@@ -55,6 +56,7 @@ public class Compiler
     // Syntactic bindings (these get transformed before main class)
     initialEnvironment.addBinding("lambda", new LambdaSyntaxBinding());
     initialEnvironment.addBinding("let-syntax", new LetSyntaxBinding());
+    initialEnvironment.addBinding("syntax-rules", new SyntaxRulesBinding());
     initialEnvironment.addBinding("java", new JavaCallBinding());
     initialEnvironment.addBinding("class", new JavaClassBinding());
     initialEnvironment.addBinding("field", new JavaFieldBinding());
@@ -65,10 +67,11 @@ public class Compiler
     MainClass mainClass = new MainClass(outputName);
 
     // Runtime bindings (they need to be initialized, hence adding them to main class)
+    // Exceptions
     initialEnvironment.addGlobalVariable("raise");
     mainClass.addGlobalBinding("raise", RaiseLambda.class);
     initialEnvironment.addGlobalVariable("with-exception-handler");
-    mainClass.addGlobalBinding("with-exception-handler", WithExceptionHandler.class);
+    mainClass.addGlobalBinding("with-exception-handler", WithExceptionHandlerLambda.class);
 
     List<AST> parsedFile = SchemeParser.parseFile(fileName);
     List<Statement> statements = interconnect.ASTsToStatements(parsedFile);

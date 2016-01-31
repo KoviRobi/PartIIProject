@@ -4,9 +4,14 @@
  find . -name '*.java' | xargs g '[Xx][Xx][Xx]'
 
 Macros
-  - Make ASTMatchVisitor?
-  - Make ASTTranscribeVisitor?
+ - Rm sumTypes experiment
+ - Make a visitable MacroReturn class
+   -Subclasses: MacroVisitor list, Substitution, NoMatch
 If
 Throw/Catch
 Inconsistency: some Statements take other Statements, others just rely on values on top of the stack
   - could be used to ensure right number of arguments on stack
+Improper list lambdas
+Make java calls not syntactic
+
+Refactor to have font end and runtime values the same TODO1

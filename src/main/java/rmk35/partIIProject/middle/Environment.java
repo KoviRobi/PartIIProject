@@ -8,10 +8,10 @@ import rmk35.partIIProject.backend.statements.Statement;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.Hashtable;
 
 public class Environment
-{ Map<String, Binding> bindings = new TreeMap<>();
+{ Map<String, Binding> bindings = new Hashtable<>();
   int localsCount = 1; // 'this' is local zero
 
   public Environment(){}
@@ -25,6 +25,10 @@ public class Environment
     }
   }
 
+  public boolean contains(String identifier)
+  { return bindings.containsKey(identifier);
+  }
+
   public Binding lookUp(String identifier)
   { Binding binding = bindings.get(identifier);
     if (binding == null)
@@ -35,6 +39,10 @@ public class Environment
     } else
     { return binding;
     }
+  }
+
+  public Binding lookUpSilent(String identifier)
+  { return bindings.get(identifier);
   }
 
   public Statement lookUpAsStatement(String identifier, String file, long line, long character)
