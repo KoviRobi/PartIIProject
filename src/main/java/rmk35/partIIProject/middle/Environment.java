@@ -73,4 +73,11 @@ public class Environment
   public void addBinding(String identifier, Binding binding)
   { bindings.put(identifier, binding);
   }
+
+  // For macro rewriting, when we need fresh keys
+  public String similarFreshKey(String key)
+  { int i = 0;
+    for (i = 0; bindings.containsKey(key + i); i++) {}
+    return key + i;
+  }
 }

@@ -3,16 +3,13 @@
  find . -name '*.java' | xargs g '[Nn][Ee][Xx][Tt]'
  find . -name '*.java' | xargs g '[Xx][Xx][Xx]'
 
-Macros
- - Rm sumTypes experiment
- - Make a visitable MacroReturn class
-   -Subclasses: MacroVisitor list, Substitution, NoMatch
 If
-Throw/Catch
 Inconsistency: some Statements take other Statements, others just rely on values on top of the stack
   - could be used to ensure right number of arguments on stack
 Improper list lambdas
 Make java calls not syntactic
 Definitions
-
+Macros with ellipsis
+  - More efficient macro matching
+Non-let macros may need to use closures if they capture local or closure variables
 Refactor to have font end and runtime values the same TODO1

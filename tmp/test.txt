@@ -1,7 +1,6 @@
 ;(lambda (x) x)
 ;(lambda (x) (lambda (y) x))
 ;(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") "foo")
-;(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") raise)
 
 #;(with-exception-handler
   (lambda (x)
@@ -16,11 +15,20 @@
       x))
   (lambda () (raise "help")))
 
-(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out")
+#;(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out")
   ((lambda ()
    (java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") 0)
    1)))
 
+#;(let-syntax ((foo (syntax-rules ()
+				((foo a) ((lambda (x y) x) 1 2)) )))
+	(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") (foo bar))) ; bar should not cause a warning about it being undeclared
+
+; Same as above, just with hygiene tests, should be 25
 (let-syntax ((foo (syntax-rules ()
-				((foo a) (foo 1 a)) )))
-	(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") "foo"))
+				((foo a) ((lambda (x y) a) 1 2)) )))
+	((lambda (x)
+	(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") (foo x))) ; bar should not cause a warning about it being undeclared
+	25))
+
+#;((lambda (x) (x x)) (lambda (x) (x x))) ; tail call

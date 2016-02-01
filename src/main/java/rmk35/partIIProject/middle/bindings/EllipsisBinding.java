@@ -25,11 +25,11 @@ public class EllipsisBinding implements Binding
 
   @Override
   public boolean shouldSaveToClosure()
-  { throw new InternalCompilerException("Tried to use shouldSaveToClosure on an ellipsis binding");
+  { return false;
   }
 
   @Override
   public Binding subEnvironment()
-  { throw new InternalCompilerException("Tried to use subEnvironment on an ellipsis binding");
+  { return this;
   }
 }

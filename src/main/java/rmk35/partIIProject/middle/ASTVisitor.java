@@ -17,8 +17,6 @@ import rmk35.partIIProject.frontend.AST.SchemeNumber;
 import rmk35.partIIProject.frontend.AST.SchemeString;
 import rmk35.partIIProject.frontend.AST.SchemeVector;
 
-import rmk35.partIIProject.backend.statements.Statement;
-
 public abstract class ASTVisitor<T>
 { public abstract T visit(SchemeCons list) throws SyntaxErrorException;
   public abstract T visit(SchemeNil nil) throws SyntaxErrorException;

@@ -11,6 +11,7 @@ import rmk35.partIIProject.middle.AST;
 import rmk35.partIIProject.middle.astMacroMatchVisitor.ASTCompilePatternVisitor;
 import rmk35.partIIProject.middle.astMacroMatchVisitor.ASTMatchVisitor;
 import rmk35.partIIProject.middle.ASTConvertVisitor;
+import rmk35.partIIProject.middle.ASTMacroRewriteVisitor;
 
 import rmk35.partIIProject.backend.statements.Statement;
 
@@ -24,14 +25,16 @@ import lombok.Value;
 
 @Value
 public class SyntaxBinding implements Binding
-{ Collection<String> literals;
+{ Environment definitionEnvironment;
+  Collection<String> literals;
   List<Pair<ASTMatchVisitor, AST>> patternsAndTemplates;
 
-  public SyntaxBinding(Environment storedEnvironment, Collection<String> literals, List<Pair<AST, AST>> patternsAndTemplates)
-  { this.literals = literals;
+  public SyntaxBinding(Environment definitionEnvironment, Collection<String> literals, List<Pair<AST, AST>> patternsAndTemplates)
+  { this.definitionEnvironment = definitionEnvironment;
+    this.literals = literals;
     this.patternsAndTemplates = new ArrayList<>(patternsAndTemplates.size());
     for (Pair<AST, AST> pair : patternsAndTemplates)
-    { this.patternsAndTemplates.add(new Pair<>(pair.getFirst().accept(new ASTCompilePatternVisitor(literals, storedEnvironment)), pair.getSecond()));
+    { this.patternsAndTemplates.add(new Pair<>(pair.getFirst().accept(new ASTCompilePatternVisitor(literals, definitionEnvironment)), pair.getSecond()));
     }
   }
 
@@ -42,18 +45,15 @@ public class SyntaxBinding implements Binding
 
   @Override
   public Statement applicate(Environment useEnvironment, AST operator, AST operands)
-  { //Substitution substitution = arguments.accept
-    //  (new ASTMacroMatchVisitor(storedEnvironment, useEnvironment, literals, pattern));
-    //Pair<AST, Environment> transcribed = arguments.accept
-    //  (new ASTMacroRewriteVisitor(storedEnvironment, substitution, literals, template));
-    //return transcribed.getFirst().accept(new ASTConvertVisitor(transcribed.getSecond()));
+  { // See Macros That Work, figure 3
     for (Pair<ASTMatchVisitor, AST> pair : patternsAndTemplates)
     { pair.getFirst().setUseEnvironment(useEnvironment);
       Map<String, AST> substitution = (new SchemeCons(operator, operands, operator.file(), operator.line(), operator.character())).accept(pair.getFirst());
-      // NEXT 4 Only iterate until match
+      if (substitution != null)
+      { Pair<AST, Environment> rewritten = pair.getSecond().accept(new ASTMacroRewriteVisitor(substitution, definitionEnvironment, useEnvironment));
+        return rewritten.getFirst().accept(new ASTConvertVisitor(rewritten.getSecond()));
+      }
     }
-    //applicationVisitor.setUseEnvironment(useEnvironment);
-    //return null; // NEXT 4: transcribe macro, then evaluate it
     throw new SyntaxErrorException("Incorrect macro use", operator.file(), operator.line(), operator.character());
   }
 
