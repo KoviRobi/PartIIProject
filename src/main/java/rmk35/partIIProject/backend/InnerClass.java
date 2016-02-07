@@ -1,11 +1,14 @@
 package rmk35.partIIProject.backend;
 
+import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.statements.IdentifierStatement;
+import rmk35.partIIProject.backend.statements.ClosureIdentifierStatement;
+import rmk35.partIIProject.backend.statements.LocalIdentifierStatement;
+import rmk35.partIIProject.backend.statements.DefineStatement;
 import rmk35.partIIProject.backend.runtimeValues.RuntimeValue;
 import rmk35.partIIProject.backend.runtimeValues.LambdaValue;
 import rmk35.partIIProject.backend.instructions.Instruction;
 import rmk35.partIIProject.backend.instructions.LocalLoadInstruction;
-import rmk35.partIIProject.backend.instructions.PutFieldInstruction;
 import rmk35.partIIProject.backend.instructions.DupInstruction;
 import rmk35.partIIProject.backend.instructions.IntegerConstantInstruction;
 import rmk35.partIIProject.backend.instructions.InterfaceCallInstruction;
@@ -34,7 +37,7 @@ public class InnerClass extends OutputClass
   private static final ObjectType listType = new ObjectType(List.class);
   private static final ObjectType objectType = new ObjectType(Object.class);
 
-  public InnerClass(String name, List<IdentifierStatement> closureVariables, int variableCount)
+  public InnerClass(String name, List<IdentifierStatement> closureVariables, int variableCount, MainClass mainClass)
   { super(name);
     this.closureVariables = closureVariables;
     this.variableCount = variableCount;
@@ -42,16 +45,14 @@ public class InnerClass extends OutputClass
     constructorTypes = new ObjectType[closureVariables.size()];
     Arrays.fill(constructorTypes, runtimeValueType);
     // Ensure closure variables exist and also that they are set on construction
-    ByteCodeMethod initializerMethod = new ByteCodeMethod(voidType, "public", "<init>", constructorTypes);; // FIXME: arguments to initializer!
+    ByteCodeMethod initializerMethod = new ByteCodeMethod(voidType, "public", "<init>", constructorTypes);
     initializerMethod.addInstruction(new LocalLoadInstruction(new ObjectType(), 0));
     initializerMethod.addInstruction(new NonVirtualCallInstruction(voidType, getSuperClassName() + "/<init>"));
     int index = 1; // 0 is 'this'
-    for (IdentifierStatement identifier : closureVariables)
-    { ensureFieldExists("private", identifier.getName(), runtimeValueType);
-      initializerMethod.ensureLocal(index);
-      initializerMethod.addInstruction(new LocalLoadInstruction(runtimeValueType, 0)); // This
-      initializerMethod.addInstruction(new LocalLoadInstruction(runtimeValueType, index)); // Value
-      initializerMethod.addInstruction(new PutFieldInstruction(runtimeValueType, getName() + "/" + identifier.getName()));
+    for (IdentifierStatement closureName : closureVariables)
+    { String identifierName = closureName.getName();
+      Statement storeStatement = new DefineStatement(new ClosureIdentifierStatement(identifierName), new LocalIdentifierStatement(identifierName, index));
+      storeStatement.generateOutput(mainClass, this, initializerMethod);
       index++;
     }
     // Overwrite initializer

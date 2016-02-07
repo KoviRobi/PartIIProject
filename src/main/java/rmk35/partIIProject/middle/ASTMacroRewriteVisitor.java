@@ -56,7 +56,7 @@ public class ASTMacroRewriteVisitor extends ASTVisitor<Pair<AST, Environment>>
     if (binding != null)
     { returnEnvironment.addBinding(newIdentifierName, binding);
     }
-    
+
     if (substitution.containsKey(identifierName))
     { return new Pair<>(substitution.get(identifierName), returnEnvironment);
     } else

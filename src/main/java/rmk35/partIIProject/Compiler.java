@@ -7,6 +7,11 @@ import rmk35.partIIProject.middle.Interconnect;
 import rmk35.partIIProject.middle.Environment;
 import rmk35.partIIProject.middle.bindings.Binding;
 import rmk35.partIIProject.middle.bindings.LambdaSyntaxBinding;
+import rmk35.partIIProject.middle.bindings.IfBinding;
+import rmk35.partIIProject.middle.bindings.DefineBinding;
+import rmk35.partIIProject.middle.bindings.SetBinding;
+import rmk35.partIIProject.middle.bindings.LetBinding;
+import rmk35.partIIProject.middle.bindings.DefineSyntaxBinding;
 import rmk35.partIIProject.middle.bindings.LetSyntaxBinding;
 import rmk35.partIIProject.middle.bindings.SyntaxRulesBinding;
 import rmk35.partIIProject.middle.bindings.JavaCallBinding;
@@ -50,11 +55,16 @@ public class Compiler
     { return fileName.substring(0, lastIndex);
     }
   }
-  
+
   public Compiler(String fileName, String outputName) throws IOException
   { initialEnvironment = new Environment();
     // Syntactic bindings (these get transformed before main class)
     initialEnvironment.addBinding("lambda", new LambdaSyntaxBinding());
+    initialEnvironment.addBinding("if", new IfBinding());
+    initialEnvironment.addBinding("define", new DefineBinding());
+    initialEnvironment.addBinding("set!", new SetBinding());
+    initialEnvironment.addBinding("let", new LetBinding());
+    initialEnvironment.addBinding("define-syntax", new DefineSyntaxBinding());
     initialEnvironment.addBinding("let-syntax", new LetSyntaxBinding());
     initialEnvironment.addBinding("syntax-rules", new SyntaxRulesBinding());
     initialEnvironment.addBinding("java", new JavaCallBinding());
@@ -75,6 +85,7 @@ public class Compiler
 
     List<AST> parsedFile = SchemeParser.parseFile(fileName);
     List<Statement> statements = interconnect.ASTsToStatements(parsedFile);
+    System.out.println(statements);
     // Mutates mainClass
     JavaByteCodeGenerator.generateOutput(mainClass, statements);
     mainClass.saveToDisk();

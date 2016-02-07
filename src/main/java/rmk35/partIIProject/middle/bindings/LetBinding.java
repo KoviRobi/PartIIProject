@@ -9,11 +9,13 @@ import rmk35.partIIProject.middle.Environment;
 import rmk35.partIIProject.middle.AST;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectConsVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTListFoldVisitor;
-import rmk35.partIIProject.middle.ASTSyntaxSpecificationVisitor;
+import rmk35.partIIProject.middle.ASTBindingSpecificationVisitor;
 import rmk35.partIIProject.middle.ASTConvertVisitor;
 
 import rmk35.partIIProject.backend.statements.Statement;
+import rmk35.partIIProject.backend.statements.IdentifierStatement;
 import rmk35.partIIProject.backend.statements.BeginStatement;
+import rmk35.partIIProject.backend.statements.DefineStatement;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ import java.util.ArrayList;
 import lombok.Value;
 
 @Value
-public class LetSyntaxBinding implements Binding
+public class LetBinding implements Binding
 { @Override
   public Statement toStatement(String file, long line, long character)
   { throw new SyntaxErrorException("Don't know how to use a syntactic variable in a run time context", file, line, character);
@@ -33,13 +35,15 @@ public class LetSyntaxBinding implements Binding
     //  Copy environment for lexical effect
     Environment letEnvironment = new Environment(environment, false);
 
-    // XXX To think about: letrec-syntax in particular this and looking up a variable in the environment to see if it has changed
+    // ToDo: named let, could optimise to use goto
+    List<Pair<String, Statement>> bindingSpecifications = first.car().accept(new ASTListFoldVisitor<>(new ArrayList<>(),
+      (List<Pair<String, Statement>> list, AST ast) -> { list.add(ast.accept(new ASTBindingSpecificationVisitor(letEnvironment))); return list; } ));
 
-    List<Pair<String, SyntaxBinding>> macros = first.car().accept(new ASTListFoldVisitor<>(new ArrayList<>(),
-      (List<Pair<String, SyntaxBinding>> list, AST ast) -> { list.add(ast.accept(new ASTSyntaxSpecificationVisitor(letEnvironment))); return list; } ));
-
-    for (Pair<String, SyntaxBinding> macro : macros)
-    { letEnvironment.addBinding(macro.getFirst(), macro.getSecond());
+    List<Statement> bindingStatements = new ArrayList<>();
+    for (Pair<String, Statement> binding : bindingSpecifications)
+    { letEnvironment.addLocalVariable(binding.getFirst());
+      IdentifierStatement local = (IdentifierStatement) letEnvironment.lookUpAsStatement(binding.getFirst(), operator.file(), operator.line(), operator.character());
+      Statement setBinding = new DefineStatement(local, binding.getSecond());
     }
 
     // Implicit begin (superset of the standard but useful)
@@ -49,7 +53,8 @@ public class LetSyntaxBinding implements Binding
     if (body.isEmpty())
     { throw new SyntaxErrorException("Empty lambda body", operator.file(), operator.line(), operator.character());
     }
-    return new BeginStatement(body);
+    bindingStatements.addAll(body);
+    return new BeginStatement(bindingStatements);
   }
 
   @Override

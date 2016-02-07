@@ -40,7 +40,7 @@ public class ApplicationStatement extends Statement
   { method.addInstruction(new CommentPseudoInstruction("ApplicationStatement"));
     operator.generateOutput(mainClass, outputClass, method);
     method.addInstruction(new CheckCastInstruction(LambdaValue.class));
-    
+
     // Create new ArrayList for operands
     method.addInstruction(new NewObjectInstruction(ArrayList.class));
     method.addInstruction(new DupInstruction());

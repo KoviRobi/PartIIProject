@@ -38,7 +38,6 @@ public class ClosureIdentifierStatement extends IdentifierStatement
   @Override
   public void generateSetOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("ClosureIdentifierStatement Set"));
-    outputClass.ensureFieldExists("private", name, type);
     method.addInstruction(new LocalLoadInstruction(type, 0)); // 'this', the current object
     // Note getClass, whereas for GlobalIdentifier we have getMainClass
     method.addInstruction(new PutFieldInstruction(type, outputClass.getName() + "/" + name));
@@ -54,5 +53,10 @@ public class ClosureIdentifierStatement extends IdentifierStatement
   { Collection<String> returnValue = new TreeSet<>();
     returnValue.add(getName());
     return returnValue;
+  }
+
+  @Override
+  public void ensureExistence(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
+  { outputClass.ensureFieldExists("private", name, type);
   }
 }

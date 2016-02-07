@@ -34,7 +34,6 @@ public class GlobalIdentifierStatement extends IdentifierStatement
   @Override
   public void generateSetOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("GlobalIdentifierStatement Set"));
-    mainClass.ensureFieldExists("public static", name, type);
     // Note getMainClass, whereas for ClosureIdentifier we have getName
     method.addInstruction(new PutStaticInstruction(type, mainClass.getName() + "/" + name));
   }
@@ -47,5 +46,10 @@ public class GlobalIdentifierStatement extends IdentifierStatement
   @Override
   public Collection<String> getFreeIdentifiers()
   { return new TreeSet<String>();
+  }
+
+  @Override
+  public void ensureExistence(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
+  { mainClass.ensureFieldExists("public static", name, type);
   }
 }

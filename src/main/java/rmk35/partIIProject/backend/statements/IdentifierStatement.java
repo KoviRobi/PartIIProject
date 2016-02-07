@@ -9,4 +9,5 @@ public abstract class IdentifierStatement extends Statement
 { /* Assumes variable to set to is on top of the stack */
   public abstract void generateSetOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method);
   public abstract String getName();
+  public abstract void ensureExistence(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method);
 }

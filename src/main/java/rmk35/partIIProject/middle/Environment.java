@@ -12,13 +12,13 @@ import java.util.Hashtable;
 
 public class Environment
 { Map<String, Binding> bindings = new Hashtable<>();
-  int localsCount = 1; // 'this' is local zero
+  int localsCount = 1; // 'this' is local zero (or String[] arguments for MainClass)
 
   public Environment(){}
   // SubEnvironment is true when we enter a lambda (converts local bindings to closure bindings)
   public Environment(Environment outerEnvironment, boolean subEnvironment)
   { for (Map.Entry<String, Binding> entry : outerEnvironment.bindings.entrySet())
-    { bindings.put(entry.getKey(), 
+    { bindings.put(entry.getKey(),
         subEnvironment
         ? entry.getValue().subEnvironment()
         : entry.getValue());

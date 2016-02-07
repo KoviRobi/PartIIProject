@@ -11,7 +11,7 @@ public class SchemeIdentifier implements AST
   String file;
   long line;
   long character;
- 
+
   public SchemeIdentifier(String text, String file, long line, long character)
   { identifier = text;
     this.file = file;

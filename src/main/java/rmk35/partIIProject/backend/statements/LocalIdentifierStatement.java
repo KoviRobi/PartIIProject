@@ -47,4 +47,9 @@ public class LocalIdentifierStatement extends IdentifierStatement
   public Collection<String> getFreeIdentifiers()
   { return new TreeSet<String>();
   }
+
+  @Override
+  public void ensureExistence(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
+  { method.ensureLocal(localIndex);
+  }
 }

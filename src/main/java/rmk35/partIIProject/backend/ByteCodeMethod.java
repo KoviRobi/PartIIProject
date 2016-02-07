@@ -60,7 +60,7 @@ public class ByteCodeMethod
   { stackCount -= i;
     if (stackCount < 0) throw new InternalCompilerException("Simulated stack underflown");
   }
-  
+
   public void ensureLocal(int i)
   { localLimit = Math.max(localLimit, i+1); // +1 because of local 0
   }

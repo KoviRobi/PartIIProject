@@ -1,6 +1,6 @@
 package rmk35.partIIProject.middle.bindings;
 
-import rmk35.partIIProject.backend.statements.Statement;
+import rmk35.partIIProject.backend.statements.IdentifierStatement;
 import rmk35.partIIProject.backend.statements.ClosureIdentifierStatement;
 
 import lombok.Value;
@@ -10,7 +10,7 @@ public class ClosureBinding extends VariableBinding
 { String identifier;
 
   @Override
-  public Statement toStatement(String file, long line, long character)
+  public IdentifierStatement toStatement(String file, long line, long character)
   { return new ClosureIdentifierStatement(identifier);
   }
 

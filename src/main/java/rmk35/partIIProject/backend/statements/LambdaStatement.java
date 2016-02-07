@@ -31,7 +31,7 @@ public class LambdaStatement extends Statement
   { method.addInstruction(new CommentPseudoInstruction("LambdaStatement"));
 
     String innerClassName = mainClass.uniqueID() + "$Lambda"; // Using main class' unique ID as that way all files definitely have different names
-    InnerClass innerClass = new InnerClass(innerClassName, closureVariables, formals.size());
+    InnerClass innerClass = new InnerClass(innerClassName, closureVariables, formals.size(), mainClass);
     // Implicit begin
     body.generateOutput(mainClass, innerClass, innerClass.getPrimaryMethod());
     mainClass.addInnerClass(innerClass);
