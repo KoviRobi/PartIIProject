@@ -3,7 +3,6 @@
  find . -name '*.java' | xargs g '[Nn][Ee][Xx][Tt]'
  find . -name '*.java' | xargs g '[Xx][Xx][Xx]'
 
-If
 Inconsistency: some Statements take other Statements, others just rely on values on top of the stack
   - could be used to ensure right number of arguments on stack
 Improper list lambdas (perhaps TODO1 could help)
@@ -12,6 +11,4 @@ Definitions
  - Internal definitions
 Macros with ellipsis
   - More efficient macro matching (i.e. rsc's point about regexp matching)
-Non-let macros may need to use closures if they capture local or closure variables
- - actually, this is silly, as macros are a compile time thing and variable values are a runtime thing so can't capture
 Refactor to have font end and runtime values the same TODO1
