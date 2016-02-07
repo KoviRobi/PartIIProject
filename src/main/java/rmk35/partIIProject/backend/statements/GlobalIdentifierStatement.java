@@ -27,14 +27,14 @@ public class GlobalIdentifierStatement extends IdentifierStatement
   @Override
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("GlobalIdentifierStatement Get"));
-    // Note getMainClass, whereas for ClosureIdentifier we have getName
+    // Note using mainClass, whereas for ClosureIdentifierStatement, we are using outputClass
     method.addInstruction(new GetStaticInstruction(type, mainClass.getName() + "/" + name));
   }
 
   @Override
   public void generateSetOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("GlobalIdentifierStatement Set"));
-    // Note getMainClass, whereas for ClosureIdentifier we have getName
+    // Note using mainClass, whereas for ClosureIdentifierStatement, we are using outputClass
     method.addInstruction(new PutStaticInstruction(type, mainClass.getName() + "/" + name));
   }
 

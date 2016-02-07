@@ -28,6 +28,7 @@ public class DefineStatement extends Statement
     } else
     { value.generateOutput(mainClass, outputClass, method);
     }
+    variable.ensureExistence(mainClass, outputClass, method);
     variable.generateSetOutput(mainClass, outputClass, method);
   }
 

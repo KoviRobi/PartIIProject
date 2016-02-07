@@ -3,7 +3,6 @@ package rmk35.partIIProject.middle.astMacroMatchVisitor;
 import rmk35.partIIProject.frontend.AST.SchemeLiteral;
 // Literals
 import rmk35.partIIProject.frontend.AST.SchemeBoolean;
-import rmk35.partIIProject.frontend.AST.SchemeBytevector;
 import rmk35.partIIProject.frontend.AST.SchemeCharacter;
 import rmk35.partIIProject.frontend.AST.SchemeNumber;
 import rmk35.partIIProject.frontend.AST.SchemeString;
@@ -48,7 +47,7 @@ public class ASTLiteralMatchVisitor extends ASTNoMatchVisitor
 
   @Override
   public Map<String, AST> visit(SchemeNumber number)
-  { if (storedObject instanceof SchemeNumber && ((SchemeNumber) storedObject).getData() == number.getData())
+  { if (storedObject instanceof SchemeNumber && ((SchemeNumber) storedObject).getData().equals(number.getData()))
     { return new Hashtable<>();
     } else
     { return null;
@@ -57,7 +56,7 @@ public class ASTLiteralMatchVisitor extends ASTNoMatchVisitor
 
   @Override
   public Map<String, AST> visit(SchemeString string)
-  { if (storedObject instanceof SchemeString && ((SchemeString) storedObject).getData() == string.getData())
+  { if (storedObject instanceof SchemeString && ((SchemeString) storedObject).getData().equals(string.getData()))
     { return new Hashtable<>();
     } else
     { return null;

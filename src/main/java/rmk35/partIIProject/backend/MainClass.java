@@ -45,7 +45,9 @@ public class MainClass extends OutputClass
     initializer.addInstruction(new NewObjectInstruction(binding));
     initializer.addInstruction(new DupInstruction());
     initializer.addInstruction(new NonVirtualCallInstruction(voidType, binding.getName().replace('.', '/') + "/<init>"));
-    (new GlobalIdentifierStatement(name)).generateSetOutput(this, this, initializer);
+    GlobalIdentifierStatement destination = new GlobalIdentifierStatement(name);
+    destination.ensureExistence(this, this, initializer);
+    destination.generateSetOutput(this, this, initializer);
   }
 
   @Override

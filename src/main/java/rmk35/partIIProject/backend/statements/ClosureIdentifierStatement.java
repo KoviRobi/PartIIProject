@@ -7,6 +7,7 @@ import rmk35.partIIProject.backend.runtimeValues.RuntimeValue;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.LocalLoadInstruction;
 import rmk35.partIIProject.backend.instructions.GetFieldInstruction;
+import rmk35.partIIProject.backend.instructions.SwapInstruction;
 import rmk35.partIIProject.backend.instructions.PutFieldInstruction;
 import rmk35.partIIProject.backend.instructions.types.ObjectType;
 
@@ -31,7 +32,7 @@ public class ClosureIdentifierStatement extends IdentifierStatement
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("ClosureIdentifierStatement Get"));
     method.addInstruction(new LocalLoadInstruction(type, 0)); // 'this', the current object
-    // Note getClass, whereas for GlobalIdentifier we have getMainClass
+    // Note using outputClass, whereas for GlobalIdentifierStatement, we are using mainClass
     method.addInstruction(new GetFieldInstruction(type, outputClass.getName() + "/" + name));
   }
 
@@ -39,7 +40,8 @@ public class ClosureIdentifierStatement extends IdentifierStatement
   public void generateSetOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("ClosureIdentifierStatement Set"));
     method.addInstruction(new LocalLoadInstruction(type, 0)); // 'this', the current object
-    // Note getClass, whereas for GlobalIdentifier we have getMainClass
+    method.addInstruction(new SwapInstruction()); // Swap object and value for PutFieldInstruction
+    // Note using outputClass, whereas for GlobalIdentifierStatement, we are using mainClass
     method.addInstruction(new PutFieldInstruction(type, outputClass.getName() + "/" + name));
   }
 

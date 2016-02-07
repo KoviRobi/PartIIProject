@@ -43,7 +43,7 @@ public class LetBinding implements Binding
     for (Pair<String, Statement> binding : bindingSpecifications)
     { letEnvironment.addLocalVariable(binding.getFirst());
       IdentifierStatement local = (IdentifierStatement) letEnvironment.lookUpAsStatement(binding.getFirst(), operator.file(), operator.line(), operator.character());
-      Statement setBinding = new DefineStatement(local, binding.getSecond());
+      bindingStatements.add(new DefineStatement(local, binding.getSecond()));
     }
 
     // Implicit begin (superset of the standard but useful)
