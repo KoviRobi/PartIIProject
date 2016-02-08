@@ -3,8 +3,8 @@ package rmk35.partIIProject.backend.statements;
 import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.ByteCodeMethod;
-import rmk35.partIIProject.backend.runtimeValues.RuntimeValue;
-import rmk35.partIIProject.backend.runtimeValues.LambdaValue;
+import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.LambdaValue;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.CheckCastInstruction;
 import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
@@ -55,7 +55,7 @@ public class ApplicationStatement extends Statement
     }
 
     // Invoke operator.run with argument of operand
-    method.addInstruction(new VirtualCallInstruction(new ObjectType(RuntimeValue.class), "rmk35/partIIProject/backend/runtimeValues/LambdaValue/run", new ObjectType(List.class)));
+    method.addInstruction(new VirtualCallInstruction(new ObjectType(RuntimeValue.class), "rmk35/partIIProject/runtime/LambdaValue/run", new ObjectType(List.class)));
   }
 
   @Override

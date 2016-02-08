@@ -3,7 +3,7 @@ package rmk35.partIIProject.backend.statements;
 import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.ByteCodeMethod;
-import rmk35.partIIProject.backend.runtimeValues.BooleanValue;
+import rmk35.partIIProject.runtime.BooleanValue;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
 import rmk35.partIIProject.backend.instructions.DupInstruction;
@@ -30,7 +30,7 @@ public class BooleanValueStatement extends Statement
     method.addInstruction(new NewObjectInstruction(BooleanValue.class));
     method.addInstruction(new DupInstruction());
     method.addInstruction(new IntegerConstantInstruction(value? 1 : 0));
-    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), "rmk35/partIIProject/backend/runtimeValues/BooleanValue/<init>", new BooleanType()));
+    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), "rmk35/partIIProject/runtime/BooleanValue/<init>", new BooleanType()));
   }
 
   @Override

@@ -3,7 +3,7 @@ package rmk35.partIIProject.backend.statements;
 import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.ByteCodeMethod;
-import rmk35.partIIProject.backend.runtimeValues.NumberValue;
+import rmk35.partIIProject.runtime.NumberValue;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.NullConstantInstruction;
 

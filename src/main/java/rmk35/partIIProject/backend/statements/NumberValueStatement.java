@@ -3,7 +3,7 @@ package rmk35.partIIProject.backend.statements;
 import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.ByteCodeMethod;
-import rmk35.partIIProject.backend.runtimeValues.NumberValue;
+import rmk35.partIIProject.runtime.NumberValue;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
 import rmk35.partIIProject.backend.instructions.DupInstruction;
@@ -30,7 +30,7 @@ public class NumberValueStatement extends Statement
     method.addInstruction(new NewObjectInstruction(NumberValue.class));
     method.addInstruction(new DupInstruction());
     method.addInstruction(new IntegerConstantInstruction(value));
-    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), "rmk35/partIIProject/backend/runtimeValues/NumberValue/<init>", new IntegerType()));
+    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), "rmk35/partIIProject/runtime/NumberValue/<init>", new IntegerType()));
   }
 
   @Override

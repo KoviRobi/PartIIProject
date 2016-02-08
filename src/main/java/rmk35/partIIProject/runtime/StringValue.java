@@ -1,4 +1,4 @@
-package rmk35.partIIProject.backend.runtimeValues;
+package rmk35.partIIProject.runtime;
 
 public class StringValue implements RuntimeValue
 { String value;

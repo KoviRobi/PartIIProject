@@ -3,7 +3,7 @@ package rmk35.partIIProject.backend.statements;
 import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.ByteCodeMethod;
-import rmk35.partIIProject.backend.runtimeValues.StringValue;
+import rmk35.partIIProject.runtime.StringValue;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.CheckCastInstruction;
 import rmk35.partIIProject.backend.instructions.VirtualCallInstruction;
@@ -34,7 +34,7 @@ public class JavaFieldStatement extends Statement
     fieldName.generateOutput(mainClass, outputClass, method);
     method.addInstruction(new CheckCastInstruction(StringValue.class));
     method.addInstruction(new VirtualCallInstruction(stringType, "java/lang/Object/toString"));
-    method.addInstruction(new StaticCallInstruction(objectType, "rmk35/partIIProject/backend/runtimeValues/IntrospectionHelper/getField", objectType, stringType));
+    method.addInstruction(new StaticCallInstruction(objectType, "rmk35/partIIProject/runtime/IntrospectionHelper/getField", objectType, stringType));
   }
 
   @Override
