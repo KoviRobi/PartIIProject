@@ -1,6 +1,11 @@
-(lambda (x) x)
-(lambda (x) (lambda (y) x))
-(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") "foo")
+(define system-out (static-field "java.lang.System" "out"))
+(define print-stream (class "java.io.PrintStream"))
+(define output-stream-println (method system-out "println" "java.lang.Object"))
+(define println (lambda (value) (java output-stream-println system-out value)))
+
+(println print-stream)
+
+; lambdas, application, let, define, if, java (call, method, class, field, static field), with-exception-handler & raise, macro hygiene
 
 (with-exception-handler
   (lambda (x)
@@ -15,11 +20,6 @@
       x))
   (lambda () (raise "help")))
 
-(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out")
-  ((lambda ()
-   (java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") 0)
-   1)))
-
 (let-syntax ((foo (syntax-rules ()
 				((foo a) ((lambda (x y) x) 1 2)) )))
 	(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") (foo bar))) ; bar should not cause a warning about it being undeclared
@@ -30,10 +30,6 @@
 	((lambda (x)
 	(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") (foo x))) ; bar should not cause a warning about it being undeclared
 	25))
-
-(define output-stream-println (method (static-field "java.lang.System" "out") "println" "java.lang.Object"))
-(define system-out (static-field "java.lang.System" "out"))
-(define println (lambda (value) (java output-stream-println system-out value)))
 
 (println 3)
 

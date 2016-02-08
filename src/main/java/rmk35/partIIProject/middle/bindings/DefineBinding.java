@@ -39,10 +39,11 @@ public class DefineBinding implements Binding
     second.cdr().accept(new ASTExpectNilVisitor());
 
     IdentifierStatement variableStatement;
-    if (variableBinding != null && variableBinding instanceof IdentifierStatement)
-    { variableStatement = (IdentifierStatement) variableBinding;
+    if (variableBinding != null && variableBinding instanceof VariableBinding)
+    { variableStatement = (IdentifierStatement) environment.lookUpAsStatement(variable, first.car().file(), first.car().line(), first.car().character());
     } else // Overwrite binding
-    { variableStatement = new GlobalIdentifierStatement(variable);
+    { environment.addBinding(variable, new GlobalBinding(variable));
+      variableStatement = new GlobalIdentifierStatement(variable);
     }
 
     return new DefineStatement(variableStatement, expression);

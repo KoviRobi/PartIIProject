@@ -12,3 +12,5 @@ Definitions
 Macros with ellipsis
   - More efficient macro matching (i.e. rsc's point about regexp matching)
 Refactor to have font end and runtime values the same TODO1
+ - Have unwrap for scheme objects
+Java "new"

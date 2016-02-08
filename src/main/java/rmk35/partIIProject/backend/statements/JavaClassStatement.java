@@ -7,7 +7,7 @@ import rmk35.partIIProject.backend.runtimeValues.StringValue;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.CheckCastInstruction;
 import rmk35.partIIProject.backend.instructions.VirtualCallInstruction;
-import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
+import rmk35.partIIProject.backend.instructions.StaticCallInstruction;
 import rmk35.partIIProject.backend.instructions.types.ObjectType;
 
 import java.util.Collection;
@@ -31,7 +31,7 @@ public class JavaClassStatement extends Statement
     className.generateOutput(mainClass, outputClass, method);
     method.addInstruction(new CheckCastInstruction(StringValue.class));
     method.addInstruction(new VirtualCallInstruction(stringType, "java/lang/Object/toString"));
-    method.addInstruction(new NonVirtualCallInstruction(classType, "java/lang/Class/forName", stringType));
+    method.addInstruction(new StaticCallInstruction(classType, "java/lang/Class/forName", stringType));
   }
 
   @Override

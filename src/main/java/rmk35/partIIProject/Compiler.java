@@ -85,7 +85,6 @@ public class Compiler
 
     List<AST> parsedFile = SchemeParser.parseFile(fileName);
     List<Statement> statements = interconnect.ASTsToStatements(parsedFile);
-    System.out.println(statements);
     // Mutates mainClass
     JavaByteCodeGenerator.generateOutput(mainClass, statements);
     mainClass.saveToDisk();
