@@ -1,5 +1,6 @@
 package rmk35.partIIProject.runtime;
 
+import rmk35.partIIProject.InternalCompilerException;
 import rmk35.partIIProject.SyntaxErrorException;
 
 import rmk35.partIIProject.frontend.SourceInfo;
@@ -12,7 +13,6 @@ import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
 import rmk35.partIIProject.backend.instructions.DupInstruction;
-import rmk35.partIIProject.backend.instructions.StringConstantInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
 import rmk35.partIIProject.backend.instructions.types.VoidType;
 import rmk35.partIIProject.backend.instructions.types.ObjectType;
@@ -20,24 +20,23 @@ import rmk35.partIIProject.backend.instructions.types.ObjectType;
 import lombok.Data;
 
 @Data
-public class StringValue implements SelfquotingValue
-{ String value;
+public class ConsValue implements PrimitiveValue
+{ RuntimeValue car;
+  RuntimeValue cdr;
   SourceInfo sourceInfo;
 
   @Deprecated
-  public StringValue(String value)
-  { this(value, null);
+  public ConsValue(RuntimeValue car, RuntimeValue cdr)
+  { this(car, cdr, null);
   }
-  public StringValue(String value, SourceInfo sourceInfo)
-  { this.value = value;
+  public ConsValue(RuntimeValue car, RuntimeValue cdr, SourceInfo sourceInfo)
+  { this.car = car;
+    this.cdr = cdr;
     this.sourceInfo = sourceInfo;
   }
 
-  public static String decodeParsedString(String parsedString)
-  { return parsedString.substring(1, parsedString.lastIndexOf('"'));
-  }
-
-  public String getValue() { return value; }
+  public RuntimeValue getCar() { return car; }
+  public RuntimeValue getCdr() { return cdr; }
   public SourceInfo getSourceInfo() { return sourceInfo; }
 
   @Override
@@ -46,13 +45,13 @@ public class StringValue implements SelfquotingValue
   }
 
   @Override
-  public boolean eqv(RuntimeValue other)
-  { return other instanceof StringValue
-        && value.equals(((StringValue)other).value);
-  }
-
+  public boolean eqv(RuntimeValue other) { return eq(other); }
   @Override
-  public boolean equal(RuntimeValue other) { return eq(other); }
+  public boolean equal(RuntimeValue other)
+  { return other instanceof ConsValue
+        && car.equal(((ConsValue) other).getCar())
+        && cdr.equal(((ConsValue) other).getCdr());
+  }
 
   @Override
   public <T> T accept(ASTVisitor<T> visitor) throws SyntaxErrorException
@@ -61,10 +60,11 @@ public class StringValue implements SelfquotingValue
 
   @Override
   public void generateByteCode(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
-  { method.addInstruction(new CommentPseudoInstruction("ByteCode for " + StringValue.class.getName()));
-    method.addInstruction(new NewObjectInstruction(StringValue.class));
+  { method.addInstruction(new CommentPseudoInstruction("ByteCode for " + ConsValue.class.getName()));
+    method.addInstruction(new NewObjectInstruction(ConsValue.class));
     method.addInstruction(new DupInstruction());
-    method.addInstruction(new StringConstantInstruction(value));
-    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), StringValue.class.getName().replace('.', '/') + "/<init>", new ObjectType(String.class)));
+    car.generateByteCode(mainClass, outputClass, method);
+    cdr.generateByteCode(mainClass, outputClass, method);
+    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), ConsValue.class.getName().replace('.', '/') + "/<init>", new ObjectType(PrimitiveValue.class), new ObjectType(PrimitiveValue.class)));
   }
 }

@@ -15,11 +15,11 @@ public class Interconnect
   { this.initialEnvironment = initialEnvironment;
   }
 
-  public List<Statement> ASTsToStatements(List<AST> datum)
+  public List<Statement> ASTsToStatements(List<RuntimeValue> datum)
   { List<Statement> returnValue = new ArrayList<>(datum.size());
     ASTConvertVisitor visitor = new ASTConvertVisitor(initialEnvironment);
 
-    for (AST ast : datum)
+    for (RuntimeValue ast : datum)
     { // Holds state of the environment
       returnValue.add(ast.accept(visitor));
     }

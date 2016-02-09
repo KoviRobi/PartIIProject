@@ -1,5 +1,7 @@
 package rmk35.partIIProject.middle.bindings;
 
+import rmk35.partIIProject.frontend.SourceInfo;
+
 import rmk35.partIIProject.backend.statements.IdentifierStatement;
 import rmk35.partIIProject.backend.statements.LocalIdentifierStatement;
 
@@ -10,8 +12,13 @@ public class LocalBinding extends VariableBinding
 { String identifier;
   int localIndex;
 
+  public LocalBinding(String identifier, int localIndex)
+  { this.identifier = identifier;
+    this.localIndex = localIndex;
+  }
+
   @Override
-  public IdentifierStatement toStatement(String file, long line, long character)
+  public IdentifierStatement toStatement(SourceInfo sourceInfo)
   { return new LocalIdentifierStatement(identifier, localIndex);
   }
 

@@ -1,14 +1,44 @@
 package rmk35.partIIProject.runtime;
 
-public class NumberValue implements RuntimeValue
-{ Integer value;
+import rmk35.partIIProject.SyntaxErrorException;
 
-  public NumberValue(int value)
-  { this(new Integer(value));
-  }
+import rmk35.partIIProject.frontend.SourceInfo;
+
+import rmk35.partIIProject.middle.ASTVisitor;
+
+import rmk35.partIIProject.backend.MainClass;
+import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.ByteCodeMethod;
+import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
+import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
+import rmk35.partIIProject.backend.instructions.DupInstruction;
+import rmk35.partIIProject.backend.instructions.IntegerConstantInstruction;
+import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
+import rmk35.partIIProject.backend.instructions.types.VoidType;
+import rmk35.partIIProject.backend.instructions.types.IntegerType;
+
+import lombok.Value;
+
+@Value
+public class NumberValue implements SelfquotingValue
+{ Integer value;
+  SourceInfo sourceInfo;
+
+  @Deprecated
   public NumberValue(Integer value)
-  { this.value = value;
+  { this(value, null);
   }
+  public NumberValue(Integer value, SourceInfo sourceInfo)
+  { this.value = value;
+    this.sourceInfo = sourceInfo;
+  }
+  public NumberValue(String value, SourceInfo sourceInfo)
+  { this.value = Integer.decode(value);
+    this.sourceInfo = sourceInfo;
+  }
+
+  public Integer getValue() { return value; }
+  public SourceInfo getSourceInfo() { return sourceInfo; }
 
   public boolean equal(RuntimeValue other)
   { if (other instanceof NumberValue)
@@ -26,7 +56,18 @@ public class NumberValue implements RuntimeValue
   { return equal(other);
   }
 
-  public String toString()
-  { return value.toString();
+  @Override
+  public <T> T accept(ASTVisitor<T> visitor) throws SyntaxErrorException
+  { return visitor.visit(this);
+  }
+
+  @Override
+  public void generateByteCode(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
+  { method.addInstruction(new CommentPseudoInstruction("ByteCode for " + NumberValue.class.getName()));
+    method.addInstruction(new NewObjectInstruction(NumberValue.class));
+    method.addInstruction(new DupInstruction());
+    method.addInstruction(new IntegerConstantInstruction(value));
+    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), NumberValue.class.getName().replace('.', '/') + "/<init>", new IntegerType()));
+  
   }
 }

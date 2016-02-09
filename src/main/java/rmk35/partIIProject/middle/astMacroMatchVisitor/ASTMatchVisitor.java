@@ -2,8 +2,9 @@ package rmk35.partIIProject.middle.astMacroMatchVisitor;
 
 import rmk35.partIIProject.InternalCompilerException;
 
+import rmk35.partIIProject.runtime.RuntimeValue;
+
 import rmk35.partIIProject.middle.Environment;
-import rmk35.partIIProject.middle.AST;
 import rmk35.partIIProject.middle.ASTVisitor;
 
 import java.util.Map;
@@ -11,7 +12,7 @@ import java.util.Map;
 /** A macro pattern gets compiled into this visitor, which is then matched against the macro application
     null means "no match"
  */
-public abstract class ASTMatchVisitor extends ASTVisitor<Map<String, AST>>
+public abstract class ASTMatchVisitor extends ASTVisitor<Map<String, RuntimeValue>>
 { Environment useEnvironment = null;
   public final void setUseEnvironment(Environment environment)
   { useEnvironment = environment;

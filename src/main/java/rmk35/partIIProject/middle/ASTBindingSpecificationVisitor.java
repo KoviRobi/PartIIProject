@@ -11,6 +11,6 @@ import lombok.Value;
 @Value
 public class ASTBindingSpecificationVisitor extends ASTPairMapVisitor<String, Statement>
 { public ASTBindingSpecificationVisitor(Environment environment)
-  { super(a -> a.accept(new ASTExpectIdentifierVisitor()).getData(), b -> b.accept(new ASTConvertVisitor(environment)));
+  { super(a -> a.accept(new ASTExpectIdentifierVisitor()).getValue(), b -> b.accept(new ASTConvertVisitor(environment)));
   }
 }

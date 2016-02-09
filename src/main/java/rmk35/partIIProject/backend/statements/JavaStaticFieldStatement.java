@@ -32,10 +32,10 @@ public class JavaStaticFieldStatement extends Statement
   { method.addInstruction(new CommentPseudoInstruction("JavaFieldStatement"));
     className.generateOutput(mainClass, outputClass, method);
     method.addInstruction(new CheckCastInstruction(StringValue.class));
-    method.addInstruction(new VirtualCallInstruction(stringType, "java/lang/Object/toString"));
+    method.addInstruction(new VirtualCallInstruction(stringType, StringValue.class.getName().replace('.', '/') + "/getValue"));
     fieldName.generateOutput(mainClass, outputClass, method);
     method.addInstruction(new CheckCastInstruction(StringValue.class));
-    method.addInstruction(new VirtualCallInstruction(stringType, "java/lang/Object/toString"));
+    method.addInstruction(new VirtualCallInstruction(stringType, StringValue.class.getName().replace('.', '/') + "/getValue"));
     method.addInstruction(new StaticCallInstruction(objectType, "rmk35/partIIProject/runtime/IntrospectionHelper/getStaticField", stringType, stringType));
   }
 

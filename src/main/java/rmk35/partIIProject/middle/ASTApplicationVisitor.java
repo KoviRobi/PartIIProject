@@ -3,12 +3,11 @@ package rmk35.partIIProject.middle;
 import rmk35.partIIProject.SyntaxErrorException;
 import rmk35.partIIProject.InternalCompilerException;
 
-import rmk35.partIIProject.frontend.AST.SchemeLiteral;
-import rmk35.partIIProject.frontend.AST.SchemeCons;
-import rmk35.partIIProject.frontend.AST.SchemeNil;
-import rmk35.partIIProject.frontend.AST.SchemeIdentifier;
-import rmk35.partIIProject.frontend.AST.SchemeLabelReference;
-import rmk35.partIIProject.frontend.AST.SchemeLabelledData;
+import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.ConsValue;
+import rmk35.partIIProject.runtime.IdentifierValue;
+import rmk35.partIIProject.runtime.NullValue;
+import rmk35.partIIProject.runtime.SelfquotingValue;
 
 import rmk35.partIIProject.middle.astExpectVisitor.ASTListFoldVisitor;
 
@@ -23,42 +22,32 @@ import lombok.Value;
 @Value
 public class ASTApplicationVisitor extends ASTVisitor<Statement>
 { Environment environment;
-  AST arguments;
+  RuntimeValue arguments;
 
-  public ASTApplicationVisitor(Environment environment, AST arguments)
+  public ASTApplicationVisitor(Environment environment, RuntimeValue arguments)
   { this.environment = environment;
     this.arguments = arguments;
   }
 
   @Override
-  public Statement visit(SchemeCons consCell) throws SyntaxErrorException
+  public Statement visit(ConsValue consCell) throws SyntaxErrorException
   { return new ApplicationStatement(consCell.accept(new ASTConvertVisitor(environment)),
       arguments.accept(new ASTListFoldVisitor<List<Statement>>(new ArrayList<>(),
         (list, ast) -> { list.add(ast.accept(new ASTConvertVisitor(environment))); return list; } )));
   }
 
   @Override
-  public Statement visit(SchemeNil nil)
-  { throw new SyntaxErrorException("Don't know how to apply nil", nil.file(), nil.line(), nil.character());
+  public Statement visit(IdentifierValue identifier) throws SyntaxErrorException
+  { return environment.lookUp(identifier.getValue()).applicate(environment, identifier, arguments);
   }
 
   @Override
-  public Statement visit(SchemeIdentifier identifier) throws SyntaxErrorException
-  { return environment.lookUp(identifier.getData()).applicate(environment, identifier, arguments);
+  public Statement visit(NullValue nil) throws SyntaxErrorException
+  { throw new SyntaxErrorException("Don't know how to apply nil", nil.getSourceInfo());
   }
 
   @Override
-  public Statement visit(SchemeLiteral object) throws SyntaxErrorException
-  { throw new SyntaxErrorException("Don't know how to apply a value as an operand", object.file(), object.line(), object.character());
-  }
-
-  @Override
-  public Statement visit(SchemeLabelReference reference) throws SyntaxErrorException
-  { throw new SyntaxErrorException("Don't know how to apply a label reference", reference.file(), reference.line(), reference.character());
-  }
-
-  @Override
-  public Statement visit(SchemeLabelledData data) throws SyntaxErrorException
-  { throw new SyntaxErrorException("Don't know how to handle non-literal labelled data", data.file(), data.line(), data.character());
+  public Statement visit(SelfquotingValue object) throws SyntaxErrorException
+  { throw new SyntaxErrorException("Don't know how to apply a constant as an operand", object.getSourceInfo());
   }
 }

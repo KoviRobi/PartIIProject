@@ -4,17 +4,15 @@ import rmk35.partIIProject.SyntaxErrorException;
 
 import rmk35.partIIProject.utility.Pair;
 
-import rmk35.partIIProject.frontend.AST.SchemeLiteral;
-import rmk35.partIIProject.frontend.AST.SchemeCons;
-import rmk35.partIIProject.frontend.AST.SchemeNil;
-import rmk35.partIIProject.frontend.AST.SchemeIdentifier;
-import rmk35.partIIProject.frontend.AST.SchemeLabelledData;
-import rmk35.partIIProject.frontend.AST.SchemeLabelReference;
+import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.ConsValue;
+import rmk35.partIIProject.runtime.IdentifierValue;
 
 import rmk35.partIIProject.middle.Environment;
 import rmk35.partIIProject.middle.bindings.SyntaxBinding;
 import rmk35.partIIProject.middle.bindings.SyntaxRulesBinding;
 import rmk35.partIIProject.middle.bindings.EllipsisBinding;
+import rmk35.partIIProject.middle.astExpectVisitor.ASTUnexpectedVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTListFoldVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTPairMapVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectIdentifierVisitor;
@@ -29,7 +27,7 @@ import lombok.Value;
 /** Syntax specification is a keyword, transformer specification, see r7rs, 7.1.3, page 64
  */
 @Value
-public class ASTTransformerSpecificationVisitor extends ASTVisitor<SyntaxBinding>
+public class ASTTransformerSpecificationVisitor extends ASTUnexpectedVisitor<SyntaxBinding>
 { Environment environment;
 
   public ASTTransformerSpecificationVisitor(Environment environment)
@@ -37,51 +35,26 @@ public class ASTTransformerSpecificationVisitor extends ASTVisitor<SyntaxBinding
   }
 
   @Override
-  public SyntaxBinding visit(SchemeCons consCell)
-  { String syntaxRules = consCell.car().accept(new ASTExpectIdentifierVisitor()).getData();
+  public SyntaxBinding visit(ConsValue consCell)
+  { String syntaxRules = consCell.getCar().accept(new ASTExpectIdentifierVisitor()).getValue();
     if (! (environment.lookUp(syntaxRules) instanceof SyntaxRulesBinding))
-    { throw new SyntaxErrorException("I was expecting \"syntax-rules\" maybe it has been rebound?", consCell.file(), consCell.line(), consCell.character());
+    { throw new SyntaxErrorException("I was expecting \"syntax-rules\" maybe it has been rebound?", consCell.getSourceInfo());
     }
     Environment ellipsisEnvironment = new Environment(environment, /* subEnvironment */ false);
-    SchemeCons second = consCell.cdr().accept(new ASTExpectConsVisitor());
-    AST literalsAST;
-    if (second.car() instanceof SchemeIdentifier)
-    { environment.addBinding(((SchemeIdentifier) second.car()).getData(), new EllipsisBinding());
-      literalsAST = second.cdr();
+    ConsValue second = consCell.getCdr().accept(new ASTExpectConsVisitor());
+    RuntimeValue literalsAST;
+    if (second.getCar() instanceof IdentifierValue)
+    { environment.addBinding(((IdentifierValue) second.getCar()).getValue(), new EllipsisBinding());
+      literalsAST = second.getCdr();
     } else
     { environment.addBinding("...", new EllipsisBinding());
       literalsAST = second;
     }
-    SchemeCons literalsCell = literalsAST.accept(new ASTExpectConsVisitor());
-    List<String> literals = literalsCell.car().accept(new ASTListFoldVisitor<>(new ArrayList<>(),
-      (list, ast) -> { list.add(ast.accept(new ASTExpectIdentifierVisitor()).getData()); return list; } ));
-    List<Pair<AST, AST>> patternAndTemplate = literalsCell.cdr().accept(new ASTListFoldVisitor<>(new ArrayList<>(),
+    ConsValue literalsCell = literalsAST.accept(new ASTExpectConsVisitor());
+    List<String> literals = literalsCell.getCar().accept(new ASTListFoldVisitor<>(new ArrayList<>(),
+      (list, ast) -> { list.add(ast.accept(new ASTExpectIdentifierVisitor()).getValue()); return list; } ));
+    List<Pair<RuntimeValue, RuntimeValue>> patternAndTemplate = literalsCell.getCdr().accept(new ASTListFoldVisitor<>(new ArrayList<>(),
       (list, current) -> { list.add(current.accept(new ASTPairMapVisitor<>(x -> x, y -> y))); return list; } ));
     return new SyntaxBinding(ellipsisEnvironment, literals, patternAndTemplate);
-  }
-
-  @Override
-  public SyntaxBinding visit(SchemeNil nil)
-  { throw new SyntaxErrorException("List is too short for transformer specification", nil.file(), nil.line(), nil.character());
-  }
-
-  @Override
-  public SyntaxBinding visit(SchemeIdentifier identifier)
-  { throw new SyntaxErrorException("I was expecting a proper list", identifier.file(), identifier.line(), identifier.character());
-  }
-
-  @Override
-  public SyntaxBinding visit(SchemeLiteral object)
-  { throw new SyntaxErrorException("I was expecting a proper list", object.file(), object.line(), object.character());
-  }
-
-  @Override
-  public SyntaxBinding visit(SchemeLabelReference reference)
-  { throw new SyntaxErrorException("I was expecting a proper list", reference.file(), reference.line(), reference.character());
-  }
-
-  @Override
-  public SyntaxBinding visit(SchemeLabelledData data)
-  { throw new SyntaxErrorException("I was expecting a proper list", data.file(), data.line(), data.character());
   }
 }

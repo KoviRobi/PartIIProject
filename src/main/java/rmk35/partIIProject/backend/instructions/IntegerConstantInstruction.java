@@ -19,6 +19,8 @@ public class IntegerConstantInstruction implements Instruction
     { return "  iconst_m1\n";
     } else if (0 <= number && number <= 5)
     { return "  iconst_" + number;
+    } else if (-128 <= number && number <= 127)
+    { return "  bipush " + number;
     } else
     { return "  ldc " + number;
     }

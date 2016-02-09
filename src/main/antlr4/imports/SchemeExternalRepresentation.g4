@@ -6,15 +6,15 @@ grammar SchemeExternalRepresentation;
 
 import SchemeLexicalStructure;
 
-datum[String filename] returns [AST expr]
+datum[String filename] returns [RuntimeValue expr]
   : simpleDatum[$filename] { $expr = $simpleDatum.expr; }
   | compoundDatum[$filename] { $expr = $compoundDatum.expr; }
-  | LabelCreate child=datum[$filename] { $expr = new SchemeLabelledData($LabelCreate.text, $child.expr, $filename, $LabelCreate.line, $LabelCreate.pos); }
-  | LabelReference { $expr = new SchemeLabelReference($LabelReference.text); } // FIXME: Error from here.
+//  | LabelCreate child=datum[$filename] { throw new UnsupportedOperationException("Labels are not yet supported"); }
+//  | LabelReference { throw new UnsupportedOperationException("Labels are not yet supported"); }
   | '#;' datum[$filename] { $expr = null; }
   ;
 
-simpleDatum[String filename] returns [AST expr]
+simpleDatum[String filename] returns [RuntimeValue expr]
   : bool[$filename] { $expr = $bool.expr; }
   | number[$filename] { $expr = $number.expr; }
   | character[$filename] { $expr = $character.expr; }
@@ -23,69 +23,70 @@ simpleDatum[String filename] returns [AST expr]
   | bytevector[$filename] { $expr = $bytevector.expr; }
   ;
 
-bool[String filename] returns [SchemeBoolean expr] : Boolean { $expr = new SchemeBoolean($Boolean.text, $filename, $Boolean.line, $Boolean.pos); } ;
-number[String filename] returns [SchemeNumber expr]: Number { $expr = new SchemeNumber($Number.text, $filename, $Number.line, $Number.pos); } ;
-character[String filename] returns [SchemeCharacter expr] : Character { $expr = new SchemeCharacter($Character.text, $filename, $Character.line, $Character.pos); } ;
-string[String filename] returns [SchemeString expr]: String { $expr = new SchemeString($String.text, "Filename unknown", $String.line, $String.pos); } ;
-symbol[String filename] returns [SchemeIdentifier expr] : Identifier { $expr = new SchemeIdentifier($Identifier.text, $filename, $Identifier.line, $Identifier.pos); } ;
+bool[String filename] returns [BooleanValue expr] : Boolean { $expr = new BooleanValue($Boolean.text, new SourceInfo($filename, $Boolean.line, $Boolean.pos)); } ;
+number[String filename] returns [NumberValue expr]: Number { $expr = new NumberValue($Number.text, new SourceInfo($filename, $Number.line, $Number.pos)); } ;
+character[String filename] returns [CharacterValue expr] : Character { $expr = new CharacterValue($Character.text, new SourceInfo($filename, $Character.line, $Character.pos)); } ;
+string[String filename] returns [StringValue expr]: String { $expr = new StringValue(StringValue.decodeParsedString($String.text), new SourceInfo($filename, $String.line, $String.pos)); } ;
+symbol[String filename] returns [IdentifierValue expr] : Identifier { $expr = new IdentifierValue($Identifier.text, new SourceInfo($filename, $Identifier.line, $Identifier.pos)); } ;
 
 bytevector[String filename]
-  returns [SchemeBytevector expr]
-  locals [Stack<String> acc, long line, long col]
+  returns [BytevectorValue expr]
+  locals [List<Byte> acc, SourceInfo sourceInfo]
   @init {
-   $acc = new Stack<>();
+   $acc = new LinkedList<>();
   }
   @after {
-   $expr = new SchemeBytevector($acc.toArray(), $filename, $line, $col);
+   $expr = new BytevectorValue($acc, $sourceInfo);
   }
-  : BytevectorOpen { $line = $BytevectorOpen.line; $col = $BytevectorOpen.pos; }
-    (UInteger { $acc.push($UInteger.text); } )*
+  : open=BytevectorOpen { $sourceInfo = new SourceInfo($filename, $open.line, $open.pos); }
+    (UInteger { $acc.add(Byte.decode($UInteger.text)); } )*
     ')'
   ;
 
-compoundDatum[String filename] returns [AST expr]
+compoundDatum[String filename] returns [RuntimeValue expr]
   : list[$filename] { $expr = $list.expr; }
   | vector[$filename] { $expr = $vector.expr; }
   | abbreviation[$filename] { $expr = $abbreviation.expr; }
   ;
 
 list[String filename]
-  returns [AST expr] // For example, '( . a) is just 'a  NOTE: this is a bug in Larceny ;)
-  locals [Stack<SchemeCons> acc, AST end]
+  returns [RuntimeValue expr] // For example, '( . a) is just 'a  NOTE: this is a bug in Larceny ;)
+  locals [Deque<ConsValue> acc, RuntimeValue end]
   @init {
-   $acc = new  Stack<>();
+   $acc = new  LinkedList<>();
   }
   @after {
-   while (!$acc.empty())
+   while (!$acc.isEmpty())
    { // Reverse iterate, append lists
-     SchemeCons tail = $acc.pop();
+     ConsValue tail = $acc.removeFirst();
      tail.setCdr($end);
      $end = tail;
    }
    $expr = $end;
   }
-  : '(' (datum[$filename] { if ($datum.expr != null) $acc.push(new SchemeCons($datum.expr, null, $filename, $datum.expr.line(), $datum.expr.character())); } )*  closingParen=')' { $end = new SchemeNil($filename, $closingParen.line, $closingParen.pos); }
-  | openingParen='(' (datum[$filename] { if ($datum.expr != null) $acc.push(new SchemeCons($datum.expr, null, $filename, $datum.expr.line(), $datum.expr.character())); } )+ '.' datum[$filename] { if ($datum.expr != null) $end = $datum.expr; else throw new SyntaxErrorException("Improper improper list, no end datum", $filename, $openingParen.line, $openingParen.pos); } ')'
+  : '(' (datum[$filename] { if ($datum.expr != null) $acc.addFirst(new ConsValue($datum.expr, null, $datum.expr.getSourceInfo())); } )*  closingParen=')' { $end = new NullValue(new SourceInfo($filename, $closingParen.line, $closingParen.pos)); }
+  | openingParen='(' (datum[$filename] { if ($datum.expr != null) $acc.addFirst(new ConsValue($datum.expr, null, $datum.expr.getSourceInfo())); } )+ '.' datum[$filename] { if ($datum.expr != null) $end = $datum.expr; else throw new SyntaxErrorException("Improper improper list, no end datum", new SourceInfo($filename, $openingParen.line, $openingParen.pos)); } ')'
   ;
 
 vector[String filename]
-  returns [SchemeVector expr]
-  locals [List<AST> acc]
+  returns [VectorValue expr]
+  locals [List<RuntimeValue> acc, SourceInfo sourceInfo]
   @init {
    $acc = new ArrayList<>();
   }
   @after {
-   $expr = new SchemeVector($acc.toArray(), $filename, -1, -1);
+   $expr = new VectorValue($acc, $sourceInfo);
   }
-  : '#(' (datum[$filename] { if ($datum.expr != null) $acc.add($datum.expr); } )* ')'
+  : open='#(' (datum[$filename] { if ($datum.expr != null) $acc.add($datum.expr); } )* ')' { $sourceInfo = new SourceInfo($filename, $open.line, $open.pos); }
   ;
 
 abbreviation[String filename]
-  returns [AST expr]
+  returns [RuntimeValue expr]
   : AbbrevPrefix datum[$filename] 
-  { $expr = new SchemeAbbreviation($AbbrevPrefix.text, $datum.expr, $filename, $AbbrevPrefix.line, $AbbrevPrefix.pos); }; //FIXME:
+  { $expr = new ConsValue(new IdentifierValue
+  (IdentifierValue.decodeAbbreviationPrefix($AbbrevPrefix.text), new SourceInfo($filename, $AbbrevPrefix.line, $AbbrevPrefix.pos)), $datum.expr, $datum.expr.getSourceInfo()); };
 
 AbbrevPrefix : '\'' | '`' | ',' | ',@' ;
 
-LabelCreate : '#' UInteger '=' ;
-LabelReference : '#' UInteger '#' ;
+//LabelCreate : '#' UInteger '=' ;
+//LabelReference : '#' UInteger '#' ;

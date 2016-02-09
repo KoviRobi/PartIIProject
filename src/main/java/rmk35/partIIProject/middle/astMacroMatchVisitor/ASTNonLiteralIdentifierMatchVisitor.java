@@ -1,13 +1,10 @@
 package rmk35.partIIProject.middle.astMacroMatchVisitor;
 
-import rmk35.partIIProject.frontend.AST.SchemeLiteral;
-import rmk35.partIIProject.frontend.AST.SchemeCons;
-import rmk35.partIIProject.frontend.AST.SchemeNil;
-import rmk35.partIIProject.frontend.AST.SchemeIdentifier;
-import rmk35.partIIProject.frontend.AST.SchemeLabelReference;
-import rmk35.partIIProject.frontend.AST.SchemeLabelledData;
-
-import rmk35.partIIProject.middle.AST;
+import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.ConsValue;
+import rmk35.partIIProject.runtime.IdentifierValue;
+import rmk35.partIIProject.runtime.NullValue;
+import rmk35.partIIProject.runtime.SelfquotingValue;
 
 import java.util.Map;
 import java.util.Hashtable;
@@ -20,44 +17,30 @@ public class ASTNonLiteralIdentifierMatchVisitor extends ASTMatchVisitor
   }
 
   @Override
-  public Map<String, AST> visit(SchemeCons consCell)
-  { Map<String, AST> returnValue = new Hashtable<>();
+  public Map<String, RuntimeValue> visit(ConsValue consCell)
+  { Map<String, RuntimeValue> returnValue = new Hashtable<>();
     returnValue.put(variableName, consCell);
     return returnValue;
   }
 
   @Override
-  public Map<String, AST> visit(SchemeNil nil)
-  { Map<String, AST> returnValue = new Hashtable<>();
-    returnValue.put(variableName, nil);
-    return returnValue;
-  }
-
-  @Override
-  public Map<String, AST> visit(SchemeIdentifier identifier)
-  { Map<String, AST> returnValue = new Hashtable<>();
+  public Map<String, RuntimeValue> visit(IdentifierValue identifier)
+  { Map<String, RuntimeValue> returnValue = new Hashtable<>();
     returnValue.put(variableName, identifier);
     return returnValue;
   }
 
   @Override
-  public Map<String, AST> visit(SchemeLiteral object)
-  { Map<String, AST> returnValue = new Hashtable<>();
+  public Map<String, RuntimeValue> visit(NullValue nil)
+  { Map<String, RuntimeValue> returnValue = new Hashtable<>();
+    returnValue.put(variableName, nil);
+    return returnValue;
+  }
+
+  @Override
+  public Map<String, RuntimeValue> visit(SelfquotingValue object)
+  { Map<String, RuntimeValue> returnValue = new Hashtable<>();
     returnValue.put(variableName, object);
-    return returnValue;
-  }
-
-  @Override
-  public Map<String, AST> visit(SchemeLabelReference reference)
-  { Map<String, AST> returnValue = new Hashtable<>();
-    returnValue.put(variableName, reference);
-    return returnValue;
-  }
-
-  @Override
-  public Map<String, AST> visit(SchemeLabelledData data)
-  { Map<String, AST> returnValue = new Hashtable<>();
-    returnValue.put(variableName, data);
     return returnValue;
   }
 }

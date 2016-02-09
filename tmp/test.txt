@@ -20,25 +20,25 @@
       x))
   (lambda () (raise "help")))
 
-(let-syntax ((foo (syntax-rules ()
+#;(let-syntax ((foo (syntax-rules ()
 				((foo a) ((lambda (x y) x) 1 2)) )))
 	(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") (foo bar))) ; bar should not cause a warning about it being undeclared
 
 ; Same as above, just with hygiene tests, should be 25
-(let-syntax ((foo (syntax-rules ()
+#;(let-syntax ((foo (syntax-rules ()
 				((foo a) ((lambda (x y) a) 1 2)) )))
 	((lambda (x)
 	(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") (foo x))) ; bar should not cause a warning about it being undeclared
 	25))
 
-(println 3)
+#;(println 3)
 
-(define-syntax bar
+#;(define-syntax bar
   (syntax-rules ()
     ((bar 0) (println "bar zero"))
     ((bar 1) (println "bar one")) ) )
 
-(let ((print println)
+#;(let ((print println)
       (println "foo"))
   (print println)
   (bar 0)

@@ -2,27 +2,17 @@ package rmk35.partIIProject.middle;
 
 import rmk35.partIIProject.SyntaxErrorException;
 
-import rmk35.partIIProject.frontend.AST.SchemeLiteral;
-import rmk35.partIIProject.frontend.AST.SchemeCons;
-import rmk35.partIIProject.frontend.AST.SchemeNil;
-import rmk35.partIIProject.frontend.AST.SchemeIdentifier;
-import rmk35.partIIProject.frontend.AST.SchemeLabelledData;
-import rmk35.partIIProject.frontend.AST.SchemeLabelReference;
-// Literals
-import rmk35.partIIProject.frontend.AST.SchemeNumber;
-import rmk35.partIIProject.frontend.AST.SchemeBoolean;
-import rmk35.partIIProject.frontend.AST.SchemeString;
-
-import rmk35.partIIProject.middle.bindings.Binding;
+import rmk35.partIIProject.runtime.ConsValue;
+import rmk35.partIIProject.runtime.IdentifierValue;
+import rmk35.partIIProject.runtime.NullValue;
+import rmk35.partIIProject.runtime.SelfquotingValue;
 
 import rmk35.partIIProject.backend.statements.Statement;
-import rmk35.partIIProject.backend.statements.NumberValueStatement;
-import rmk35.partIIProject.backend.statements.BooleanValueStatement;
-import rmk35.partIIProject.backend.statements.StringValueStatement;
+import rmk35.partIIProject.backend.statements.PrimitiveValueStatement;
 
 import lombok.Data;
 
-/* This is the main visitor, it converts the frontend's AST to the backend's Statement */
+/* This is the main visitor, it converts the frontend's RuntimeValue to the backend's Statement */
 
 @Data
 public class ASTConvertVisitor extends ASTVisitor<Statement>
@@ -33,47 +23,22 @@ public class ASTConvertVisitor extends ASTVisitor<Statement>
   }
 
   @Override
-  public Statement visit(SchemeCons consCell)
-  { return consCell.car().accept(new ASTApplicationVisitor(environment, consCell.cdr()));
+  public Statement visit(ConsValue consCell)
+  { return consCell.getCar().accept(new ASTApplicationVisitor(environment, consCell.getCdr()));
   }
 
   @Override
-  public Statement visit(SchemeNil nil)
-  { throw new SyntaxErrorException("Don't know what to do with nil", nil.file(), nil.line(), nil.character());
+  public Statement visit(IdentifierValue identifier)
+  { return environment.lookUpAsStatement(identifier.getValue(), identifier.getSourceInfo());
   }
 
   @Override
-  public Statement visit(SchemeIdentifier identifier)
-  { return environment.lookUpAsStatement(identifier.getData(), identifier.file(), identifier.line(), identifier.character());
+  public Statement visit(NullValue nil)
+  { throw new SyntaxErrorException("Don't know what to do with nil", nil.getSourceInfo());
   }
 
   @Override
-  public Statement visit(SchemeLiteral object)
-  { throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public Statement visit(SchemeNumber number)
-  { return new NumberValueStatement(Integer.parseInt(number.getData()));
-  }
-
-  @Override
-  public Statement visit(SchemeBoolean booleanValue)
-  { return new BooleanValueStatement(booleanValue.getData());
-  }
-
-  @Override
-  public Statement visit(SchemeString string)
-  { return new StringValueStatement(string.getData());
-  }
-
-  @Override
-  public Statement visit(SchemeLabelReference reference)
-  { throw new SyntaxErrorException("Unexpected label reference", reference.file(), reference.line(), reference.character());
-  }
-
-  @Override
-  public Statement visit(SchemeLabelledData data)
-  { throw new SyntaxErrorException("Don't know how to handle labelled data in non-literal position", data.file(), data.line(), data.character());
+  public Statement visit(SelfquotingValue object)
+  { return new PrimitiveValueStatement(object);
   }
 }

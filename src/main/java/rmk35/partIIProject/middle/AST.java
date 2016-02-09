@@ -1,12 +1,10 @@
 package rmk35.partIIProject.middle;
 
-import rmk35.partIIProject.SyntaxErrorException;
+import rmk35.partIIProject.frontend.SourceInfo;
 
-import rmk35.partIIProject.backend.statements.Statement;
+import rmk35.partIIProject.SyntaxErrorException;
 
 public interface AST
 { <T> T accept(ASTVisitor<T> visitor) throws SyntaxErrorException;
-  String file();
-  long line();
-  long character();
+  SourceInfo getSourceInfo();
 }

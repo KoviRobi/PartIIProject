@@ -1,5 +1,7 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.runtime.BooleanValue;
+
 import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.ByteCodeMethod;
@@ -35,7 +37,7 @@ public class IfStatement extends Statement
     predicate.generateOutput(mainClass, outputClass, method);
     // Top of stack is now predicate's value
     // XXX Speed: if we make booleans unique, we could use "if_acmpeq" to compare false
-    (new BooleanValueStatement(false)).generateOutput(mainClass, outputClass, method);
+    (new BooleanValue(false)).generateByteCode(mainClass, outputClass, method);
     method.addInstruction(new InterfaceCallInstruction(/* static */ false, new BooleanType(), "rmk35/partIIProject/runtime/RuntimeValue/eq", runtimeValueType));
 
     // Stack now contains 1 if predicate is false, otherwise 0.

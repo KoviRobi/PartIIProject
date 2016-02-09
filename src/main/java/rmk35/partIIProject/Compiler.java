@@ -20,6 +20,7 @@ import rmk35.partIIProject.middle.bindings.JavaFieldBinding;
 import rmk35.partIIProject.middle.bindings.JavaMethodBinding;
 import rmk35.partIIProject.middle.bindings.JavaStaticFieldBinding;
 
+import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.RaiseLambda;
 import rmk35.partIIProject.runtime.WithExceptionHandlerLambda;
 
@@ -83,7 +84,7 @@ public class Compiler
     initialEnvironment.addGlobalVariable("with-exception-handler");
     mainClass.addGlobalBinding("with-exception-handler", WithExceptionHandlerLambda.class);
 
-    List<AST> parsedFile = SchemeParser.parseFile(fileName);
+    List<RuntimeValue> parsedFile = SchemeParser.parseFile(fileName);
     List<Statement> statements = interconnect.ASTsToStatements(parsedFile);
     // Mutates mainClass
     JavaByteCodeGenerator.generateOutput(mainClass, statements);

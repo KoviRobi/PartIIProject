@@ -33,7 +33,7 @@ public class JavaFieldStatement extends Statement
     object.generateOutput(mainClass, outputClass, method);
     fieldName.generateOutput(mainClass, outputClass, method);
     method.addInstruction(new CheckCastInstruction(StringValue.class));
-    method.addInstruction(new VirtualCallInstruction(stringType, "java/lang/Object/toString"));
+    method.addInstruction(new VirtualCallInstruction(stringType, StringValue.class.getName().replace('.', '/') + "/getValue"));
     method.addInstruction(new StaticCallInstruction(objectType, "rmk35/partIIProject/runtime/IntrospectionHelper/getField", objectType, stringType));
   }
 

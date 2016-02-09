@@ -44,7 +44,7 @@ public class JavaMethodStatement extends Statement
     object.generateOutput(mainClass, outputClass, method);
     methodName.generateOutput(mainClass, outputClass, method);
     method.addInstruction(new CheckCastInstruction(StringValue.class));
-    method.addInstruction(new VirtualCallInstruction(stringType, "java/lang/Object/toString"));
+    method.addInstruction(new VirtualCallInstruction(stringType, StringValue.class.getName().replace('.', '/') + "/getValue"));
 
     // Make array for variadic arguments
     method.addInstruction(new IntegerConstantInstruction(arguments.size()));
@@ -55,7 +55,7 @@ public class JavaMethodStatement extends Statement
       method.addInstruction(new IntegerConstantInstruction(i));
       argument.generateOutput(mainClass, outputClass, method);
       method.addInstruction(new CheckCastInstruction(StringValue.class));
-      method.addInstruction(new VirtualCallInstruction(stringType, "java/lang/Object/toString"));
+      method.addInstruction(new VirtualCallInstruction(stringType, StringValue.class.getName().replace('.', '/') + "/getValue"));
       method.addInstruction(new ReferenceArrayStoreInstruction());
       i++;
     }

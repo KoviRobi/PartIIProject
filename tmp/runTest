@@ -8,7 +8,7 @@ else
   term=
 fi
 
-#$term jdb -launch -classpath ../src/main/java:../target/part-II-project-1.0-SNAPSHOT.jar:../target/classes:$CLASSPATH rmk35.partIIProject.Compiler  test.txt
+#term jdb -launch -classpath ../src/main/java:../target/part-II-project-1.0-SNAPSHOT.jar:../target/classes:$CLASSPATH rmk35.partIIProject.Compiler  test.txt
 java -classpath ../src/main/java:../target/part-II-project-1.0-SNAPSHOT.jar:../target/classes:$CLASSPATH rmk35.partIIProject.Compiler  test.txt
 
 java -jar ../jasmin.jar -g *.j

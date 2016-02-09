@@ -1,5 +1,6 @@
 package rmk35.partIIProject.runtime;
 
+import rmk35.partIIProject.InternalCompilerException;
 import rmk35.partIIProject.SyntaxErrorException;
 
 import rmk35.partIIProject.frontend.SourceInfo;
@@ -17,24 +18,28 @@ import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
 import rmk35.partIIProject.backend.instructions.types.VoidType;
 import rmk35.partIIProject.backend.instructions.types.ObjectType;
 
-import lombok.Data;
+import lombok.Value;
 
-@Data
-public class StringValue implements SelfquotingValue
+@Value
+public class IdentifierValue implements PrimitiveValue
 { String value;
   SourceInfo sourceInfo;
 
   @Deprecated
-  public StringValue(String value)
+  public IdentifierValue(String value)
   { this(value, null);
   }
-  public StringValue(String value, SourceInfo sourceInfo)
-  { this.value = value;
+  public IdentifierValue(String value, SourceInfo sourceInfo)
+  { this.value = value.intern();
     this.sourceInfo = sourceInfo;
   }
 
-  public static String decodeParsedString(String parsedString)
-  { return parsedString.substring(1, parsedString.lastIndexOf('"'));
+  public static String decodeAbbreviationPrefix(String prefix)
+  { if ("'".equals(prefix)) return "quote";
+    if ("`".equals(prefix)) return "quasiquote";
+    if (",".equals(prefix)) return "unquote";
+    if (",@".equals(prefix)) return "unquote-splicing";
+    throw new InternalCompilerException("Unable to decode abbreviation prefix: " + prefix);
   }
 
   public String getValue() { return value; }
@@ -42,15 +47,12 @@ public class StringValue implements SelfquotingValue
 
   @Override
   public boolean eq(RuntimeValue other)
-  { return this == other;
+  { return other instanceof IdentifierValue
+        && value.equals(((IdentifierValue)other).value);
   }
 
   @Override
-  public boolean eqv(RuntimeValue other)
-  { return other instanceof StringValue
-        && value.equals(((StringValue)other).value);
-  }
-
+  public boolean eqv(RuntimeValue other) { return eq(other); }
   @Override
   public boolean equal(RuntimeValue other) { return eq(other); }
 
@@ -61,10 +63,10 @@ public class StringValue implements SelfquotingValue
 
   @Override
   public void generateByteCode(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
-  { method.addInstruction(new CommentPseudoInstruction("ByteCode for " + StringValue.class.getName()));
-    method.addInstruction(new NewObjectInstruction(StringValue.class));
+  { method.addInstruction(new CommentPseudoInstruction("ByteCode for " + IdentifierValue.class.getName()));
+    method.addInstruction(new NewObjectInstruction(IdentifierValue.class));
     method.addInstruction(new DupInstruction());
     method.addInstruction(new StringConstantInstruction(value));
-    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), StringValue.class.getName().replace('.', '/') + "/<init>", new ObjectType(String.class)));
+    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), IdentifierValue.class.getName().replace('.', '/') + "/<init>", new ObjectType(String.class)));
   }
 }

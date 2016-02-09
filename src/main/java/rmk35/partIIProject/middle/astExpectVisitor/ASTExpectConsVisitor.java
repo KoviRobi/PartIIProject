@@ -1,12 +1,10 @@
 package rmk35.partIIProject.middle.astExpectVisitor;
 
-import rmk35.partIIProject.frontend.AST.SchemeCons;
+import rmk35.partIIProject.runtime.ConsValue;
 
-import rmk35.partIIProject.middle.ASTVisitor;
-
-public class ASTExpectConsVisitor extends ASTUnexpectedVisitor<SchemeCons>
+public class ASTExpectConsVisitor extends ASTUnexpectedVisitor<ConsValue>
 { @Override
-  public SchemeCons visit(SchemeCons consCell)
+  public ConsValue visit(ConsValue consCell)
   { return consCell;
   }
 }

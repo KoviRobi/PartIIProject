@@ -1,12 +1,10 @@
 package rmk35.partIIProject.middle.astExpectVisitor;
 
-import rmk35.partIIProject.middle.ASTVisitor;
+import rmk35.partIIProject.runtime.IdentifierValue;
 
-import rmk35.partIIProject.frontend.AST.SchemeIdentifier;
-
-public class ASTExpectIdentifierVisitor extends ASTUnexpectedVisitor<SchemeIdentifier>
+public class ASTExpectIdentifierVisitor extends ASTUnexpectedVisitor<IdentifierValue>
 { @Override
-  public SchemeIdentifier visit(SchemeIdentifier identifier)
+  public IdentifierValue visit(IdentifierValue identifier)
   { return identifier;
   }
 }

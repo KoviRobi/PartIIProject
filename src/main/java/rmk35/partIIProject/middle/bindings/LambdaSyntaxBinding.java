@@ -1,11 +1,12 @@
 package rmk35.partIIProject.middle.bindings;
 
+import rmk35.partIIProject.InternalCompilerException;
 import rmk35.partIIProject.SyntaxErrorException;
 
-import rmk35.partIIProject.frontend.AST.SchemeCons;
+import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.ConsValue;
 
 import rmk35.partIIProject.middle.Environment;
-import rmk35.partIIProject.middle.AST;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectConsVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectIdentifierVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTImproperListFoldVisitor;
@@ -20,28 +21,23 @@ import rmk35.partIIProject.backend.statements.BeginStatement;
 import java.util.List;
 import java.util.ArrayList;
 
-import lombok.Value;
+import lombok.ToString;
 
-@Value
-public class LambdaSyntaxBinding implements Binding
+@ToString
+public class LambdaSyntaxBinding extends SintacticBinding
 { @Override
-  public Statement toStatement(String file, long line, long character)
-  { throw new SyntaxErrorException("Don't know how to use a syntactic variable in a run time context", file, line, character);
-  }
-
-  @Override
-  public Statement applicate(Environment environment, AST operator, AST operands)
-  { SchemeCons first = operands.accept(new ASTExpectConsVisitor());
+  public Statement applicate(Environment environment, RuntimeValue operator, RuntimeValue operands)
+  { ConsValue first = operands.accept(new ASTExpectConsVisitor());
     Environment bodyEnvironment = new Environment(environment, /* subEnvironment */ true);
-    List<String> formals = first.car().accept(new ASTImproperListFoldVisitor<List<String>>(new ArrayList<String>(),
-      (List<String> list, AST ast) -> { list.add(ast.accept(new ASTExpectIdentifierVisitor()).getData()); return list; } ));
+    List<String> formals = first.getCar().accept(new ASTImproperListFoldVisitor<List<String>>(new ArrayList<String>(),
+      (List<String> list, RuntimeValue ast) -> { list.add(ast.accept(new ASTExpectIdentifierVisitor()).getValue()); return list; } ));
     bodyEnvironment.addLocalVariables(formals);
 
-    List<Statement> body = first.cdr().accept
+    List<Statement> body = first.getCdr().accept
       (new ASTListFoldVisitor<List<Statement>>(new ArrayList<>(),
         (list, ast) -> { list.add(ast.accept(new ASTConvertVisitor(bodyEnvironment))); return list; } ));
     if (body.isEmpty())
-    { throw new SyntaxErrorException("Empty lambda body", operator.file(), operator.line(), operator.character());
+    { throw new SyntaxErrorException("Empty lambda body", operator.getSourceInfo());
     }
     BeginStatement bodyStatement = new BeginStatement(body);
 
@@ -50,20 +46,10 @@ public class LambdaSyntaxBinding implements Binding
     // to save them in the created function's closure
     for (String variable : bodyStatement.getFreeIdentifiers())
     { if (bodyEnvironment.lookUp(variable).shouldSaveToClosure()) // Note the use of bodyEnvironment here and environment below
-      { closureVariables.add((IdentifierStatement)environment.lookUpAsStatement(variable, operator.file(), operator.line(), operator.character()));
+      { closureVariables.add((IdentifierStatement)environment.lookUpAsStatement(variable, operator.getSourceInfo()));
       }
     }
 
     return new LambdaStatement(formals, closureVariables, bodyStatement);
-  }
-
-  @Override
-  public boolean shouldSaveToClosure()
-  { return false;
-  }
-
-  @Override
-  public Binding subEnvironment()
-  { return this;
   }
 }

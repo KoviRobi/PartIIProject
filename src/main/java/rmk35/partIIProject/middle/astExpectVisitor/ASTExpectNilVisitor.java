@@ -1,12 +1,10 @@
 package rmk35.partIIProject.middle.astExpectVisitor;
 
-import rmk35.partIIProject.frontend.AST.SchemeNil;
+import rmk35.partIIProject.runtime.NullValue;
 
-import rmk35.partIIProject.middle.ASTVisitor;
-
-public class ASTExpectNilVisitor extends ASTUnexpectedVisitor<SchemeNil>
+public class ASTExpectNilVisitor extends ASTUnexpectedVisitor<NullValue>
 { @Override
-  public SchemeNil visit(SchemeNil nil)
+  public NullValue visit(NullValue nil)
   { return nil;
   }
 }

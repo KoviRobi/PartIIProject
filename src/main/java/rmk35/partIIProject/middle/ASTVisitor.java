@@ -1,38 +1,40 @@
 package rmk35.partIIProject.middle;
 
+import rmk35.partIIProject.InternalCompilerException;
 import rmk35.partIIProject.SyntaxErrorException;
 
-import rmk35.partIIProject.frontend.AST.SchemeLabelledData;
-import rmk35.partIIProject.frontend.AST.SchemeLabelReference;
-import rmk35.partIIProject.frontend.AST.SchemeCons;
-import rmk35.partIIProject.frontend.AST.SchemeNil;
-import rmk35.partIIProject.frontend.AST.SchemeIdentifier;
-import rmk35.partIIProject.frontend.AST.SchemeLiteral;
-// Literals
-import rmk35.partIIProject.frontend.AST.SchemeAbbreviation;
-import rmk35.partIIProject.frontend.AST.SchemeBoolean;
-import rmk35.partIIProject.frontend.AST.SchemeBytevector;
-import rmk35.partIIProject.frontend.AST.SchemeCharacter;
-import rmk35.partIIProject.frontend.AST.SchemeNumber;
-import rmk35.partIIProject.frontend.AST.SchemeString;
-import rmk35.partIIProject.frontend.AST.SchemeVector;
+import rmk35.partIIProject.runtime.ConsValue;
+import rmk35.partIIProject.runtime.IdentifierValue;
+import rmk35.partIIProject.runtime.NullValue;
+import rmk35.partIIProject.runtime.SelfquotingValue;
+// SelfquotingValues
+import rmk35.partIIProject.runtime.BooleanValue;
+import rmk35.partIIProject.runtime.BytevectorValue;
+import rmk35.partIIProject.runtime.CharacterValue;
+import rmk35.partIIProject.runtime.NumberValue;
+import rmk35.partIIProject.runtime.StringValue;
+import rmk35.partIIProject.runtime.VectorValue;
+// RuntimeValues
+import rmk35.partIIProject.runtime.LambdaValue;
+import rmk35.partIIProject.runtime.ThrowableValue;
 
 public abstract class ASTVisitor<T>
-{ public abstract T visit(SchemeCons list) throws SyntaxErrorException;
-  public abstract T visit(SchemeNil nil) throws SyntaxErrorException;
-  public abstract T visit(SchemeIdentifier identifier) throws SyntaxErrorException;
-  public abstract T visit(SchemeLabelReference reference) throws SyntaxErrorException;
-  public abstract T visit(SchemeLabelledData data) throws SyntaxErrorException;
+{ public abstract T visit(ConsValue list) throws SyntaxErrorException;
+  public abstract T visit(IdentifierValue identifier) throws SyntaxErrorException;
+  public abstract T visit(NullValue nil) throws SyntaxErrorException;
   // This is subclass only access modifier, as below explicitly lists all literals,
   // and if we add a new literal then this way we will get a static error rather than a dynamic
-  protected abstract T visit(SchemeLiteral object) throws SyntaxErrorException;
+  protected abstract T visit(SelfquotingValue object) throws SyntaxErrorException;
 
-  // SchemeLiteral subtypes, in case we want to specialise
-  public T visit(SchemeAbbreviation abbreviation) throws SyntaxErrorException { return visit((SchemeLiteral)abbreviation); }
-  public T visit(SchemeBoolean booln) throws SyntaxErrorException { return visit((SchemeLiteral)booln); }
-  public T visit(SchemeBytevector bytevector) throws SyntaxErrorException { return visit((SchemeLiteral)bytevector); }
-  public T visit(SchemeCharacter character) throws SyntaxErrorException { return visit((SchemeLiteral)character); }
-  public T visit(SchemeNumber number) throws SyntaxErrorException { return visit((SchemeLiteral)number); }
-  public T visit(SchemeString string) throws SyntaxErrorException { return visit((SchemeLiteral)string); }
-  public T visit(SchemeVector vector) throws SyntaxErrorException { return visit((SchemeLiteral)vector); }
+  // SelfquotingValue subtypes, in case we want to specialise
+  public T visit(BooleanValue booln) throws SyntaxErrorException { return visit((SelfquotingValue)booln); }
+  public T visit(BytevectorValue bytevector) throws SyntaxErrorException { return visit((SelfquotingValue)bytevector); }
+  public T visit(CharacterValue character) throws SyntaxErrorException { return visit((SelfquotingValue)character); }
+  public T visit(NumberValue number) throws SyntaxErrorException { return visit((SelfquotingValue)number); }
+  public T visit(StringValue string) throws SyntaxErrorException { return visit((SelfquotingValue)string); }
+  public T visit(VectorValue vector) throws SyntaxErrorException { return visit((SelfquotingValue)vector); }
+  
+  // RuntimeValue subtypes, usually an error
+  public T visit(LambdaValue vector) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
+  public T visit(ThrowableValue vector) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
 }

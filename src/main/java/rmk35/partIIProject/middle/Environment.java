@@ -1,5 +1,7 @@
 package rmk35.partIIProject.middle;
 
+import rmk35.partIIProject.frontend.SourceInfo;
+
 import rmk35.partIIProject.middle.bindings.Binding;
 import rmk35.partIIProject.middle.bindings.GlobalBinding;
 import rmk35.partIIProject.middle.bindings.LocalBinding;
@@ -45,8 +47,8 @@ public class Environment
   { return bindings.get(identifier);
   }
 
-  public Statement lookUpAsStatement(String identifier, String file, long line, long character)
-  { return lookUp(identifier).toStatement(file, line, character);
+  public Statement lookUpAsStatement(String identifier, SourceInfo sourceInfo)
+  { return lookUp(identifier).toStatement(sourceInfo);
   }
 
   public void addGlobalVariable(String identifier)

@@ -12,38 +12,28 @@ import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
 import rmk35.partIIProject.backend.instructions.DupInstruction;
-import rmk35.partIIProject.backend.instructions.IntegerConstantInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
 import rmk35.partIIProject.backend.instructions.types.VoidType;
-import rmk35.partIIProject.backend.instructions.types.BooleanType;
 
 import lombok.Value;
 
 @Value
-public class BooleanValue implements SelfquotingValue
-{ boolean value;
-  SourceInfo sourceInfo;
+public class NullValue implements PrimitiveValue
+{ SourceInfo sourceInfo;
 
   @Deprecated
-  public BooleanValue(boolean value)
-  { this(value, null);
+  public NullValue()
+  { this(null);
   }
-  public BooleanValue(String value, SourceInfo sourceInfo)
-  { this.value = "#t".equals(value) || "#true".equals(value);
-    this.sourceInfo = null;
-  }
-  public BooleanValue(boolean value, SourceInfo sourceInfo)
-  { this.value = value;
-    this.sourceInfo = null;
+  public NullValue(SourceInfo sourceInfo)
+  { this.sourceInfo = sourceInfo;
   }
 
-  public boolean getValue() { return value; }
-  public SourceInfo getSourceInfo() {return sourceInfo; }
+  public SourceInfo getSourceInfo() { return sourceInfo; }
 
   @Override
   public boolean eq(RuntimeValue other)
-  { return other instanceof BooleanValue
-        && getValue() == ((BooleanValue)other).getValue();
+  { return other instanceof NullValue;
   }
 
   @Override
@@ -58,11 +48,9 @@ public class BooleanValue implements SelfquotingValue
 
   @Override
   public void generateByteCode(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
-  { method.addInstruction(new CommentPseudoInstruction("ByteCode for " + BooleanValue.class.getName()));
-    method.addInstruction(new NewObjectInstruction(BooleanValue.class));
+  { method.addInstruction(new CommentPseudoInstruction("ByteCode for " + NullValue.class.getName()));
+    method.addInstruction(new NewObjectInstruction(NullValue.class));
     method.addInstruction(new DupInstruction());
-    method.addInstruction(new IntegerConstantInstruction(value? 1 : 0));
-    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), BooleanValue.class.getName().replace('.', '/') + "/<init>", new BooleanType()));
-  
+    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), NullValue.class.getName().replace('.', '/') + "/<init>"));
   }
 }
