@@ -1,10 +1,12 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.LambdaValue;
+import rmk35.partIIProject.runtime.TrampolineValue;
+
 import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.ByteCodeMethod;
-import rmk35.partIIProject.runtime.RuntimeValue;
-import rmk35.partIIProject.runtime.LambdaValue;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.CheckCastInstruction;
 import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
@@ -31,6 +33,8 @@ public class ApplicationStatement extends Statement
 { Statement operator;
   List<Statement> operands;
 
+  private static final VoidType voidType = new VoidType();
+
   public ApplicationStatement(Statement operator, List<Statement> operands)
   { this.operator = operator;
     this.operands = operands;
@@ -38,6 +42,9 @@ public class ApplicationStatement extends Statement
 
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("ApplicationStatement"));
+    method.addInstruction(new NewObjectInstruction(TrampolineValue.class));
+    method.addInstruction(new DupInstruction());
+
     operator.generateOutput(mainClass, outputClass, method);
     method.addInstruction(new CheckCastInstruction(LambdaValue.class));
 
@@ -45,7 +52,7 @@ public class ApplicationStatement extends Statement
     method.addInstruction(new NewObjectInstruction(ArrayList.class));
     method.addInstruction(new DupInstruction());
     method.addInstruction(new IntegerConstantInstruction(operands.size()));
-    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), "java/util/ArrayList/<init>", new IntegerType()));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, ArrayList.class.getName().replace('.', '/') + "/<init>", new IntegerType()));
 
     for (Statement operand : operands)
     { method.addInstruction(new DupInstruction()); // Loop invariant is the list on the top of the stack
@@ -54,8 +61,8 @@ public class ApplicationStatement extends Statement
       method.addInstruction(new PopInstruction()); // Pop returned boolean
     }
 
-    // Invoke operator.run with argument of operand
-    method.addInstruction(new VirtualCallInstruction(new ObjectType(RuntimeValue.class), "rmk35/partIIProject/runtime/LambdaValue/run", new ObjectType(List.class)));
+    // Wrap call in a TrampolineVisitor
+    method.addInstruction(new NonVirtualCallInstruction(voidType, TrampolineValue.class.getName().replace('.', '/') + "/<init>", new ObjectType(LambdaValue.class), new ObjectType(List.class)));
   }
 
   @Override

@@ -1,3 +1,5 @@
+Also see README.md
+
 * rmk35.partIIProject.middle
   - This contain the macro processor, which is also the engine that looks at keywords as Scheme has no resevered keywords
   - Interconnect: Entry point

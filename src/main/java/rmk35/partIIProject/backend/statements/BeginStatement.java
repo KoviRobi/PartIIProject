@@ -1,12 +1,17 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.TrampolineValue;
+
 import rmk35.partIIProject.backend.InnerClass;
 import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.NullConstantInstruction;
+import rmk35.partIIProject.backend.instructions.StaticCallInstruction;
 import rmk35.partIIProject.backend.instructions.PopInstruction;
+import rmk35.partIIProject.backend.instructions.types.ObjectType;
 
 import java.util.Collection;
 import java.util.TreeSet;
@@ -22,12 +27,12 @@ public class BeginStatement extends Statement
   { this.statements = statements;
   }
 
-  @SuppressWarnings("deprecation")
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("BeginStatement"));
     method.addInstruction(new NullConstantInstruction());
     for (Statement statement : statements)
-    { method.addInstruction(new PopInstruction());
+    { method.addInstruction(new StaticCallInstruction(new ObjectType(Object.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(Object.class)));
+      method.addInstruction(new PopInstruction());
       statement.generateOutput(mainClass, outputClass, method);
     }
   }

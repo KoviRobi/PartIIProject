@@ -39,6 +39,8 @@ public class StringValue implements SelfquotingValue
 
   public String getValue() { return value; }
   public SourceInfo getSourceInfo() { return sourceInfo; }
+  @Override
+  public String toString() { return value; }
 
   @Override
   public boolean eq(RuntimeValue other)

@@ -44,6 +44,8 @@ public class IdentifierValue implements PrimitiveValue
 
   public String getValue() { return value; }
   public SourceInfo getSourceInfo() { return sourceInfo; }
+  @Override
+  public String toString() { return value; }
 
   @Override
   public boolean eq(RuntimeValue other)

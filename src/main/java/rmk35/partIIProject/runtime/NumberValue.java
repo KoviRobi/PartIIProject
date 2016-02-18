@@ -28,7 +28,11 @@ public class NumberValue implements SelfquotingValue
   public NumberValue(Integer value)
   { this(value, null);
   }
-  public NumberValue(Integer value, SourceInfo sourceInfo)
+  @Deprecated
+  public NumberValue(int value)
+  { this(value, null);
+  }
+   public NumberValue(Integer value, SourceInfo sourceInfo)
   { this.value = value;
     this.sourceInfo = sourceInfo;
   }
@@ -39,6 +43,8 @@ public class NumberValue implements SelfquotingValue
 
   public Integer getValue() { return value; }
   public SourceInfo getSourceInfo() { return sourceInfo; }
+  @Override
+  public String toString() { return value.toString(); }
 
   public boolean equal(RuntimeValue other)
   { if (other instanceof NumberValue)

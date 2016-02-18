@@ -1,13 +1,26 @@
+(define system-in (static-field "java.lang.System" "in"))
 (define system-out (static-field "java.lang.System" "out"))
-(define print-stream (class "java.io.PrintStream"))
 (define output-stream-println (method system-out "println" "java.lang.Object"))
+(define input-stream-read (method system-in "read"))
 (define println (lambda (value) (java output-stream-println system-out value)))
-
-(println print-stream)
-
+(define read-byte (lambda () (java input-stream-read system-in)))
+(define clear (lambda () (println "") (println "") (println "") (println "") (println "") (println "") (println "") (println "") (println "") (println "")))
+(clear)
+(clear)
+(clear)
+(read-byte)
+(println " - Syntax ambiguity with #|a|#|b|#|c#|")
+(read-byte)
+(println " - On track")
+(read-byte)
+(println " - Backup woes")
+(read-byte)
+(println " - Working demo of the features:")
+(read-byte)
 ; lambdas, application, let, define, if, java (call, method, class, field, static field), with-exception-handler & raise, macro hygiene
 
-(with-exception-handler
+; FIXME: Tail calls and exn handlers
+#;(with-exception-handler
   (lambda (x)
     (java
       (method
@@ -18,30 +31,21 @@
         "java.lang.System"
         "out")
       x))
-  (lambda () (raise "help")))
+  (lambda () (raise "Raise and handle exceptions")))
 
-#;(let-syntax ((foo (syntax-rules ()
-				((foo a) ((lambda (x y) x) 1 2)) )))
-	(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") (foo bar))) ; bar should not cause a warning about it being undeclared
-
-; Same as above, just with hygiene tests, should be 25
-#;(let-syntax ((foo (syntax-rules ()
-				((foo a) ((lambda (x y) a) 1 2)) )))
-	((lambda (x)
-	(java (method (static-field "java.lang.System" "out") "println" "java.lang.Object") (static-field "java.lang.System" "out") (foo x))) ; bar should not cause a warning about it being undeclared
-	25))
-
-#;(println 3)
-
-#;(define-syntax bar
+(define-syntax bar
   (syntax-rules ()
-    ((bar 0) (println "bar zero"))
-    ((bar 1) (println "bar one")) ) )
+    ((bar 0) (println "Hygienic macros"))
+    ((bar 1) (println " - no binding introduced or captured")) ) )
 
-#;(let ((print println)
-      (println "foo"))
+(let ((print println)
+      (println "Java calls"))
   (print println)
   (bar 0)
-  (bar 1) )
+  (print " - no binding introduced or captured") )
 
-#;((lambda (x) (x x)) (lambda (x) (x x))) ; tail call
+(println "")
+(read-byte)
+(define omega (lambda (x) (x x)))
+(omega omega) ; tail call
+(println "End")

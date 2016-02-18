@@ -29,6 +29,8 @@ public class SetStatement extends Statement
     { value.generateOutput(mainClass, outputClass, method);
     }
     variable.generateSetOutput(mainClass, outputClass, method);
+    // Push undefined
+    method.addInstruction(new NullConstantInstruction());
   }
 
   @Override

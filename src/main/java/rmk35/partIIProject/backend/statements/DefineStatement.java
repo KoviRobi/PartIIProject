@@ -30,6 +30,8 @@ public class DefineStatement extends Statement
     }
     variable.ensureExistence(mainClass, outputClass, method);
     variable.generateSetOutput(mainClass, outputClass, method);
+    // Push undefined
+    method.addInstruction(new NullConstantInstruction());
   }
 
   @Override
