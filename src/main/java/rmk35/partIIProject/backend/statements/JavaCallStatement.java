@@ -53,7 +53,7 @@ public class JavaCallStatement extends Statement
       method.addInstruction(new ReferenceArrayStoreInstruction());
       i++;
     }
-    method.addInstruction(new VirtualCallInstruction(objectType, "java/lang/reflect/Method/invoke", objectType, new ArrayType(objectType)));
+    method.addInstruction(new VirtualCallInstruction(objectType, Method.class.getName().replace('.', '/') + "/invoke", objectType, new ArrayType(objectType)));
   }
 
   @Override

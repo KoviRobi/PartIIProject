@@ -57,7 +57,7 @@ public class ApplicationStatement extends Statement
     for (Statement operand : operands)
     { method.addInstruction(new DupInstruction()); // Loop invariant is the list on the top of the stack
       operand.generateOutput(mainClass, outputClass, method);
-      method.addInstruction(new InterfaceCallInstruction(/* static */ false, new BooleanType(), "java/util/List/add", new ObjectType(Object.class)));
+      method.addInstruction(new InterfaceCallInstruction(/* static */ false, new BooleanType(), List.class.getName().replace('.', '/') + "/add", new ObjectType(Object.class)));
       method.addInstruction(new PopInstruction()); // Pop returned boolean
     }
 

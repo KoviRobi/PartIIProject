@@ -1,9 +1,11 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.runtime.StringValue;
+import rmk35.partIIProject.runtime.IntrospectionHelper;
+
 import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.ByteCodeMethod;
-import rmk35.partIIProject.runtime.StringValue;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.CheckCastInstruction;
 import rmk35.partIIProject.backend.instructions.VirtualCallInstruction;
@@ -60,7 +62,7 @@ public class JavaMethodStatement extends Statement
       i++;
     }
 
-    method.addInstruction(new StaticCallInstruction(methodType, "rmk35/partIIProject/runtime/IntrospectionHelper/getMethod", objectType, stringType, new ArrayType(stringType)));
+    method.addInstruction(new StaticCallInstruction(methodType, IntrospectionHelper.class.getName().replace('.', '/') + "/getMethod", objectType, stringType, new ArrayType(stringType)));
   }
 
   @Override

@@ -31,7 +31,7 @@ public class JavaClassStatement extends Statement
     className.generateOutput(mainClass, outputClass, method);
     method.addInstruction(new CheckCastInstruction(StringValue.class));
     method.addInstruction(new VirtualCallInstruction(stringType, StringValue.class.getName().replace('.', '/') + "/getValue"));
-    method.addInstruction(new StaticCallInstruction(classType, "java/lang/Class/forName", stringType));
+    method.addInstruction(new StaticCallInstruction(classType, Class.class.getName().replace('.', '/') + "/forName", stringType));
   }
 
   @Override
