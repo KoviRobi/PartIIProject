@@ -3,7 +3,8 @@ package rmk35.partIIProject.runtime;
 import java.util.List;
 
 public abstract class UnaryLambda extends LambdaValue
-{ public RuntimeValue run(List<RuntimeValue> arguments)
+{ @Override
+  public Object run(List<RuntimeValue> arguments)
   { if (arguments.size() != 1)
     { throw new IllegalArgumentException("Expecting one RuntimeValue arguments, got " + arguments);
     } else
@@ -11,5 +12,5 @@ public abstract class UnaryLambda extends LambdaValue
     }
   }
 
-  abstract RuntimeValue run(RuntimeValue first);
+  abstract Object run(RuntimeValue first);
 }

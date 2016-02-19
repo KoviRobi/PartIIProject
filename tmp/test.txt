@@ -20,7 +20,7 @@
 ; lambdas, application, let, define, if, java (call, method, class, field, static field), with-exception-handler & raise, macro hygiene
 
 ; FIXME: Tail calls and exn handlers
-#;(with-exception-handler
+(with-exception-handler
   (lambda (x)
     (java
       (method

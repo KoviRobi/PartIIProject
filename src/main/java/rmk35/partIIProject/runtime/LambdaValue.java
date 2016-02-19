@@ -21,7 +21,7 @@ public abstract class LambdaValue implements RuntimeValue
   public boolean eqv(RuntimeValue other) { return this == other; }
   public boolean eq(RuntimeValue other) { return this == other; }
 
-  public abstract RuntimeValue run(List<RuntimeValue> arguments);
+  public abstract Object run(List<RuntimeValue> arguments);
 
   @Override
   public <T> T accept(ASTVisitor<T> visitor) throws SyntaxErrorException

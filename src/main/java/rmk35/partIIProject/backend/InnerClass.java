@@ -58,13 +58,13 @@ public class InnerClass extends OutputClass
     // Overwrite initializer
     methods.put("<init>", initializerMethod);
 
-    ByteCodeMethod runMethod = new ByteCodeMethod(runtimeValueType, "public", "run", listType);
+    ByteCodeMethod runMethod = new ByteCodeMethod(objectType, "public", "run", listType);
     // Store array into locals
     runMethod.addInstruction(new LocalLoadInstruction(listType, 1)); // Load ArrayList, will be over written
     for (int i = 0; i < variableCount; i++)
     { runMethod.addInstruction(new DupInstruction()); // Loop invariant: ArrayList on top of the stack
       runMethod.addInstruction(new IntegerConstantInstruction(i));
-      runMethod.addInstruction(new InterfaceCallInstruction(/* static */ false, objectType, "java/util/List/get", new IntegerType()));
+      runMethod.addInstruction(new InterfaceCallInstruction(/* static */ false, objectType, List.class.getName().replace('.', '/') + "/get", new IntegerType()));
       runMethod.ensureLocal(i+1);
       runMethod.addInstruction(new LocalStoreInstruction(objectType, i+1)); // i+1, as local 0 is this, which we can't over write
     }
