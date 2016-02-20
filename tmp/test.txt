@@ -42,10 +42,11 @@
       (println "Java calls"))
   (print println)
   (bar 0)
-  (print " - no binding introduced or captured") )
+  (bar 1) )
 
 (println "")
 (read-byte)
 (define omega (lambda (x) (x x)))
-(omega omega) ; tail call
+;(omega omega) ; tail call
 (println "End")
+(println (quote (1 2 "Foo" a)))

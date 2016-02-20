@@ -38,7 +38,7 @@ public class ASTConvertVisitor extends ASTVisitor<Statement>
   }
 
   @Override
-  public Statement visit(SelfquotingValue object)
+  protected Statement visit(SelfquotingValue object)
   { return new PrimitiveValueStatement(object);
   }
 }

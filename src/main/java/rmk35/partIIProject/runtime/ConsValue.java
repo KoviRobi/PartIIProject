@@ -26,6 +26,10 @@ public class ConsValue implements PrimitiveValue
   SourceInfo sourceInfo;
 
   @Deprecated
+  public ConsValue(PrimitiveValue car, PrimitiveValue cdr)
+  { this((RuntimeValue) car, (RuntimeValue) cdr);
+  }
+  @Deprecated
   public ConsValue(RuntimeValue car, RuntimeValue cdr)
   { this(car, cdr, null);
   }
