@@ -41,6 +41,8 @@ public class ConsValue implements PrimitiveValue
 
   public RuntimeValue getCar() { return car; }
   public RuntimeValue getCdr() { return cdr; }
+  public void setCar(RuntimeValue car) { this.car = car; }
+  public void setCdr(RuntimeValue cdr) { this.cdr = cdr; }
   public SourceInfo getSourceInfo() { return sourceInfo; }
 
   @Override
@@ -70,5 +72,10 @@ public class ConsValue implements PrimitiveValue
     car.generateByteCode(mainClass, outputClass, method);
     cdr.generateByteCode(mainClass, outputClass, method);
     method.addInstruction(new NonVirtualCallInstruction(new VoidType(), ConsValue.class.getName().replace('.', '/') + "/<init>", new ObjectType(PrimitiveValue.class), new ObjectType(PrimitiveValue.class)));
+  }
+
+  @Override
+  public String toString()
+  { return "(" + car.toString() + " . " + cdr.toString() + ")";
   }
 }

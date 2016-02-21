@@ -53,4 +53,7 @@ public class NullValue implements PrimitiveValue
     method.addInstruction(new DupInstruction());
     method.addInstruction(new NonVirtualCallInstruction(new VoidType(), NullValue.class.getName().replace('.', '/') + "/<init>"));
   }
+
+  @Override
+  public String toString() { return "'()"; }
 }
