@@ -44,10 +44,10 @@ public class ASTTransformerSpecificationVisitor extends ASTUnexpectedVisitor<Syn
     ConsValue second = consCell.getCdr().accept(new ASTExpectConsVisitor());
     RuntimeValue literalsAST;
     if (second.getCar() instanceof IdentifierValue)
-    { environment.addBinding(((IdentifierValue) second.getCar()).getValue(), new EllipsisBinding());
+    { ellipsisEnvironment.addBinding(((IdentifierValue) second.getCar()).getValue(), new EllipsisBinding());
       literalsAST = second.getCdr();
     } else
-    { environment.addBinding("...", new EllipsisBinding());
+    { ellipsisEnvironment.addBinding("...", new EllipsisBinding());
       literalsAST = second;
     }
     ConsValue literalsCell = literalsAST.accept(new ASTExpectConsVisitor());

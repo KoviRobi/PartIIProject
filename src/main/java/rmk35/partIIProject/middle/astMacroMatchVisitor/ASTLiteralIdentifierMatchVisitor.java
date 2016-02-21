@@ -5,8 +5,7 @@ import rmk35.partIIProject.runtime.IdentifierValue;
 
 import rmk35.partIIProject.middle.Environment;
 
-import java.util.Map;
-import java.util.Hashtable;
+import rmk35.partIIProject.middle.astMacroMatchVisitor.astMatchVisitorReturn.Substitution;
 
 public class ASTLiteralIdentifierMatchVisitor extends ASTNoMatchVisitor
 { Environment definitionEnvironment;
@@ -18,11 +17,11 @@ public class ASTLiteralIdentifierMatchVisitor extends ASTNoMatchVisitor
   }
 
   @Override
-  public Map<String, RuntimeValue> visit(IdentifierValue argument)
+  public Substitution visit(IdentifierValue argument)
   { // Using lookUpSilent as we may be matching against unbound identifiers, e.g. "=>" in cond
     if (definitionEnvironment.lookUpSilent(parameter) ==
         useEnvironment.lookUpSilent(argument.getValue()))
-    { return  new Hashtable<>();
+    { return  new Substitution();
     } else
     { return null;
     }

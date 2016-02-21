@@ -7,12 +7,12 @@ import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.middle.Environment;
 import rmk35.partIIProject.middle.ASTVisitor;
 
-import java.util.Map;
+import rmk35.partIIProject.middle.astMacroMatchVisitor.astMatchVisitorReturn.Substitution;
 
 /** A macro pattern gets compiled into this visitor, which is then matched against the macro application
     null means "no match"
  */
-public abstract class ASTMatchVisitor extends ASTVisitor<Map<String, RuntimeValue>>
+public abstract class ASTMatchVisitor extends ASTVisitor<Substitution>
 { Environment useEnvironment = null;
   public final void setUseEnvironment(Environment environment)
   { useEnvironment = environment;

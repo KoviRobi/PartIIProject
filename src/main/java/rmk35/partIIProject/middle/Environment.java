@@ -82,4 +82,9 @@ public class Environment
     for (i = 0; bindings.containsKey(key + i); i++) {}
     return key + i;
   }
+
+  @Override
+  public String toString()
+  { return "Environment: \"" + bindings + "\"";
+  }
 }

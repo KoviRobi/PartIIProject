@@ -3,8 +3,7 @@ package rmk35.partIIProject.middle.astMacroMatchVisitor;
 import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.SelfquotingValue;
 
-import java.util.Map;
-import java.util.Hashtable;
+import rmk35.partIIProject.middle.astMacroMatchVisitor.astMatchVisitorReturn.Substitution;
 
 public class ASTLiteralMatchVisitor extends ASTNoMatchVisitor
 { RuntimeValue storedObject;
@@ -14,8 +13,11 @@ public class ASTLiteralMatchVisitor extends ASTNoMatchVisitor
   }
 
   @Override
-  public Map<String, RuntimeValue> visit(SelfquotingValue object)
-  { object.equal(storedObject);
-    return new Hashtable<>();
+  public Substitution visit(SelfquotingValue object)
+  { if (object.equal(storedObject))
+    { return new Substitution();
+    } else
+    { return null;
+    }
   }
 }

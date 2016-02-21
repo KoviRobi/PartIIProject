@@ -6,41 +6,40 @@ import rmk35.partIIProject.runtime.IdentifierValue;
 import rmk35.partIIProject.runtime.NullValue;
 import rmk35.partIIProject.runtime.SelfquotingValue;
 
-import java.util.Map;
-import java.util.Hashtable;
+import rmk35.partIIProject.middle.astMacroMatchVisitor.astMatchVisitorReturn.Substitution;
 
 public class ASTNonLiteralIdentifierMatchVisitor extends ASTMatchVisitor
-{ String variableName;
+{ IdentifierValue variable;
 
-  public ASTNonLiteralIdentifierMatchVisitor(String variableName)
-  { this.variableName = variableName;
+  public ASTNonLiteralIdentifierMatchVisitor(IdentifierValue variable)
+  { this.variable = variable;
   }
 
   @Override
-  public Map<String, RuntimeValue> visit(ConsValue consCell)
-  { Map<String, RuntimeValue> returnValue = new Hashtable<>();
-    returnValue.put(variableName, consCell);
+  public Substitution visit(ConsValue consCell)
+  { Substitution returnValue = new Substitution();
+    returnValue.put(variable, consCell);
     return returnValue;
   }
 
   @Override
-  public Map<String, RuntimeValue> visit(IdentifierValue identifier)
-  { Map<String, RuntimeValue> returnValue = new Hashtable<>();
-    returnValue.put(variableName, identifier);
+  public Substitution visit(IdentifierValue identifier)
+  { Substitution returnValue = new Substitution();
+    returnValue.put(variable, identifier);
     return returnValue;
   }
 
   @Override
-  public Map<String, RuntimeValue> visit(NullValue nil)
-  { Map<String, RuntimeValue> returnValue = new Hashtable<>();
-    returnValue.put(variableName, nil);
+  public Substitution visit(NullValue nil)
+  { Substitution returnValue = new Substitution();
+    returnValue.put(variable, nil);
     return returnValue;
   }
 
   @Override
-  public Map<String, RuntimeValue> visit(SelfquotingValue object)
-  { Map<String, RuntimeValue> returnValue = new Hashtable<>();
-    returnValue.put(variableName, object);
+  public Substitution visit(SelfquotingValue object)
+  { Substitution returnValue = new Substitution();
+    returnValue.put(variable, object);
     return returnValue;
   }
 }

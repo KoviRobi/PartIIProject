@@ -15,6 +15,8 @@ import rmk35.partIIProject.middle.astMacroMatchVisitor.ASTMatchVisitor;
 import rmk35.partIIProject.middle.ASTConvertVisitor;
 import rmk35.partIIProject.middle.ASTMacroRewriteVisitor;
 
+import rmk35.partIIProject.middle.astMacroMatchVisitor.astMatchVisitorReturn.Substitution;
+
 import rmk35.partIIProject.backend.statements.Statement;
 
 import java.util.Collection;
@@ -45,7 +47,7 @@ public class SyntaxBinding extends SintacticBinding
   { // See Macros That Work, figure 3
     for (Pair<ASTMatchVisitor, RuntimeValue> pair : patternsAndTemplates)
     { pair.getFirst().setUseEnvironment(useEnvironment);
-      Map<String, RuntimeValue> substitution = (new ConsValue(operator, operands, operator.getSourceInfo())).accept(pair.getFirst());
+      Substitution substitution = (new ConsValue(operator, operands, operator.getSourceInfo())).accept(pair.getFirst());
       if (substitution != null)
       { Pair<RuntimeValue, Environment> rewritten = pair.getSecond().accept(new ASTMacroRewriteVisitor(substitution, definitionEnvironment, useEnvironment));
         return rewritten.getFirst().accept(new ASTConvertVisitor(rewritten.getSecond()));

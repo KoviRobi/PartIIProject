@@ -55,5 +55,5 @@ public class NullValue implements PrimitiveValue
   }
 
   @Override
-  public String toString() { return "'()"; }
+  public String toString() { return "()"; }
 }

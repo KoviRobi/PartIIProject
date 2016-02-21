@@ -7,8 +7,7 @@ import rmk35.partIIProject.runtime.ConsValue;
 
 import rmk35.partIIProject.middle.Environment;
 
-import java.util.Map;
-import java.util.Hashtable;
+import rmk35.partIIProject.middle.astMacroMatchVisitor.astMatchVisitorReturn.Substitution;
 
 public class ASTConsMatchVisitor extends ASTNoMatchVisitor
 { ASTMatchVisitor carVisitor;
@@ -20,16 +19,17 @@ public class ASTConsMatchVisitor extends ASTNoMatchVisitor
   }
 
   @Override
-  public Map<String, RuntimeValue> visit(ConsValue consCell)
-  { Map<String, RuntimeValue> carSubstitution = consCell.getCar().accept(carVisitor);
-    Map<String, RuntimeValue> cdrSubstitution = consCell.getCdr().accept(cdrVisitor);
+  public Substitution visit(ConsValue consCell)
+  { RuntimeValue car = consCell.getCar();
+    RuntimeValue cdr = consCell.getCdr();
+    Substitution carSubstitution = car.accept(carVisitor);
+    Substitution cdrSubstitution = cdr.accept(cdrVisitor);
 
-    if (carSubstitution == null || cdrSubstitution == null) // NEXT 5 r7rs page 23: we want to have an ellipsis cons visitor that backtracks when cdrSubstitution == null
+    if (carSubstitution == null || cdrSubstitution == null)
     { return null;
     } else
-    { Map<String, RuntimeValue> returnValue = new Hashtable<>(carSubstitution);
-      returnValue.putAll(cdrSubstitution);
-      return returnValue;
+    { carSubstitution.merge(cdrSubstitution);
+      return carSubstitution;
     }
   }
 }

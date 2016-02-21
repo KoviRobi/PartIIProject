@@ -6,9 +6,9 @@ import rmk35.partIIProject.middle.Environment;
 
 import rmk35.partIIProject.middle.astMacroMatchVisitor.astMatchVisitorReturn.Substitution;
 
-public class ASTNoMatchVisitor extends ASTMatchVisitor
+public class ASTAnyMatchVisitor extends ASTMatchVisitor
 { @Override
   public Substitution visit(RuntimeValue value)
-  { return null;
+  { return new Substitution();
   }
 }

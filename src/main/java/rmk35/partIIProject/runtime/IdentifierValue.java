@@ -71,4 +71,15 @@ public class IdentifierValue implements PrimitiveValue
     method.addInstruction(new StringConstantInstruction(value));
     method.addInstruction(new NonVirtualCallInstruction(new VoidType(), IdentifierValue.class.getName().replace('.', '/') + "/<init>", new ObjectType(String.class)));
   }
+
+  @Override
+  public int hashCode()
+  { return value.hashCode();
+  }
+
+  @Override
+  public boolean equals(Object other)
+  { return other instanceof IdentifierValue
+        && value.equals(((IdentifierValue)other).value);
+  }
 }

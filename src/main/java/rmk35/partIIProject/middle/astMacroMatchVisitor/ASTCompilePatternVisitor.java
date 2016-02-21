@@ -2,6 +2,7 @@ package rmk35.partIIProject.middle.astMacroMatchVisitor;
 
 import rmk35.partIIProject.SyntaxErrorException;
 
+import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.ConsValue;
 import rmk35.partIIProject.runtime.IdentifierValue;
 import rmk35.partIIProject.runtime.NullValue;
@@ -26,21 +27,31 @@ public class ASTCompilePatternVisitor extends ASTVisitor<ASTMatchVisitor>
 
   @Override
   public ASTMatchVisitor visit(ConsValue list)
-  { // NEXT 5 r7rs page 23: have ellipsis visitor visit cdr, to see if next element is "..." and thus we would need to repeat current element
-    ASTMatchVisitor car = list.getCar().accept(this);
-    ASTMatchVisitor cdr = list.getCdr().accept(this);
-    return new ASTConsMatchVisitor(car, cdr); // Possible solution: have ASTMatchVisitor return a sum type "ASTMatchVisitor + Map<String, RuntimeValue> + NoMatch"
+  { RuntimeValue car = list.getCar();
+    RuntimeValue cdr = list.getCdr();
+    if (cdr instanceof ConsValue)
+    { ConsValue cdrCons = (ConsValue) cdr;
+      if (cdrCons.getCar() instanceof IdentifierValue)
+      { IdentifierValue cadrIdentifier = (IdentifierValue) cdrCons.getCar();
+        if (definitionEnvironment.lookUpSilent(cadrIdentifier.getValue()) instanceof EllipsisBinding)
+        { return new ASTConsStarMatchVisitor(car.accept(this), cdrCons.getCdr().accept(this));
+        }
+      }
+    }
+
+    return new ASTConsMatchVisitor(car.accept(this), cdr.accept(this)); // Possible solution: have ASTMatchVisitor return a sum type "ASTMatchVisitor + Substitution + NoMatch"
   }
 
   @Override
   public ASTMatchVisitor visit(IdentifierValue identifier)
-  { if (definitionEnvironment.lookUpSilent(identifier.getValue()) instanceof EllipsisBinding)
-    { throw new SyntaxErrorException("Unexpected ellipsis", identifier.getSourceInfo());
-    }
-    else if (literals.contains(identifier.getValue()))
+  { if (literals.contains(identifier.getValue()))
     { return new ASTLiteralIdentifierMatchVisitor(definitionEnvironment, identifier);
+    } else if (definitionEnvironment.lookUpSilent(identifier.getValue()) instanceof EllipsisBinding)
+    { throw new SyntaxErrorException("Unexpected ellipsis", identifier.getSourceInfo());
+    } else if (identifier.getValue().equals("_"))
+    { return new ASTAnyMatchVisitor();
     } else
-    { return new ASTNonLiteralIdentifierMatchVisitor(identifier.getValue());
+    { return new ASTNonLiteralIdentifierMatchVisitor(identifier);
     }
   }
 
