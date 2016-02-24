@@ -55,6 +55,17 @@ public class ASTMacroRewriteVisitor extends ASTVisitor<Pair<RuntimeValue, Enviro
     public Pair<Option<RuntimeValue>, Environment> visit(ConsValue list)
     { RuntimeValue car = list.getCar();
       RuntimeValue cdr = list.getCdr();
+      // Escaping ellipses, e.g. in (... ...) which should rewrite to ...
+      if (car instanceof IdentifierValue)
+      { IdentifierValue carIdentifier = (IdentifierValue) car;
+        if (definitionEnvironment.lookUpSilent(carIdentifier.getValue()) instanceof EllipsisBinding)
+        { Binding storedBinding = definitionEnvironment.removeBinding(carIdentifier.getValue());
+          Pair<Option<RuntimeValue>, Environment> returnValue = cdr.accept(this);
+          definitionEnvironment.addBinding(carIdentifier.getValue(), storedBinding);
+          return returnValue;
+        }
+      }
+      // Trailing ellipses, e.g. in (x ...)
       if (cdr instanceof ConsValue)
       { ConsValue cdrCons = (ConsValue) cdr;
         if (cdrCons.getCar() instanceof IdentifierValue)

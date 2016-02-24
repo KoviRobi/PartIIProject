@@ -76,6 +76,10 @@ public class Environment
   { bindings.put(identifier, binding);
   }
 
+  public Binding removeBinding(String identifier)
+  { return bindings.remove(identifier);
+  }
+
   // For macro rewriting, when we need fresh keys
   public String similarFreshKey(String key)
   { int i = 0;
