@@ -92,4 +92,12 @@ public class MainClass extends OutputClass
     { oc.saveToDisk();
     }
   }
+
+  @Override
+  public void assembleToDisk() throws Exception, IOException
+  { super.assembleToDisk();
+    for (OutputClass oc : innerClasses)
+    { oc.assembleToDisk();
+    }
+  }
 }

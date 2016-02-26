@@ -18,6 +18,14 @@ import java.util.ArrayList;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+
+import jasmin.ClassFile;
 
 public abstract class OutputClass
 { String name;
@@ -82,11 +90,31 @@ public abstract class OutputClass
     return returnValue.toString();
   }
 
+  public byte[] assembledByteCode() throws Exception, IOException
+  { ClassFile compiledClass= new ClassFile();
+    Reader byteCodeReader = new StringReader(byteCode());
+    ByteArrayOutputStream returnValue = new ByteArrayOutputStream();
+    // Throws Exception....
+    compiledClass.readJasmin(byteCodeReader, getName() + ".class", /* numberLines */ true);
+    if (compiledClass.errorCount() != 0) throw new InternalCompilerException("Something went wrong, but no idea what");
+    byteCodeReader.close();
+    compiledClass.write(returnValue);
+    return returnValue.toByteArray();
+  }
+
   public void saveToDisk() throws IOException
   { try (BufferedWriter writer =
             new BufferedWriter
               (new FileWriter(getName() + ".j")))
     { writer.append(byteCode());
+    }
+  }
+
+  public void assembleToDisk() throws Exception, IOException
+  { try (BufferedOutputStream outputStream =
+            new BufferedOutputStream
+              (new FileOutputStream(getName() + ".class")))
+    { outputStream.write(assembledByteCode());
     }
   }
 

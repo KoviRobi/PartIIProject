@@ -19,7 +19,6 @@
 (read-byte)
 ; lambdas, application, let, define, if, java (call, method, class, field, static field), with-exception-handler & raise, macro hygiene
 
-; FIXME: Tail calls and exn handlers
 (with-exception-handler
   (lambda (x)
     (java
@@ -63,8 +62,3 @@
     ((foo (a ...) ((b ...) ...))
      (quote (let ((a b) ...) ...)) ) ) )
 (println (foo (foo bar bas) ((1 2 3) (4 5 6) (7 8 9))))
-
-(define-syntax foo
-  (syntax-rules ()
-    ((foo) (quote (... ...))) ) )
-(println (foo))

@@ -38,7 +38,7 @@ public class Compiler
   Environment initialEnvironment;
   MainClass mainClass;
 
-  public static void main(String[] arguments) throws IOException
+  public static void main(String[] arguments) throws Exception, IOException
   { if (arguments.length != 1)
     { System.out.println("Expecting only one argument, the file name to parse.");
       System.exit(1);
@@ -58,7 +58,7 @@ public class Compiler
     }
   }
 
-  public Compiler(String fileName, String outputName) throws IOException
+  public Compiler(String fileName, String outputName) throws Exception, IOException
   { initialEnvironment = new Environment();
     // Syntactic bindings (these get transformed before main class)
     initialEnvironment.addBinding("lambda", new LambdaSyntaxBinding());
@@ -90,6 +90,6 @@ public class Compiler
     List<Statement> statements = interconnect.ASTsToStatements(parsedFile);
     // Mutates mainClass
     JavaByteCodeGenerator.generateOutput(mainClass, statements);
-    mainClass.saveToDisk();
+    mainClass.assembleToDisk();
   }
 }

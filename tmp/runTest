@@ -1,6 +1,8 @@
 #!/bin/sh -e
 
-rm *.j *.class || true
+JAR=../target/part-II-project-1.0-SNAPSHOT-jar-with-dependencies.jar
+
+rm *.class || true
 
 if [ "$termprog" != "win" ]; then
   term=win
@@ -8,9 +10,8 @@ else
   term=
 fi
 
-#$term jdb -launch -classpath ../src/main/java:../target/part-II-project-1.0-SNAPSHOT.jar:../target/classes:$CLASSPATH rmk35.partIIProject.Compiler  test.txt
-java -classpath ../src/main/java:../target/part-II-project-1.0-SNAPSHOT.jar:../target/classes:$CLASSPATH rmk35.partIIProject.Compiler  test.txt
+#$term jdb -launch -classpath ../src/main/java:$JAR:../target/classes rmk35.partIIProject.Compiler  test.txt
+java -classpath ../src/main/java:$JAR:../target/classes rmk35.partIIProject.Compiler  test.txt
 
-java -jar ../jasmin.jar -g *.j
-#$term jdb -launch -classpath ../target/part-II-project-1.0-SNAPSHOT.jar:$CLASSPATH test
-java -classpath ../target/part-II-project-1.0-SNAPSHOT.jar:$CLASSPATH test
+#$term jdb -launch -classpath .:$JAR test
+java -classpath .:$JAR test
