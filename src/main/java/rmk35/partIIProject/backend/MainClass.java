@@ -12,6 +12,7 @@ import rmk35.partIIProject.backend.instructions.DupInstruction;
 import rmk35.partIIProject.backend.instructions.IntegerConstantInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
 import rmk35.partIIProject.backend.instructions.StaticCallInstruction;
+import rmk35.partIIProject.backend.instructions.PopInstruction;
 import rmk35.partIIProject.backend.instructions.types.JVMType;
 import rmk35.partIIProject.backend.instructions.types.VoidType;
 import rmk35.partIIProject.backend.instructions.types.IntegerType;
@@ -56,6 +57,7 @@ public class MainClass extends OutputClass
     mainMethod.addInstruction(new NonVirtualCallInstruction(voidType, ArrayList.class.getName().replace('.', '/') + "/<init>", new IntegerType()));
     mainMethod.addInstruction(new NonVirtualCallInstruction(voidType, TrampolineValue.class.getName().replace('.', '/') + "/<init>", new ObjectType(LambdaValue.class), new ObjectType(List.class)));
     mainMethod.addInstruction(new StaticCallInstruction(new ObjectType(Object.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(Object.class)));
+    mainMethod.addInstruction(new PopInstruction());
     methods.put("main", mainMethod);
   }
 

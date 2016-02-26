@@ -6,4 +6,9 @@ public class InternalCompilerException extends RuntimeException
   public InternalCompilerException(String message)
   { this.message = message;
   }
+
+  @Override
+  public String getMessage()
+  { return message;
+  }
 }

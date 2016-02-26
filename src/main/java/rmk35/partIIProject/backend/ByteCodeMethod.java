@@ -12,28 +12,23 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class ByteCodeMethod
-{ JVMType returnType;
+{ String modifier; // Access modifier, e.g. private
+  JVMType returnType;
   String methodName;
   JVMType[] arguments;
 
   int stackCount, stackLimit;
   int localLimit;
 
-  List<String> header;
   List<String> instructions;
-  List<String> footer;
-
-  String cachedByteCode = null; // As byteCode() mutates state
 
   public ByteCodeMethod(JVMType returnType, String modifier, String methodName, JVMType... arguments)
-  { this.returnType = returnType;
+  { this.modifier = modifier;
+    this.returnType = returnType;
     this.methodName = methodName;
     this.arguments = arguments;
 
-    header = new ArrayList<>();
-    addInstruction(new BeginMethodDirective(returnType, modifier, methodName, arguments), header);
     instructions = new ArrayList<>();
-    footer = new ArrayList<>();
 
     stackCount = stackLimit = 0;
     localLimit =
@@ -43,8 +38,7 @@ public class ByteCodeMethod
   }
 
   private void addInstruction(Instruction instruction, List<String> instructionList)
-  { if (cachedByteCode != null) throw new InternalCompilerException("Adding instruction after calling byteCode");
-    instruction.simulateLimits(this);
+  {instruction.simulateLimits(this);
     instructionList.add(instruction.byteCode());
   }
   public void addInstruction(Instruction instruction)
@@ -61,6 +55,10 @@ public class ByteCodeMethod
     if (stackCount < 0) throw new InternalCompilerException("Simulated stack underflown");
   }
 
+  private void checkReturnStackCount()
+  { if (stackCount != returnType.stackCount()) throw new InternalCompilerException("Return stack wrong for \"" + returnType + " " + methodName + "(" + arguments + ")\", got " + stackCount + " instead of " + returnType.stackCount());
+  }
+
   public void ensureLocal(int i)
   { localLimit = Math.max(localLimit, i+1); // +1 because of local 0
   }
@@ -71,13 +69,12 @@ public class ByteCodeMethod
   }
 
   public String byteCode()
-  { addInstruction(new ReturnInstruction(returnType), footer); // Mutates state (limits)
-    addInstruction(new EndMethodDirective(), footer);
-    cachedByteCode = String.join("\n", header) + "\n" +
+  { checkReturnStackCount();
+    return new BeginMethodDirective(returnType, modifier, methodName, arguments).byteCode() + "\n" +
       "  .limit stack " + stackLimit + "\n" +
       "  .limit locals " + localLimit + "\n" +
       String.join("\n", instructions) + "\n" +
-      String.join("\n", footer);
-    return cachedByteCode;
+      new ReturnInstruction(returnType).byteCode() + "\n" +
+      new EndMethodDirective().byteCode();
   }
 }
