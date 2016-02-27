@@ -1,10 +1,13 @@
-package rmk35.partIIProject.runtime;
+package rmk35.partIIProject.runtime.libraries;
+
+import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.LambdaValue;
 
 import java.util.List;
 
 public abstract class BinaryLambda extends LambdaValue
 { @Override
-  public Object run(List<RuntimeValue> arguments)
+  public final Object run(List<RuntimeValue> arguments)
   { if (arguments.size() != 2)
     { throw new IllegalArgumentException("Expecting two RuntimeValue arguments, got " + arguments);
     } else
@@ -12,5 +15,5 @@ public abstract class BinaryLambda extends LambdaValue
     }
   }
 
-  abstract Object run(RuntimeValue first, RuntimeValue second);
+  protected abstract Object run(RuntimeValue first, RuntimeValue second);
 }

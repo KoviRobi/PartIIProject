@@ -22,8 +22,8 @@ import rmk35.partIIProject.middle.bindings.JavaMethodBinding;
 import rmk35.partIIProject.middle.bindings.JavaStaticFieldBinding;
 
 import rmk35.partIIProject.runtime.RuntimeValue;
-import rmk35.partIIProject.runtime.RaiseLambda;
-import rmk35.partIIProject.runtime.WithExceptionHandlerLambda;
+import rmk35.partIIProject.runtime.libraries.base.RaiseLambda;
+import rmk35.partIIProject.runtime.libraries.base.WithExceptionHandlerLambda;
 
 import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.JavaByteCodeGenerator;

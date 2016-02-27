@@ -1,11 +1,17 @@
-package rmk35.partIIProject.runtime;
+package rmk35.partIIProject.runtime.libraries.base;
+
+import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.LambdaValue;
+import rmk35.partIIProject.runtime.TrampolineValue;
+import rmk35.partIIProject.runtime.ThrowableValue;
+import rmk35.partIIProject.runtime.libraries.BinaryLambda;
 
 import java.util.List;
 import java.util.ArrayList;
 
 public class WithExceptionHandlerLambda extends BinaryLambda
 { @Override
-  Object run(RuntimeValue first, RuntimeValue second)
+  protected Object run(RuntimeValue first, RuntimeValue second)
   { LambdaValue handler = (LambdaValue) first;
     LambdaValue body = (LambdaValue) second;
     try

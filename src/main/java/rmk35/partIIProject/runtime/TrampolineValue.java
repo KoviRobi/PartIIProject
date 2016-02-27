@@ -18,6 +18,7 @@ public class TrampolineValue implements RuntimeValue
   LambdaValue function;
   List<RuntimeValue> arguments;
 
+  // Inner class defined at the bottom of the file
   private static final TrampolineVisitor trampolineVisitor = new TrampolineVisitor();
 
   public TrampolineValue(LambdaValue function, List<RuntimeValue> arguments)
@@ -66,5 +67,13 @@ public class TrampolineValue implements RuntimeValue
   @Override
   public <T> T accept(ASTVisitor<T> visitor) throws SyntaxErrorException
   { return visitor.visit(this);
+  }
+
+  private static class TrampolineVisitor extends ASTVisitor<Object>
+  { @Override
+    public Object visit(TrampolineValue trampoline) { return trampoline.call(); }
+
+    @Override
+    public Object visit(RuntimeValue value) { return value; }
   }
 }
