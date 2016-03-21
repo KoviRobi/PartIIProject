@@ -88,4 +88,9 @@ public class CharacterValue implements SelfquotingValue
     method.addInstruction(new IntegerConstantInstruction(value));
     method.addInstruction(new NonVirtualCallInstruction(new VoidType(), CharacterValue.class.getName().replace('.', '/') + "/<init>", new CharacterType()));
   }
+
+  @Override
+  public Character toJavaValue()
+  { return value;
+  }
 }

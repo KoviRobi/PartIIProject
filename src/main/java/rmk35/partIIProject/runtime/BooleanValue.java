@@ -63,6 +63,10 @@ public class BooleanValue implements SelfquotingValue
     method.addInstruction(new DupInstruction());
     method.addInstruction(new IntegerConstantInstruction(value? 1 : 0));
     method.addInstruction(new NonVirtualCallInstruction(new VoidType(), BooleanValue.class.getName().replace('.', '/') + "/<init>", new BooleanType()));
-  
+  }
+
+  @Override
+  public Boolean toJavaValue()
+  { return value;
   }
 }

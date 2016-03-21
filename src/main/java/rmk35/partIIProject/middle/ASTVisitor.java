@@ -18,7 +18,10 @@ import rmk35.partIIProject.runtime.VectorValue;
 // RuntimeValues
 import rmk35.partIIProject.runtime.LambdaValue;
 import rmk35.partIIProject.runtime.TrampolineValue;
+import rmk35.partIIProject.runtime.EndOfFileValue;
 import rmk35.partIIProject.runtime.ThrowableValue;
+import rmk35.partIIProject.runtime.MethodValue;
+import rmk35.partIIProject.runtime.ObjectValue;
 
 public abstract class ASTVisitor<T>
 { // This is subclass only access modifier, as below explicitly lists all values,
@@ -41,7 +44,10 @@ public abstract class ASTVisitor<T>
   public T visit(VectorValue vector) throws SyntaxErrorException { return visit((SelfquotingValue)vector); }
   
   // Other RuntimeValue subtypes (these are not PrimitiveValue subtypes), usually an error
-  public T visit(LambdaValue vector) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
-  public T visit(TrampolineValue vector) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
-  public T visit(ThrowableValue vector) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
+  public T visit(LambdaValue lambda) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
+  public T visit(TrampolineValue trampoline) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
+  public T visit(EndOfFileValue eof) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
+  public T visit(ThrowableValue throwable) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
+  public T visit(MethodValue method) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
+  public T visit(ObjectValue object) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
 }

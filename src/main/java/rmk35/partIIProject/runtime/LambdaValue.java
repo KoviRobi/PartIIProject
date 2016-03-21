@@ -12,8 +12,9 @@ import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.ByteCodeMethod;
 
 import java.util.List;
+import java.util.function.Function;
 
-public abstract class LambdaValue implements RuntimeValue
+public abstract class LambdaValue implements RuntimeValue, Function<RuntimeValue, RuntimeValue>
 { @Override
   public SourceInfo getSourceInfo() { return null; }
 
@@ -21,7 +22,7 @@ public abstract class LambdaValue implements RuntimeValue
   public boolean eqv(RuntimeValue other) { return this == other; }
   public boolean eq(RuntimeValue other) { return this == other; }
 
-  public abstract Object run(List<RuntimeValue> arguments);
+  public abstract RuntimeValue apply(RuntimeValue argument);
 
   @Override
   public <T> T accept(ASTVisitor<T> visitor) throws SyntaxErrorException
@@ -31,5 +32,10 @@ public abstract class LambdaValue implements RuntimeValue
   @Override
   public void generateByteCode(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { throw new InternalCompilerException("I don't know how to generate ByteCode for LambdaValue yet");
+  }
+
+  @Override
+  public Object toJavaValue()
+  { return this;
   }
 }

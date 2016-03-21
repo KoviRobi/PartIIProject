@@ -11,22 +11,20 @@ import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.ByteCodeMethod;
 
-import java.util.List;
-
 public class TrampolineValue implements RuntimeValue
 { // A trampoline is used to encapsulate a call to a LambdaValue
   LambdaValue function;
-  List<RuntimeValue> arguments;
+  RuntimeValue arguments;
 
   // Inner class defined at the bottom of the file
   private static final TrampolineVisitor trampolineVisitor = new TrampolineVisitor();
 
-  public TrampolineValue(LambdaValue function, List<RuntimeValue> arguments)
+  public TrampolineValue(LambdaValue function, RuntimeValue arguments)
   { this.function = function;
     this.arguments = arguments;
   }
 
-  public static Object bounceHelper(Object object)
+  public static RuntimeValue bounceHelper(RuntimeValue object)
   { if (object != null && object instanceof TrampolineValue)
     { return ((TrampolineValue) object).bounce();
     } else
@@ -34,9 +32,9 @@ public class TrampolineValue implements RuntimeValue
     }
   }
 
-  public Object bounce()
+  public RuntimeValue bounce()
   { // TrampolineVisitor calls tail calls, or returns normal RuntimeValues
-    Object returnValue = call();
+    RuntimeValue returnValue = this;
     // While we have tail calls to perform
     while (returnValue != null && returnValue instanceof TrampolineValue)
     { returnValue = acceptHelper(returnValue);
@@ -44,16 +42,16 @@ public class TrampolineValue implements RuntimeValue
     return returnValue;
   }
 
-  public Object call()
-  { return function.run(arguments);
-  }
-
-  public static Object acceptHelper(Object value)
+  public static RuntimeValue acceptHelper(RuntimeValue value)
   { if (value == null || ! (value instanceof RuntimeValue))
     { return value; // null is the undefined value, non-RuntimeValues returned by java calls
     } else
     { return ((RuntimeValue) value).accept(trampolineVisitor);
     }
+  }
+
+  public RuntimeValue call()
+  { return function.apply(arguments);
   }
 
   @Override
@@ -69,11 +67,14 @@ public class TrampolineValue implements RuntimeValue
   { return visitor.visit(this);
   }
 
-  private static class TrampolineVisitor extends ASTVisitor<Object>
+  private static class TrampolineVisitor extends ASTVisitor<RuntimeValue>
   { @Override
-    public Object visit(TrampolineValue trampoline) { return trampoline.call(); }
+    public RuntimeValue visit(TrampolineValue trampoline) { return trampoline.call(); }
 
     @Override
-    public Object visit(RuntimeValue value) { return value; }
+    public RuntimeValue visit(RuntimeValue value) { return value; }
   }
+
+  @Override
+  public Object toJavaValue() { throw new InternalCompilerException("A trampoline is an internal data structure, it should not be externally visible."); }
 }

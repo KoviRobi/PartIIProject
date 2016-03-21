@@ -31,7 +31,7 @@ public class BeginStatement extends Statement
   { method.addInstruction(new CommentPseudoInstruction("BeginStatement"));
     method.addInstruction(new NullConstantInstruction());
     for (Statement statement : statements)
-    { method.addInstruction(new StaticCallInstruction(new ObjectType(Object.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(Object.class)));
+    { method.addInstruction(new StaticCallInstruction(new ObjectType(RuntimeValue.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(RuntimeValue.class)));
       method.addInstruction(new PopInstruction());
       statement.generateOutput(mainClass, outputClass, method);
     }

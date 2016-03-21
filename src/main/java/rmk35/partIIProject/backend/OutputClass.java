@@ -118,7 +118,7 @@ public abstract class OutputClass
     }
   }
 
-  /* Gets the primary method of the class, either the main or the run method (for Main and Inner classes respectively) */
+  /* Gets the primary method of the class, either the main or the apply method (for Main and Inner classes respectively) */
   public abstract ByteCodeMethod getPrimaryMethod();
   /** Generates a unique ID that does not start with a number */
   public abstract String getSuperClassName();

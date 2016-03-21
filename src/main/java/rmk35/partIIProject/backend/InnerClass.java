@@ -1,24 +1,26 @@
 package rmk35.partIIProject.backend;
 
+import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.LambdaValue;
+import rmk35.partIIProject.runtime.NullValue;
+import rmk35.partIIProject.runtime.ConsValue;
+
 import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.statements.IdentifierStatement;
 import rmk35.partIIProject.backend.statements.ClosureIdentifierStatement;
 import rmk35.partIIProject.backend.statements.LocalIdentifierStatement;
 import rmk35.partIIProject.backend.statements.DefineStatement;
-import rmk35.partIIProject.runtime.RuntimeValue;
-import rmk35.partIIProject.runtime.LambdaValue;
 import rmk35.partIIProject.backend.instructions.Instruction;
 import rmk35.partIIProject.backend.instructions.LocalLoadInstruction;
 import rmk35.partIIProject.backend.instructions.DupInstruction;
-import rmk35.partIIProject.backend.instructions.IntegerConstantInstruction;
-import rmk35.partIIProject.backend.instructions.InterfaceCallInstruction;
 import rmk35.partIIProject.backend.instructions.LocalStoreInstruction;
+import rmk35.partIIProject.backend.instructions.CheckCastInstruction;
 import rmk35.partIIProject.backend.instructions.PopInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
+import rmk35.partIIProject.backend.instructions.VirtualCallInstruction;
 import rmk35.partIIProject.backend.instructions.types.JVMType;
 import rmk35.partIIProject.backend.instructions.types.ObjectType;
 import rmk35.partIIProject.backend.instructions.types.VoidType;
-import rmk35.partIIProject.backend.instructions.types.IntegerType;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -34,8 +36,6 @@ public class InnerClass extends OutputClass
 
   private static final JVMType voidType = new VoidType();
   private static final ObjectType runtimeValueType = new ObjectType(RuntimeValue.class);
-  private static final ObjectType listType = new ObjectType(List.class);
-  private static final ObjectType objectType = new ObjectType(Object.class);
 
   public InnerClass(String name, List<IdentifierStatement> closureVariables, int variableCount, MainClass mainClass)
   { super(name);
@@ -46,7 +46,7 @@ public class InnerClass extends OutputClass
     Arrays.fill(constructorTypes, runtimeValueType);
     // Ensure closure variables exist and also that they are set on construction
     ByteCodeMethod initializerMethod = new ByteCodeMethod(voidType, "public", "<init>", constructorTypes);
-    initializerMethod.addInstruction(new LocalLoadInstruction(new ObjectType(), 0));
+    initializerMethod.addInstruction(new LocalLoadInstruction(runtimeValueType, 0));
     initializerMethod.addInstruction(new NonVirtualCallInstruction(voidType, getSuperClassName() + "/<init>"));
     int index = 1; // 0 is 'this'
     for (IdentifierStatement closureName : closureVariables)
@@ -58,18 +58,22 @@ public class InnerClass extends OutputClass
     // Overwrite initializer
     methods.put("<init>", initializerMethod);
 
-    ByteCodeMethod runMethod = new ByteCodeMethod(objectType, "public", "run", listType);
+    ByteCodeMethod applyMethod = new ByteCodeMethod(runtimeValueType, "public", "apply", runtimeValueType);
     // Store array into locals
-    runMethod.addInstruction(new LocalLoadInstruction(listType, 1)); // Load ArrayList, will be over written
+    // Load arguments, may be over written (unless variable count is 0, which may happen if we got null, or this was a "(lambda x body...)")
+    applyMethod.addInstruction(new LocalLoadInstruction(runtimeValueType, 1));
     for (int i = 0; i < variableCount; i++)
-    { runMethod.addInstruction(new DupInstruction()); // Loop invariant: ArrayList on top of the stack
-      runMethod.addInstruction(new IntegerConstantInstruction(i));
-      runMethod.addInstruction(new InterfaceCallInstruction(/* static */ false, objectType, List.class.getName().replace('.', '/') + "/get", new IntegerType()));
-      runMethod.ensureLocal(i+1);
-      runMethod.addInstruction(new LocalStoreInstruction(objectType, i+1)); // i+1, as local 0 is this, which we can't over write
+    { applyMethod.addInstruction(new CheckCastInstruction(ConsValue.class));
+      applyMethod.addInstruction(new DupInstruction()); // Current head
+      applyMethod.addInstruction(new VirtualCallInstruction(runtimeValueType, ConsValue.class.getName().replace('.', '/') + "/getCar"));
+      applyMethod.ensureLocal(i+1);
+      applyMethod.addInstruction(new LocalStoreInstruction(runtimeValueType, i+1)); // i+1, as local 0 is this, which we can't over write
+      applyMethod.addInstruction(new VirtualCallInstruction(runtimeValueType, ConsValue.class.getName().replace('.', '/') + "/getCdr"));
     }
-    runMethod.addInstruction(new PopInstruction()); // Pop ArrayList
-    methods.put("run", runMethod);
+    // ToDo improper lists
+    applyMethod.addInstruction(new CheckCastInstruction(NullValue.class));
+    applyMethod.addInstruction(new PopInstruction()); // Pop null
+    methods.put("apply", applyMethod);
   }
 
   @Override
@@ -79,7 +83,7 @@ public class InnerClass extends OutputClass
 
   @Override
   public ByteCodeMethod getPrimaryMethod()
-  { return methods.get("run");
+  { return methods.get("apply");
   }
 
   public void invokeConstructor(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)

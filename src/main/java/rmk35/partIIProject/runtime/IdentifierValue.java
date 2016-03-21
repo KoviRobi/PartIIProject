@@ -82,4 +82,9 @@ public class IdentifierValue implements PrimitiveValue
   { return other instanceof IdentifierValue
         && value.equals(((IdentifierValue)other).value);
   }
+
+  @Override
+  public Object toJavaValue()
+  { return this;
+  }
 }

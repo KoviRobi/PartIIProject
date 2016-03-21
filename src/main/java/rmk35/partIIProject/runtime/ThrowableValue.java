@@ -54,4 +54,9 @@ public class ThrowableValue extends RuntimeException implements RuntimeValue
   public void generateByteCode(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { throw new InternalCompilerException("I don't know how to generate ByteCode for ThrowableValue yet");
   }
+
+  @Override
+  public Object toJavaValue()
+  { return value.toJavaValue();
+  }
 }

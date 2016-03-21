@@ -1,7 +1,8 @@
 package rmk35.partIIProject.backend.statements;
 
 import rmk35.partIIProject.runtime.StringValue;
-import rmk35.partIIProject.runtime.IntrospectionHelper;
+import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.ValueHelper;
 
 import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
@@ -23,7 +24,7 @@ public class JavaFieldStatement extends Statement
   Statement fieldName;
 
   private static final ObjectType stringType = new ObjectType(String.class);
-  private static final ObjectType objectType = new ObjectType(Object.class);
+  private static final ObjectType runtimeValueType = new ObjectType(RuntimeValue.class);
 
   public JavaFieldStatement(Statement object, Statement fieldName)
   { this.object = object;
@@ -36,7 +37,7 @@ public class JavaFieldStatement extends Statement
     fieldName.generateOutput(mainClass, outputClass, method);
     method.addInstruction(new CheckCastInstruction(StringValue.class));
     method.addInstruction(new VirtualCallInstruction(stringType, StringValue.class.getName().replace('.', '/') + "/getValue"));
-    method.addInstruction(new StaticCallInstruction(objectType, IntrospectionHelper.class.getName().replace('.', '/') + "/getField", objectType, stringType));
+    method.addInstruction(new StaticCallInstruction(runtimeValueType, JavaFieldStatement.class.getName().replace('.', '/') + "/getField", runtimeValueType, stringType));
   }
 
   @Override
@@ -45,5 +46,13 @@ public class JavaFieldStatement extends Statement
     returnValue.addAll(object.getFreeIdentifiers());
     returnValue.addAll(fieldName.getFreeIdentifiers());
     return returnValue;
+  }
+
+  public static RuntimeValue getField(RuntimeValue object, String fieldName)
+  { try
+    { return ValueHelper.toSchemeValue(object.getClass().getField(fieldName).get(object));
+    } catch (NoSuchFieldException | IllegalAccessException exception)
+    { throw new RuntimeException(exception);
+    }
   }
 }

@@ -17,6 +17,9 @@ import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
 import rmk35.partIIProject.backend.instructions.types.VoidType;
 import rmk35.partIIProject.backend.instructions.types.ObjectType;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import lombok.Data;
 
 @Data
@@ -78,4 +81,27 @@ public class ConsValue implements PrimitiveValue
   public String toString()
   { return "(" + car.toString() + " . " + cdr.toString() + ")";
   }
+
+  @Override
+  public Object toJavaValue()
+  { RuntimeValue list = this;
+    int length = 1;
+    while (list instanceof ConsValue)
+    { list = ((ConsValue) list).getCdr();
+      length++;
+    }
+    if (list instanceof ConsValue)
+    { // Proper list
+      List<Object> returnValue = new ArrayList<>(length);
+      while (list instanceof ConsValue)
+      { returnValue.add(((ConsValue) list).getCar());
+        list = ((ConsValue) list).getCdr();
+      }
+      return returnValue;
+    } else
+    { // Not sure how to represent improper lists, so just returning this
+      return this;
+    }
+  }
 }
+

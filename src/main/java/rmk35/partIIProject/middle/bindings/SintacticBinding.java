@@ -11,7 +11,7 @@ import rmk35.partIIProject.backend.statements.Statement;
 public abstract class SintacticBinding implements Binding
 { @Override
   public Statement toStatement(SourceInfo sourceInfo)
-  { throw new SyntaxErrorException("Don't know how to use a syntactic variable in a run time context", sourceInfo);
+  { throw new SyntaxErrorException("Don't know how to use a syntactic variable in a runtime context", sourceInfo);
   }
 
   @Override

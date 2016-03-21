@@ -82,4 +82,9 @@ public class BytevectorValue implements SelfquotingValue
     }
     method.addInstruction(new NonVirtualCallInstruction(new VoidType(), BytevectorValue.class.getName().replace('.', '/') + "/<init>", new ArrayType(new ByteType())));
   }
+
+  @Override
+  public byte[] toJavaValue()
+  { return value;
+  }
 }

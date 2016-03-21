@@ -1,5 +1,8 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.ValueHelper;
+
 import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.ByteCodeMethod;
@@ -20,7 +23,7 @@ public class JavaClassStatement extends Statement
 { Statement className;
 
   private static final ObjectType stringType = new ObjectType(String.class);
-  private static final ObjectType classType = new ObjectType(Class.class);
+  private static final ObjectType runtimeValueType = new ObjectType(RuntimeValue.class);
 
   public JavaClassStatement(Statement className)
   { this.className = className;
@@ -31,11 +34,19 @@ public class JavaClassStatement extends Statement
     className.generateOutput(mainClass, outputClass, method);
     method.addInstruction(new CheckCastInstruction(StringValue.class));
     method.addInstruction(new VirtualCallInstruction(stringType, StringValue.class.getName().replace('.', '/') + "/getValue"));
-    method.addInstruction(new StaticCallInstruction(classType, Class.class.getName().replace('.', '/') + "/forName", stringType));
+    method.addInstruction(new StaticCallInstruction(runtimeValueType, JavaClassStatement.class.getName().replace('.', '/') + "/getClass", stringType));
   }
 
   @Override
   public Collection<String> getFreeIdentifiers()
   { return className.getFreeIdentifiers();
+  }
+
+  public RuntimeValue getClass(String className)
+  { try
+    { return ValueHelper.toSchemeValue(Class.forName(className));
+    } catch (ClassNotFoundException exception)
+    { throw new RuntimeException("Class \"" + className + "\" not found", exception);
+    }
   }
 }

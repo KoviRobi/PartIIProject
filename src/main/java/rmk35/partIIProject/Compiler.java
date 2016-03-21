@@ -49,7 +49,7 @@ public class Compiler
     new Compiler(fileName, outputName);
   }
 
-  public static String removeExtension(String fileName)
+  static String removeExtension(String fileName)
   { int lastIndex = fileName.lastIndexOf('.');
     if (lastIndex == -1)
     { return fileName;

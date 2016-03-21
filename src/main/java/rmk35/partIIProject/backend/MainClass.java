@@ -3,6 +3,7 @@ package rmk35.partIIProject.backend;
 import rmk35.partIIProject.runtime.TrampolineValue;
 import rmk35.partIIProject.runtime.LambdaValue;
 import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.NullValue;
 
 import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.statements.GlobalIdentifierStatement;
@@ -51,12 +52,11 @@ public class MainClass extends OutputClass
     mainMethod.addInstruction(new NewObjectInstruction(mainInnerClassName));
     mainMethod.addInstruction(new DupInstruction());
     mainInnerClass.invokeConstructor(this, this, mainMethod);
-    mainMethod.addInstruction(new NewObjectInstruction(ArrayList.class));
+    mainMethod.addInstruction(new NewObjectInstruction(NullValue.class));
     mainMethod.addInstruction(new DupInstruction());
-    mainMethod.addInstruction(new IntegerConstantInstruction(0));
-    mainMethod.addInstruction(new NonVirtualCallInstruction(voidType, ArrayList.class.getName().replace('.', '/') + "/<init>", new IntegerType()));
-    mainMethod.addInstruction(new NonVirtualCallInstruction(voidType, TrampolineValue.class.getName().replace('.', '/') + "/<init>", new ObjectType(LambdaValue.class), new ObjectType(List.class)));
-    mainMethod.addInstruction(new StaticCallInstruction(new ObjectType(Object.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(Object.class)));
+    mainMethod.addInstruction(new NonVirtualCallInstruction(voidType, NullValue.class.getName().replace('.', '/') + "/<init>"));
+    mainMethod.addInstruction(new NonVirtualCallInstruction(voidType, TrampolineValue.class.getName().replace('.', '/') + "/<init>", new ObjectType(LambdaValue.class), new ObjectType(RuntimeValue.class)));
+    mainMethod.addInstruction(new StaticCallInstruction(new ObjectType(RuntimeValue.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(RuntimeValue.class)));
     mainMethod.addInstruction(new PopInstruction());
     methods.put("main", mainMethod);
   }

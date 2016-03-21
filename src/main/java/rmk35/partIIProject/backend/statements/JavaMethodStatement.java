@@ -1,7 +1,9 @@
 package rmk35.partIIProject.backend.statements;
 
 import rmk35.partIIProject.runtime.StringValue;
-import rmk35.partIIProject.runtime.IntrospectionHelper;
+import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.ObjectValue;
+import rmk35.partIIProject.runtime.ValueHelper;
 
 import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
@@ -31,9 +33,9 @@ public class JavaMethodStatement extends Statement
   Statement methodName;
   List<Statement> arguments;
 
-  private static final ObjectType objectType = new ObjectType(Object.class);
+  private static final ObjectType runtimeValueType = new ObjectType(RuntimeValue.class);
+  private static final ObjectType objectValueType = new ObjectType(ObjectValue.class);
   private static final ObjectType stringType = new ObjectType(String.class);
-  private static final ObjectType methodType = new ObjectType(Method.class);
 
   public JavaMethodStatement(Statement object, Statement methodName, List<Statement> arguments)
   { this.object = object;
@@ -44,6 +46,7 @@ public class JavaMethodStatement extends Statement
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("JavaMethodStatement"));
     object.generateOutput(mainClass, outputClass, method);
+    method.addInstruction(new CheckCastInstruction(ObjectValue.class));
     methodName.generateOutput(mainClass, outputClass, method);
     method.addInstruction(new CheckCastInstruction(StringValue.class));
     method.addInstruction(new VirtualCallInstruction(stringType, StringValue.class.getName().replace('.', '/') + "/getValue"));
@@ -62,7 +65,7 @@ public class JavaMethodStatement extends Statement
       i++;
     }
 
-    method.addInstruction(new StaticCallInstruction(methodType, IntrospectionHelper.class.getName().replace('.', '/') + "/getMethod", objectType, stringType, new ArrayType(stringType)));
+    method.addInstruction(new StaticCallInstruction(runtimeValueType, JavaMethodStatement.class.getName().replace('.', '/') + "/getMethod", objectValueType, stringType, new ArrayType(stringType)));
   }
 
   @Override
@@ -74,5 +77,17 @@ public class JavaMethodStatement extends Statement
              .map(statement -> statement.getFreeIdentifiers())
              .forEach(collection -> returnValue.addAll(collection));
     return returnValue;
+  }
+
+  public static RuntimeValue getMethod(ObjectValue object, String methodName, String... argumentClassNames)
+  { try
+    { Class[] argumentTypes = new Class[argumentClassNames.length];
+       for (int i = 0; i < argumentTypes.length; i++)
+      { argumentTypes[i] = Class.forName(argumentClassNames[i]);
+      }
+      return ValueHelper.toSchemeValue(object.toJavaValue().getClass().getDeclaredMethod(methodName, argumentTypes));
+    } catch (NoSuchMethodException | ClassNotFoundException exception)
+    { throw new RuntimeException("Can't get method", exception);
+    }
   }
 }

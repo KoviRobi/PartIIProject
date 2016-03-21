@@ -86,4 +86,13 @@ public class VectorValue implements SelfquotingValue
     }
     method.addInstruction(new NonVirtualCallInstruction(new VoidType(), VectorValue.class.getName().replace('.', '/') + "/<init>", new ArrayType(new ObjectType(RuntimeValue.class))));
   }
+
+  @Override
+  public Object[] toJavaValue()
+  { Object[] returnValue = new Object[value.length];
+    for (int i = 0; i < value.length; i++)
+    { returnValue[i] = value[i].toJavaValue();
+    }
+    return returnValue;
+  }
 }

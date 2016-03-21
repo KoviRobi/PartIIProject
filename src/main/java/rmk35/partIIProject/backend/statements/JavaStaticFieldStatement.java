@@ -1,7 +1,8 @@
 package rmk35.partIIProject.backend.statements;
 
 import rmk35.partIIProject.runtime.StringValue;
-import rmk35.partIIProject.runtime.IntrospectionHelper;
+import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.ValueHelper;
 
 import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
@@ -23,7 +24,7 @@ public class JavaStaticFieldStatement extends Statement
   Statement fieldName;
 
   private static final ObjectType stringType = new ObjectType(String.class);
-  private static final ObjectType objectType = new ObjectType(Object.class);
+  private static final ObjectType runtimeValueType = new ObjectType(RuntimeValue.class);
 
   public JavaStaticFieldStatement(Statement className, Statement fieldName)
   { this.className = className;
@@ -38,7 +39,7 @@ public class JavaStaticFieldStatement extends Statement
     fieldName.generateOutput(mainClass, outputClass, method);
     method.addInstruction(new CheckCastInstruction(StringValue.class));
     method.addInstruction(new VirtualCallInstruction(stringType, StringValue.class.getName().replace('.', '/') + "/getValue"));
-    method.addInstruction(new StaticCallInstruction(objectType, IntrospectionHelper.class.getName().replace('.', '/') + "/getStaticField", stringType, stringType));
+    method.addInstruction(new StaticCallInstruction(runtimeValueType, JavaStaticFieldStatement.class.getName().replace('.', '/') + "/getStaticField", stringType, stringType));
   }
 
   @Override
@@ -47,5 +48,13 @@ public class JavaStaticFieldStatement extends Statement
     returnValue.addAll(className.getFreeIdentifiers());
     returnValue.addAll(fieldName.getFreeIdentifiers());
     return returnValue;
+  }
+
+  public static RuntimeValue getStaticField(String className, String fieldName)
+  { try
+    { return ValueHelper.toSchemeValue(Class.forName(className).getField(fieldName).get(Class.forName(className)));
+    } catch (NoSuchFieldException | IllegalAccessException | ClassNotFoundException exception)
+    { throw new RuntimeException("Can't get static field", exception);
+    }
   }
 }

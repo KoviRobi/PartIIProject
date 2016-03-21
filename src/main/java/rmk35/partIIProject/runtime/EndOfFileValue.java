@@ -18,14 +18,14 @@ import rmk35.partIIProject.backend.instructions.types.VoidType;
 import lombok.Value;
 
 @Value
-public class NullValue implements PrimitiveValue
+public class EndOfFileValue implements RuntimeValue
 { SourceInfo sourceInfo;
 
   @Deprecated
-  public NullValue()
+  public EndOfFileValue()
   { this(null);
   }
-  public NullValue(SourceInfo sourceInfo)
+  public EndOfFileValue(SourceInfo sourceInfo)
   { this.sourceInfo = sourceInfo;
   }
 
@@ -48,17 +48,17 @@ public class NullValue implements PrimitiveValue
 
   @Override
   public void generateByteCode(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
-  { method.addInstruction(new CommentPseudoInstruction("ByteCode for " + NullValue.class.getName()));
-    method.addInstruction(new NewObjectInstruction(NullValue.class));
+  { method.addInstruction(new CommentPseudoInstruction("ByteCode for " + EndOfFileValue.class.getName()));
+    method.addInstruction(new NewObjectInstruction(EndOfFileValue.class));
     method.addInstruction(new DupInstruction());
-    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), NullValue.class.getName().replace('.', '/') + "/<init>"));
+    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), EndOfFileValue.class.getName().replace('.', '/') + "/<init>"));
   }
 
   @Override
-  public String toString() { return "()"; }
+  public String toString() { return "#end-of-file"; }
 
   @Override
   public Object toJavaValue()
-  { return null;
+  { return this;
   }
 }

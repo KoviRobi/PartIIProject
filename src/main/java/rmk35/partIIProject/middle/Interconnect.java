@@ -9,15 +9,25 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Interconnect
-{ Environment initialEnvironment;
+{ Environment environment;
 
   public Interconnect(Environment initialEnvironment)
-  { this.initialEnvironment = initialEnvironment;
+  { this.environment = initialEnvironment;
   }
 
+  // REPL
+  public Statement ASTToStatement(RuntimeValue data)
+  { return data.accept(new ASTConvertVisitor(environment));
+  }
+
+  public Environment getInteractionEnvironment()
+  { return environment;
+  }
+
+  // Compiler
   public List<Statement> ASTsToStatements(List<RuntimeValue> datum)
   { List<Statement> returnValue = new ArrayList<>(datum.size());
-    ASTConvertVisitor visitor = new ASTConvertVisitor(initialEnvironment);
+    ASTConvertVisitor visitor = new ASTConvertVisitor(environment);
 
     for (RuntimeValue ast : datum)
     { // Holds state of the environment

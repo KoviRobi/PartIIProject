@@ -76,4 +76,9 @@ public class NumberValue implements SelfquotingValue
     method.addInstruction(new NonVirtualCallInstruction(new VoidType(), NumberValue.class.getName().replace('.', '/') + "/<init>", new IntegerType()));
   
   }
+
+  @Override
+  public Integer toJavaValue()
+  { return value;
+  }
 }

@@ -40,7 +40,7 @@ public class StringValue implements SelfquotingValue
   public String getValue() { return value; }
   public SourceInfo getSourceInfo() { return sourceInfo; }
   @Override
-  public String toString() { return value; }
+  public String toString() { return "\"" + value + "\""; }
 
   @Override
   public boolean eq(RuntimeValue other)
@@ -68,5 +68,10 @@ public class StringValue implements SelfquotingValue
     method.addInstruction(new DupInstruction());
     method.addInstruction(new StringConstantInstruction(value));
     method.addInstruction(new NonVirtualCallInstruction(new VoidType(), StringValue.class.getName().replace('.', '/') + "/<init>", new ObjectType(String.class)));
+  }
+
+  @Override
+  public String toJavaValue()
+  { return value;
   }
 }
