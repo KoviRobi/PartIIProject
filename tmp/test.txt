@@ -55,6 +55,7 @@
     ((baz x y ...) (println (quote ((x end) (y ... end))))) ) )
 
 (baz 1 2 3)
+(baz 4)
 
 ; More complicated ellipsis macro
 (define-syntax foo

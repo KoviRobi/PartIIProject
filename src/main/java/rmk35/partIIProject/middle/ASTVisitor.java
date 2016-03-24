@@ -42,7 +42,7 @@ public abstract class ASTVisitor<T>
   public T visit(NumberValue number) throws SyntaxErrorException { return visit((SelfquotingValue)number); }
   public T visit(StringValue string) throws SyntaxErrorException { return visit((SelfquotingValue)string); }
   public T visit(VectorValue vector) throws SyntaxErrorException { return visit((SelfquotingValue)vector); }
-  
+
   // Other RuntimeValue subtypes (these are not PrimitiveValue subtypes), usually an error
   public T visit(LambdaValue lambda) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
   public T visit(TrampolineValue trampoline) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }

@@ -82,7 +82,7 @@ vector[String filename]
 
 abbreviation[String filename]
   returns [RuntimeValue expr]
-  : AbbrevPrefix datum[$filename] 
+  : AbbrevPrefix datum[$filename]
   { $expr = new ConsValue(new IdentifierValue
   (IdentifierValue.decodeAbbreviationPrefix($AbbrevPrefix.text), new SourceInfo($filename, $AbbrevPrefix.line, $AbbrevPrefix.pos)), $datum.expr, $datum.expr.getSourceInfo()); };
 

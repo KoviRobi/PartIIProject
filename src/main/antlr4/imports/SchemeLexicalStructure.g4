@@ -5,7 +5,7 @@ lexer grammar SchemeLexicalStructure;
 //  	| Character | String
 //  	| '(' | ')' | '#(' | '#u8' | '\'' | ',' | ',@' | '.'
 //  	;
-//  
+//
 //  Delimiter : Whitespace | VerticalLine
 //  	| '(' | ')' | '"' | ';'
 //  	;

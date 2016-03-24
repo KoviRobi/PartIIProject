@@ -18,7 +18,7 @@ Also see README.md
     - SyntacticBinding: An abstract class for all the syntactic bindings
     - VariableBinding: Variable (global, local, closure)
     - MarkerBinding: Just to use for instanceof
-  
+
 * rmk35.partIIProject.backend
   - Statement: Input datastructure from front-end, superclass is Statement
 

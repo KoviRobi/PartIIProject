@@ -25,18 +25,18 @@ public class ASTConsStarMatchVisitor extends ASTNoMatchVisitor
       RuntimeValue cdr = consCell.getCdr();
       Substitution carSubstitution = car.accept(carVisitor);
       Substitution cdrSubstitution = cdr.accept(cdrVisitor);
-  
+
       if (carSubstitution == null)
       { return null;
       }
       Substitution carStarSubstitution = new Substitution();
       carStarSubstitution.structuralMerge(carSubstitution);
-  
+
       // Try matching the rest with carVisitor
       while (cdrSubstitution == null && cdr instanceof ConsValue)
       { car = ((ConsValue) cdr).getCar();
         cdr = ((ConsValue) cdr).getCdr();
-  
+
         Substitution newCarSubstitution = car.accept(carVisitor);
         if (newCarSubstitution == null)
         { return null;
@@ -44,7 +44,7 @@ public class ASTConsStarMatchVisitor extends ASTNoMatchVisitor
         carStarSubstitution.structuralMerge(newCarSubstitution);
         cdrSubstitution = cdr.accept(cdrVisitor);
       }
-  
+
       if (cdrSubstitution == null)
       { return null;
       } else

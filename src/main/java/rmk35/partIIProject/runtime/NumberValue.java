@@ -74,7 +74,6 @@ public class NumberValue implements SelfquotingValue
     method.addInstruction(new DupInstruction());
     method.addInstruction(new IntegerConstantInstruction(value));
     method.addInstruction(new NonVirtualCallInstruction(new VoidType(), NumberValue.class.getName().replace('.', '/') + "/<init>", new IntegerType()));
-  
   }
 
   @Override
