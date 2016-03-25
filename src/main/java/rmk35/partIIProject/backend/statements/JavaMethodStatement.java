@@ -2,6 +2,7 @@ package rmk35.partIIProject.backend.statements;
 
 import rmk35.partIIProject.runtime.StringValue;
 import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.TrampolineValue;
 import rmk35.partIIProject.runtime.ObjectValue;
 import rmk35.partIIProject.runtime.ValueHelper;
 
@@ -46,8 +47,10 @@ public class JavaMethodStatement extends Statement
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("JavaMethodStatement"));
     object.generateOutput(mainClass, outputClass, method);
+    method.addInstruction(new StaticCallInstruction(new ObjectType(RuntimeValue.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(RuntimeValue.class)));
     method.addInstruction(new CheckCastInstruction(ObjectValue.class));
     methodName.generateOutput(mainClass, outputClass, method);
+    method.addInstruction(new StaticCallInstruction(new ObjectType(RuntimeValue.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(RuntimeValue.class)));
     method.addInstruction(new CheckCastInstruction(StringValue.class));
     method.addInstruction(new VirtualCallInstruction(stringType, StringValue.class.getName().replace('.', '/') + "/getValue"));
 
@@ -59,6 +62,7 @@ public class JavaMethodStatement extends Statement
     { method.addInstruction(new DupInstruction()); // Invariant: Array on top of stack
       method.addInstruction(new IntegerConstantInstruction(i));
       argument.generateOutput(mainClass, outputClass, method);
+      method.addInstruction(new StaticCallInstruction(new ObjectType(RuntimeValue.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(RuntimeValue.class)));
       method.addInstruction(new CheckCastInstruction(StringValue.class));
       method.addInstruction(new VirtualCallInstruction(stringType, StringValue.class.getName().replace('.', '/') + "/getValue"));
       method.addInstruction(new ReferenceArrayStoreInstruction());

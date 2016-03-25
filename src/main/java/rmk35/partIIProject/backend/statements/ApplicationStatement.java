@@ -16,6 +16,7 @@ import rmk35.partIIProject.backend.instructions.DupInstruction;
 import rmk35.partIIProject.backend.instructions.DupX1Instruction;
 import rmk35.partIIProject.backend.instructions.SwapInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
+import rmk35.partIIProject.backend.instructions.StaticCallInstruction;
 import rmk35.partIIProject.backend.instructions.types.ObjectType;
 import rmk35.partIIProject.backend.instructions.types.BooleanType;
 import rmk35.partIIProject.backend.instructions.types.IntegerType;
@@ -47,6 +48,7 @@ public class ApplicationStatement extends Statement
     method.addInstruction(new DupInstruction());
 
     operator.generateOutput(mainClass, outputClass, method);
+    method.addInstruction(new StaticCallInstruction(new ObjectType(RuntimeValue.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(RuntimeValue.class)));
     method.addInstruction(new CheckCastInstruction(LambdaValue.class));
 
     // Create a new list of operands
@@ -63,6 +65,7 @@ public class ApplicationStatement extends Statement
       method.addInstruction(new SwapInstruction());
       /* Generate output so now Cons, Cons, Runtime, Car */
       operand.generateOutput(mainClass, outputClass, method);
+      method.addInstruction(new StaticCallInstruction(new ObjectType(RuntimeValue.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(RuntimeValue.class)));
       /* Swap with generated output so now Cons, Cons, Car, Runtime */
       method.addInstruction(new SwapInstruction());
       method.addInstruction(new NonVirtualCallInstruction(voidType, ConsValue.class.getName().replace('.', '/') + "/<init>", runtimeType, runtimeType));

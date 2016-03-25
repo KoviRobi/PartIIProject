@@ -2,6 +2,7 @@ package rmk35.partIIProject.backend.statements;
 
 import rmk35.partIIProject.runtime.StringValue;
 import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.TrampolineValue;
 import rmk35.partIIProject.runtime.ValueHelper;
 
 import rmk35.partIIProject.backend.MainClass;
@@ -34,6 +35,7 @@ public class JavaFieldStatement extends Statement
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("JavaFieldStatement"));
     object.generateOutput(mainClass, outputClass, method);
+    method.addInstruction(new StaticCallInstruction(new ObjectType(RuntimeValue.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(RuntimeValue.class)));
     fieldName.generateOutput(mainClass, outputClass, method);
     method.addInstruction(new CheckCastInstruction(StringValue.class));
     method.addInstruction(new VirtualCallInstruction(stringType, StringValue.class.getName().replace('.', '/') + "/getValue"));

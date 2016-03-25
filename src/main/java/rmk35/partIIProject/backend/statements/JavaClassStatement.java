@@ -1,6 +1,7 @@
 package rmk35.partIIProject.backend.statements;
 
 import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.TrampolineValue;
 import rmk35.partIIProject.runtime.ValueHelper;
 
 import rmk35.partIIProject.backend.MainClass;
@@ -32,6 +33,7 @@ public class JavaClassStatement extends Statement
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("JavaClassStatement"));
     className.generateOutput(mainClass, outputClass, method);
+    method.addInstruction(new StaticCallInstruction(new ObjectType(RuntimeValue.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(RuntimeValue.class)));
     method.addInstruction(new CheckCastInstruction(StringValue.class));
     method.addInstruction(new VirtualCallInstruction(stringType, StringValue.class.getName().replace('.', '/') + "/getValue"));
     method.addInstruction(new StaticCallInstruction(runtimeValueType, JavaClassStatement.class.getName().replace('.', '/') + "/getClass", stringType));
@@ -42,7 +44,7 @@ public class JavaClassStatement extends Statement
   { return className.getFreeIdentifiers();
   }
 
-  public RuntimeValue getClass(String className)
+  public static RuntimeValue getClass(String className)
   { try
     { return ValueHelper.toSchemeValue(Class.forName(className));
     } catch (ClassNotFoundException exception)
