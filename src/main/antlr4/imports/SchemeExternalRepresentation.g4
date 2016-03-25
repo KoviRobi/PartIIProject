@@ -84,7 +84,8 @@ abbreviation[String filename]
   returns [RuntimeValue expr]
   : AbbrevPrefix datum[$filename]
   { $expr = new ConsValue(new IdentifierValue
-  (IdentifierValue.decodeAbbreviationPrefix($AbbrevPrefix.text), new SourceInfo($filename, $AbbrevPrefix.line, $AbbrevPrefix.pos)), $datum.expr, $datum.expr.getSourceInfo()); };
+  (IdentifierValue.decodeAbbreviationPrefix($AbbrevPrefix.text), new SourceInfo($filename, $AbbrevPrefix.line, $AbbrevPrefix.pos)),
+    new ConsValue($datum.expr, new NullValue($datum.expr.getSourceInfo()), $datum.expr.getSourceInfo()), $datum.expr.getSourceInfo()); };
 
 AbbrevPrefix : '\'' | '`' | ',' | ',@' ;
 
