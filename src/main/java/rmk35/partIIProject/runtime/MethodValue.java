@@ -13,6 +13,10 @@ public class MethodValue extends LambdaValue
   { return innerMethod;
   }
 
+  public String toString()
+  { return innerMethod.toString();
+  }
+
   @Override
   public Method toJavaValue()
   { return innerMethod;

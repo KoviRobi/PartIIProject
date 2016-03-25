@@ -24,6 +24,13 @@ public class ValueHelper
         returnValue = new ConsValue(item, returnValue);
       }
       return returnValue;
+    } else if (value instanceof Object[])
+    { Object[] objectArray = (Object[]) value;
+      RuntimeValue[] array = new RuntimeValue[objectArray.length];
+      for (int i = 0; i < objectArray.length; i++)
+      { array[i] = toSchemeValue(objectArray[i]);
+      }
+      return new VectorValue(array);
     } else if (value instanceof Method)
     { return new MethodValue((Method) value);
     } else if (value instanceof Class)

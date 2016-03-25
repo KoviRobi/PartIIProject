@@ -88,6 +88,17 @@ public class VectorValue implements SelfquotingValue
   }
 
   @Override
+  public String toString()
+  { StringBuilder returnValue = new StringBuilder("#(");
+    for (int i = 0; i < value.length; i++)
+    { if (i > 0) returnValue.append(" ");
+      returnValue.append(value[i].toString());
+    }
+    returnValue.append(")");
+    return returnValue.toString();
+  }
+
+  @Override
   public Object[] toJavaValue()
   { Object[] returnValue = new Object[value.length];
     for (int i = 0; i < value.length; i++)

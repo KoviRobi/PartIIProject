@@ -69,8 +69,11 @@
  ((lambda (x) x)
   4))
 
-(define test-class (class "test.LateBindingTest"))
+(define test-class (class "test.JavaCallTest"))
 (println test-class)
+(println (test-class 'getConstructors))
 (define test-object (test-class 'new "Hello, world!"))
 ((test-class 'new "Hello, world!") 'printMessage)
 ((test-class 'new) 'printMessage 0)
+((test-class 'new) 'printStaticMessage '(1 2 3))
+(test-class 'printStaticMessage '(4 5 6))
