@@ -26,6 +26,8 @@ public class ValueHelper
       return returnValue;
     } else if (value instanceof Method)
     { return new MethodValue((Method) value);
+    } else if (value instanceof Class)
+    { return new ClassValue((Class) value);
     } else
     { return new ObjectValue(value);
     }

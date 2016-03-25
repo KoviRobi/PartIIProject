@@ -90,6 +90,7 @@ public class Compiler
     List<Statement> statements = interconnect.ASTsToStatements(parsedFile);
     // Mutates mainClass
     JavaByteCodeGenerator.generateOutput(mainClass, statements);
+    mainClass.saveToDisk();
     mainClass.assembleToDisk();
   }
 }

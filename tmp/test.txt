@@ -55,7 +55,6 @@
     ((baz x y ...) (println (quote ((x end) (y ... end))))) ) )
 
 (baz 1 2 3)
-(baz 4)
 
 ; More complicated ellipsis macro
 (define-syntax foo
@@ -63,3 +62,15 @@
     ((foo (a ...) ((b ...) ...))
      (quote (let ((a b) ...) ...)) ) ) )
 (println (foo (foo bar bas) ((1 2 3) (4 5 6) (7 8 9))))
+
+(println (quote 'foo))
+
+((lambda (x) (println x))
+ ((lambda (x) x)
+  4))
+
+(define test-class (class "test.LateBindingTest"))
+(println test-class)
+(define test-object (test-class 'new "Hello, world!"))
+((test-class 'new "Hello, world!") 'printMessage)
+((test-class 'new) 'printMessage 0)

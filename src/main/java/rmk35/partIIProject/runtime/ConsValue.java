@@ -85,18 +85,13 @@ public class ConsValue implements PrimitiveValue
   @Override
   public Object toJavaValue()
   { RuntimeValue list = this;
-    int length = 1;
+    List<Object> returnValue = new ArrayList<>();
     while (list instanceof ConsValue)
-    { list = ((ConsValue) list).getCdr();
-      length++;
+    { returnValue.add(((ConsValue) list).getCar().toJavaValue());
+      list = ((ConsValue) list).getCdr();
     }
-    if (list instanceof ConsValue)
+    if (list instanceof NullValue)
     { // Proper list
-      List<Object> returnValue = new ArrayList<>(length);
-      while (list instanceof ConsValue)
-      { returnValue.add(((ConsValue) list).getCar());
-        list = ((ConsValue) list).getCdr();
-      }
       return returnValue;
     } else
     { // Not sure how to represent improper lists, so just returning this

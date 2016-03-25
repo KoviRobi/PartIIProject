@@ -2,7 +2,7 @@
 
 JAR=../target/part-II-project-1.0-SNAPSHOT-jar-with-dependencies.jar
 
-rm *.class || true
+rm *.j *.class || true
 
 if [ "$termprog" != "win" ]; then
   term=win
