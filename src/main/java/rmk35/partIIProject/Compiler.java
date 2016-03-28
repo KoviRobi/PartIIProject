@@ -15,6 +15,7 @@ import rmk35.partIIProject.middle.bindings.QuoteBinding;
 import rmk35.partIIProject.middle.bindings.DefineSyntaxBinding;
 import rmk35.partIIProject.middle.bindings.LetSyntaxBinding;
 import rmk35.partIIProject.middle.bindings.SyntaxRulesBinding;
+import rmk35.partIIProject.middle.bindings.SyntaxErrorBinding;
 import rmk35.partIIProject.middle.bindings.JavaCallBinding;
 import rmk35.partIIProject.middle.bindings.JavaClassBinding;
 import rmk35.partIIProject.middle.bindings.JavaFieldBinding;
@@ -69,6 +70,7 @@ public class Compiler
     initialEnvironment.addBinding("define-syntax", new DefineSyntaxBinding());
     initialEnvironment.addBinding("let-syntax", new LetSyntaxBinding());
     initialEnvironment.addBinding("syntax-rules", new SyntaxRulesBinding());
+    initialEnvironment.addBinding("syntax-error", new SyntaxErrorBinding());
     initialEnvironment.addBinding("quote", new QuoteBinding());
     initialEnvironment.addBinding("java", new JavaCallBinding());
     initialEnvironment.addBinding("class", new JavaClassBinding());

@@ -1,35 +1,15 @@
-(define system-in (static-field "java.lang.System" "in"))
 (define system-out (static-field "java.lang.System" "out"))
 (define output-stream-println (method system-out "println" "java.lang.Object"))
-(define input-stream-read (method system-in "read"))
 (define println (lambda (value) (java output-stream-println system-out value)))
-(define read-byte (lambda () (java input-stream-read system-in)))
-(define clear (lambda () (println "") (println "") (println "") (println "") (println "") (println "") (println "") (println "") (println "") (println "")))
-(clear)
-(clear)
-(clear)
-(read-byte)
+
 (println " - Syntax ambiguity with #|a|#|b|#|c#|")
-(read-byte)
 (println " - On track")
-(read-byte)
 (println " - Backup woes")
-(read-byte)
 (println " - Working demo of the features:")
-(read-byte)
-; lambdas, application, let, define, if, java (call, method, class, field, static field), with-exception-handler & raise, macro hygiene
 
 (with-exception-handler
   (lambda (x)
-    (java
-      (method
-        (static-field "java.lang.System" "out")
-        "println"
-        "java.lang.Object")
-      (static-field
-        "java.lang.System"
-        "out")
-      x))
+    (println x))
   (lambda () (raise "Raise and handle exceptions")))
 
 (define-syntax bar
@@ -41,10 +21,9 @@
       (println "Java calls"))
   (print println)
   (bar 0)
-  (bar 1) ) ; FIXME: this does not work
+  (bar 1) )
 
 (println "")
-(read-byte)
 (define omega (lambda (x) (x x)))
 ;(omega omega) ; tail call
 (println "End")
@@ -52,16 +31,41 @@
 
 (define-syntax baz
   (syntax-rules ()
-    ((baz x y ...) (println (quote ((x end) (y ... end))))) ) )
+    ((baz x y ...) '((... ...) (x end) (y ... end))) ) )
 
-(baz 1 2 3)
+(println (baz 1 2 3))
+(println (baz 4 5))
+(println (baz 6))
 
 ; More complicated ellipsis macro
-(define-syntax foo
+(define-syntax structural-match
   (syntax-rules ()
-    ((foo (a ...) ((b ...) ...))
-     (quote (let ((a b) ...) ...)) ) ) )
-(println (foo (foo bar bas) ((1 2 3) (4 5 6) (7 8 9))))
+    ((structural-match (x ...) ((y ...) ...))
+     '((x (x y) ...) ...) ) ) )
+
+(println
+  (structural-match	(a b c)
+					((1 2 3)
+					(4 5 6)
+					(7 8 9 10) ) ) )
+
+; Hygiene test
+(define x-hygiene 1)
+(define-syntax foo-hygiene
+  (syntax-rules ()
+    ((foo-hygiene M)
+     (let ((y-hygiene 2))
+       (println x-hygiene)
+       M) ) ) )
+(let ((x-hygiene 3)
+      (y-hygiene 4) )
+  (foo-hygiene (println y-hygiene)) )
+
+(define-syntax dont-call
+  (syntax-rules ()
+    ((dont-call)
+     (syntax-error "I told you to not call me!" 'tired 'want 'to 'sleep) ) ) )
+;(dont-call)
 
 (println (quote 'foo))
 
@@ -69,6 +73,7 @@
  ((lambda (x) x)
   4))
 
+; Message passing tests
 (define test-class (class "test.JavaCallTest"))
 (println test-class)
 (println (test-class 'getConstructors))

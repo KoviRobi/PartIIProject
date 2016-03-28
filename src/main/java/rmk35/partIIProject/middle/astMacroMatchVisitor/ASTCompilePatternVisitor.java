@@ -10,23 +10,28 @@ import rmk35.partIIProject.runtime.SelfquotingValue;
 // Literals
 import rmk35.partIIProject.runtime.VectorValue;
 
+import rmk35.partIIProject.utility.Pair;
+
 import rmk35.partIIProject.middle.Environment;
 import rmk35.partIIProject.middle.ASTVisitor;
 import rmk35.partIIProject.middle.bindings.EllipsisBinding;
 
 import java.util.Collection;
+import java.util.HashSet;
 
-public class ASTCompilePatternVisitor extends ASTVisitor<ASTMatchVisitor>
+public class ASTCompilePatternVisitor extends ASTVisitor<Pair<ASTMatchVisitor, Collection<String>>>
 { Collection<String> literals;
+  Collection<String> nonLiterals;
   Environment definitionEnvironment;
 
   public ASTCompilePatternVisitor(Collection<String> literals, Environment definitionEnvironment)
   { this.literals = literals;
+    this.nonLiterals = new HashSet<>();
     this.definitionEnvironment = definitionEnvironment;
   }
 
   @Override
-  public ASTMatchVisitor visit(ConsValue list)
+  public Pair<ASTMatchVisitor, Collection<String>> visit(ConsValue list)
   { RuntimeValue car = list.getCar();
     RuntimeValue cdr = list.getCdr();
     if (cdr instanceof ConsValue)
@@ -34,39 +39,40 @@ public class ASTCompilePatternVisitor extends ASTVisitor<ASTMatchVisitor>
       if (cdrCons.getCar() instanceof IdentifierValue)
       { IdentifierValue cadrIdentifier = (IdentifierValue) cdrCons.getCar();
         if (definitionEnvironment.lookUpSilent(cadrIdentifier.getValue()) instanceof EllipsisBinding)
-        { return new ASTConsStarMatchVisitor(car.accept(this), cdrCons.getCdr().accept(this));
+        { return new Pair<>(new ASTConsStarMatchVisitor(car.accept(this).getFirst(), cdrCons.getCdr().accept(this).getFirst()), nonLiterals);
         }
       }
     }
 
-    return new ASTConsMatchVisitor(car.accept(this), cdr.accept(this)); // Possible solution: have ASTMatchVisitor return a sum type "ASTMatchVisitor + Substitution + NoMatch"
+    return new Pair<>(new ASTConsMatchVisitor(car.accept(this).getFirst(), cdr.accept(this).getFirst()), nonLiterals); // Possible solution: have ASTMatchVisitor return a sum type "ASTMatchVisitor + Substitution + NoMatch"
   }
 
   @Override
-  public ASTMatchVisitor visit(IdentifierValue identifier)
+  public Pair<ASTMatchVisitor, Collection<String>> visit(IdentifierValue identifier)
   { if (literals.contains(identifier.getValue()))
-    { return new ASTLiteralIdentifierMatchVisitor(definitionEnvironment, identifier);
+    { return new Pair<>(new ASTLiteralIdentifierMatchVisitor(definitionEnvironment, identifier), nonLiterals);
     } else if (definitionEnvironment.lookUpSilent(identifier.getValue()) instanceof EllipsisBinding)
     { throw new SyntaxErrorException("Unexpected ellipsis", identifier.getSourceInfo());
     } else if (identifier.getValue().equals("_"))
-    { return new ASTAnyMatchVisitor();
+    { return new Pair<>(new ASTAnyMatchVisitor(), nonLiterals);
     } else
-    { return new ASTNonLiteralIdentifierMatchVisitor(identifier);
+    { nonLiterals.add(identifier.getValue());
+      return new Pair<>(new ASTNonLiteralIdentifierMatchVisitor(identifier), nonLiterals);
     }
   }
 
   @Override
-  public ASTMatchVisitor visit(NullValue nil)
-  { return new ASTNilMatchVisitor();
+  public Pair<ASTMatchVisitor, Collection<String>> visit(NullValue nil)
+  { return new Pair<>(new ASTNilMatchVisitor(), nonLiterals);
   }
 
   @Override
-  public ASTMatchVisitor visit(SelfquotingValue object)
-  { return new ASTLiteralMatchVisitor(object);
+  public Pair<ASTMatchVisitor, Collection<String>> visit(SelfquotingValue object)
+  { return new Pair<>(new ASTLiteralMatchVisitor(object), nonLiterals);
   }
 
   @Override
-  public ASTMatchVisitor visit(VectorValue vector)
+  public Pair<ASTMatchVisitor, Collection<String>> visit(VectorValue vector)
   { throw new UnsupportedOperationException("Vectors are not fully supported yet");
   }
 }

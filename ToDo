@@ -13,8 +13,8 @@ Definitions
 Library import (need an ImportBinding probably)
 Proper line numbers
 Make middle neater by using macro matching
-Nullary macro repetition
 More efficient macro matching (regular expression simple and fast)
+Split trampolines, as they are doing two things at the moment, trampoline and CallValue
 
 R7RS P. 25
 In a program or library declaration, it is an error to import the same identifier more than once with different bindings, or to redefine or mutate an imported binding with a definition or with set!, or to refer to an identifier before it is imported. However, a REPL should permit these actions.

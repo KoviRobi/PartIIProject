@@ -31,25 +31,26 @@ import lombok.ToString;
 public class SyntaxBinding extends SintacticBinding
 { Environment definitionEnvironment;
   Collection<String> literals;
-  List<Pair<ASTMatchVisitor, RuntimeValue>> patternsAndTemplates;
+  List<Pair<ASTMatchVisitor, Pair<Collection<String>, RuntimeValue>>> patternsAndTemplates;
 
   public SyntaxBinding(Environment definitionEnvironment, Collection<String> literals, List<Pair<RuntimeValue, RuntimeValue>> patternsAndTemplates)
   { this.definitionEnvironment = definitionEnvironment;
     this.literals = literals;
     this.patternsAndTemplates = new ArrayList<>(patternsAndTemplates.size());
     for (Pair<RuntimeValue, RuntimeValue> pair : patternsAndTemplates)
-    { this.patternsAndTemplates.add(new Pair<>(pair.getFirst().accept(new ASTCompilePatternVisitor(literals, definitionEnvironment)), pair.getSecond()));
+    { Pair<ASTMatchVisitor, Collection<String>> compiledPattern = pair.getFirst().accept(new ASTCompilePatternVisitor(literals, definitionEnvironment));
+      this.patternsAndTemplates.add(new Pair<>(compiledPattern.getFirst(), new Pair<>(compiledPattern.getSecond(), pair.getSecond())));
     }
   }
 
   @Override
   public Statement applicate(Environment useEnvironment, RuntimeValue operator, RuntimeValue operands)
   { // See Macros That Work, figure 3
-    for (Pair<ASTMatchVisitor, RuntimeValue> pair : patternsAndTemplates)
+    for (Pair<ASTMatchVisitor, Pair<Collection<String>, RuntimeValue>> pair : patternsAndTemplates)
     { pair.getFirst().setUseEnvironment(useEnvironment);
       Substitution substitution = (new ConsValue(operator, operands, operator.getSourceInfo())).accept(pair.getFirst());
       if (substitution != null)
-      { Pair<RuntimeValue, Environment> rewritten = pair.getSecond().accept(new ASTMacroRewriteVisitor(substitution, definitionEnvironment, useEnvironment));
+      { Pair<RuntimeValue, Environment> rewritten = pair.getSecond().getSecond().accept(new ASTMacroRewriteVisitor(substitution, definitionEnvironment, useEnvironment, pair.getSecond().getFirst()));
         return rewritten.getFirst().accept(new ASTConvertVisitor(rewritten.getSecond()));
       }
     }

@@ -22,6 +22,7 @@ import rmk35.partIIProject.runtime.EndOfFileValue;
 import rmk35.partIIProject.runtime.ThrowableValue;
 import rmk35.partIIProject.runtime.MethodValue;
 import rmk35.partIIProject.runtime.ObjectValue;
+import rmk35.partIIProject.runtime.ErrorValue;
 
 public abstract class ASTVisitor<T>
 { // This is subclass only access modifier, as below explicitly lists all values,
@@ -50,4 +51,5 @@ public abstract class ASTVisitor<T>
   public T visit(ThrowableValue throwable) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
   public T visit(MethodValue method) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
   public T visit(ObjectValue object) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
+  public T visit(ErrorValue object) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
 }
