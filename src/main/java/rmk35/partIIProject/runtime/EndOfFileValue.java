@@ -33,7 +33,7 @@ public class EndOfFileValue implements RuntimeValue
 
   @Override
   public boolean eq(RuntimeValue other)
-  { return other instanceof NullValue;
+  { return other instanceof EndOfFileValue;
   }
 
   @Override

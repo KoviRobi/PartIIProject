@@ -10,6 +10,11 @@ import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
+import org.antlr.v4.runtime.CommonToken;
+import org.antlr.v4.runtime.CommonTokenFactory;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.UnbufferedCharStream;
+import org.antlr.v4.runtime.UnbufferedTokenStream;
 
 // Also look in src/main/antlr4
 
@@ -60,5 +65,20 @@ public class SchemeParser
     }
 
     return new EndOfFileValue();
+  }
+
+  public static RuntimeValue read(InputStream input)
+  { SchemeFileLexer lexer = new SchemeFileLexer(new UnbufferedCharStream(input));
+    lexer.setTokenFactory(new CommonTokenFactory(true));
+
+    SchemeFileParser parser = new SchemeFileParser(new UnbufferedTokenStream<CommonToken>(lexer));
+    return parser.datum("Unnamed input").expr;
+  }
+
+  public static RuntimeValue read(String input)
+  { SchemeFileLexer lexer = new SchemeFileLexer(new ANTLRInputStream(input));
+    CommonTokenStream tokens = new CommonTokenStream(lexer);
+    SchemeFileParser parser = new SchemeFileParser(tokens);
+    return parser.datum("Unnamed input").expr;
   }
 }
