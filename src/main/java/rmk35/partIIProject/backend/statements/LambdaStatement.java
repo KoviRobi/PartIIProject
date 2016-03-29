@@ -19,19 +19,20 @@ public class LambdaStatement extends Statement
 { List<String> formals;
   List<IdentifierStatement> closureVariables;
   BeginStatement body;
+  String comment;
 
-  public LambdaStatement(List<String> formals, List<IdentifierStatement> closureVariables, BeginStatement body)
+  public LambdaStatement(List<String> formals, List<IdentifierStatement> closureVariables, BeginStatement body, String comment)
   { this.formals = formals;
     this.closureVariables = closureVariables;
     this.body = body;
+    this.comment = comment;
   }
 
-  @SuppressWarnings("deprecation")
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
-  { method.addInstruction(new CommentPseudoInstruction("LambdaStatement"));
+  { method.addInstruction(new CommentPseudoInstruction("LambdaStatement, comment: " + comment));
 
     String innerClassName = mainClass.uniqueID() + "$Lambda"; // Using main class' unique ID as that way all files definitely have different names
-    InnerClass innerClass = new InnerClass(innerClassName, closureVariables, formals.size(), mainClass);
+    InnerClass innerClass = new InnerClass(innerClassName, closureVariables, formals.size(), mainClass, comment);
     // Implicit begin
     body.generateOutput(mainClass, innerClass, innerClass.getPrimaryMethod());
     mainClass.addInnerClass(innerClass);

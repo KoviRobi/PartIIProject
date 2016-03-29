@@ -8,7 +8,6 @@ import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
-import rmk35.partIIProject.backend.instructions.NullConstantInstruction;
 import rmk35.partIIProject.backend.instructions.StaticCallInstruction;
 import rmk35.partIIProject.backend.instructions.PopInstruction;
 import rmk35.partIIProject.backend.instructions.types.ObjectType;
@@ -29,7 +28,7 @@ public class BeginStatement extends Statement
 
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("BeginStatement"));
-    method.addInstruction(new NullConstantInstruction());
+    new UnspecifiedValueStatement().generateOutput(mainClass, outputClass, method);
     for (Statement statement : statements)
     { method.addInstruction(new StaticCallInstruction(new ObjectType(RuntimeValue.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(RuntimeValue.class)));
       method.addInstruction(new PopInstruction());

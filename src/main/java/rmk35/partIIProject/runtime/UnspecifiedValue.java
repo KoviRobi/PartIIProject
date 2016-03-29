@@ -15,19 +15,17 @@ import rmk35.partIIProject.backend.instructions.DupInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
 import rmk35.partIIProject.backend.instructions.types.VoidType;
 
-import java.util.ArrayList;
-
 import lombok.Value;
 
 @Value
-public class NullValue implements PrimitiveValue
+public class UnspecifiedValue implements RuntimeValue
 { SourceInfo sourceInfo;
 
   @Deprecated
-  public NullValue()
+  public UnspecifiedValue()
   { this(null);
   }
-  public NullValue(SourceInfo sourceInfo)
+  public UnspecifiedValue(SourceInfo sourceInfo)
   { this.sourceInfo = sourceInfo;
   }
 
@@ -35,7 +33,7 @@ public class NullValue implements PrimitiveValue
 
   @Override
   public boolean eq(RuntimeValue other)
-  { return other instanceof NullValue;
+  { return other instanceof UnspecifiedValue;
   }
 
   @Override
@@ -50,17 +48,17 @@ public class NullValue implements PrimitiveValue
 
   @Override
   public void generateByteCode(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
-  { method.addInstruction(new CommentPseudoInstruction("ByteCode for " + NullValue.class.getName()));
-    method.addInstruction(new NewObjectInstruction(NullValue.class));
+  { method.addInstruction(new CommentPseudoInstruction("ByteCode for " + UnspecifiedValue.class.getName()));
+    method.addInstruction(new NewObjectInstruction(UnspecifiedValue.class));
     method.addInstruction(new DupInstruction());
-    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), NullValue.class.getName().replace('.', '/') + "/<init>"));
+    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), UnspecifiedValue.class.getName().replace('.', '/') + "/<init>"));
   }
 
   @Override
-  public String toString() { return "()"; }
+  public String toString() { return "#<unspecified>"; }
 
   @Override
   public Object toJavaValue()
-  { return new ArrayList<>();
+  { return this;
   }
 }

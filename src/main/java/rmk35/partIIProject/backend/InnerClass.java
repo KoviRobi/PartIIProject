@@ -10,6 +10,7 @@ import rmk35.partIIProject.backend.statements.IdentifierStatement;
 import rmk35.partIIProject.backend.statements.ClosureIdentifierStatement;
 import rmk35.partIIProject.backend.statements.LocalIdentifierStatement;
 import rmk35.partIIProject.backend.statements.DefineStatement;
+import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.Instruction;
 import rmk35.partIIProject.backend.instructions.LocalLoadInstruction;
 import rmk35.partIIProject.backend.instructions.DupInstruction;
@@ -31,21 +32,24 @@ import java.util.ArrayList;
 public class InnerClass extends OutputClass
 { List<IdentifierStatement> closureVariables;
   int variableCount;
+  String comment;
 
   private ObjectType[] constructorTypes;
 
   private static final JVMType voidType = new VoidType();
   private static final ObjectType runtimeValueType = new ObjectType(RuntimeValue.class);
 
-  public InnerClass(String name, List<IdentifierStatement> closureVariables, int variableCount, MainClass mainClass)
+  public InnerClass(String name, List<IdentifierStatement> closureVariables, int variableCount, MainClass mainClass, String comment)
   { super(name);
     this.closureVariables = closureVariables;
     this.variableCount = variableCount;
+    this.comment = comment;
 
     constructorTypes = new ObjectType[closureVariables.size()];
     Arrays.fill(constructorTypes, runtimeValueType);
     // Ensure closure variables exist and also that they are set on construction
     ByteCodeMethod initializerMethod = new ByteCodeMethod(voidType, "public", "<init>", constructorTypes);
+    initializerMethod.addInstruction(new CommentPseudoInstruction("Inner class, comment: " + comment));
     initializerMethod.addInstruction(new LocalLoadInstruction(runtimeValueType, 0));
     initializerMethod.addInstruction(new NonVirtualCallInstruction(voidType, getSuperClassName() + "/<init>"));
     int index = 1; // 0 is 'this'

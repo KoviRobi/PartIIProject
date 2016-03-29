@@ -10,6 +10,7 @@ import rmk35.partIIProject.backend.instructions.types.JVMType;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ByteCodeMethod
 { String modifier; // Access modifier, e.g. private
@@ -56,7 +57,7 @@ public class ByteCodeMethod
   }
 
   private void checkReturnStackCount()
-  { if (stackCount != returnType.stackCount()) throw new InternalCompilerException("Return stack wrong for \"" + returnType + " " + methodName + "(" + arguments + ")\", got " + stackCount + " instead of " + returnType.stackCount());
+  { if (stackCount != returnType.stackCount()) throw new InternalCompilerException("Return stack wrong for \"" + returnType + " " + methodName + "(" + Arrays.toString(arguments) + ")\", got " + stackCount + " instead of " + returnType.stackCount() + " with instructions: " + instructions);
   }
 
   public void ensureLocal(int i)

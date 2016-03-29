@@ -8,7 +8,6 @@ import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.StaticCallInstruction;
-import rmk35.partIIProject.backend.instructions.NullConstantInstruction;
 import rmk35.partIIProject.backend.instructions.types.ObjectType;
 
 import java.util.Collection;
@@ -29,15 +28,15 @@ public class DefineStatement extends Statement
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("Define statement"));
     if (value == null)
-    { method.addInstruction(new NullConstantInstruction());
+    { new UnspecifiedValueStatement().generateOutput(mainClass, outputClass, method);
     } else
     { value.generateOutput(mainClass, outputClass, method);
     }
     method.addInstruction(new StaticCallInstruction(new ObjectType(RuntimeValue.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(RuntimeValue.class)));
     variable.ensureExistence(mainClass, outputClass, method);
     variable.generateSetOutput(mainClass, outputClass, method);
-    // Push undefined
-    method.addInstruction(new NullConstantInstruction());
+    // Push unspecified
+    new UnspecifiedValueStatement().generateOutput(mainClass, outputClass, method);
   }
 
   @Override

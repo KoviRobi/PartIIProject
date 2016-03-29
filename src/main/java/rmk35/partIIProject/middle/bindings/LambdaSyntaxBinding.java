@@ -50,6 +50,6 @@ public class LambdaSyntaxBinding extends SintacticBinding
       }
     }
 
-    return new LambdaStatement(formals, closureVariables, bodyStatement);
+    return new LambdaStatement(formals, closureVariables, bodyStatement, new ConsValue(operator, operands, operator.getSourceInfo()).toJavaValue().toString());
   }
 }

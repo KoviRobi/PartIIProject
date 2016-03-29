@@ -13,5 +13,5 @@ fi
 #$term jdb -launch -classpath ../src/main/java:$JAR:../target/classes rmk35.partIIProject.Compiler  test.txt
 java -classpath ../src/main/java:$JAR:../target/classes rmk35.partIIProject.Compiler  test.txt
 
-#$term jdb -launch -classpath .:$JAR test
+#$term jdb -launch -classpath .:../src/main/java:$JAR test
 java -classpath .:$JAR test
