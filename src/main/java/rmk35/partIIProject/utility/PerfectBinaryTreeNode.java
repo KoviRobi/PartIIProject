@@ -1,8 +1,9 @@
 package rmk35.partIIProject.utility;
 
-import fj.data.List;
-import fj.data.Java8;
-
+import java.util.List;
+import java.util.ListIterator;
+import java.util.ArrayList;
+import java.util.function.Consumer;
 import java.util.function.BiFunction;
 
 /* A binary tree that always maintains
@@ -15,7 +16,8 @@ public class PerfectBinaryTreeNode<T> extends PerfectBinaryTree<T>
 
   public PerfectBinaryTreeNode(PerfectBinaryTree<T> child)
   { depth = child.getDepth()+1;
-    children = List.list(child);
+    children = new ArrayList<>();
+    children.add(child);
   }
   PerfectBinaryTreeNode(int depth, List<PerfectBinaryTree<T>> children)
   { this.depth = depth;
@@ -24,33 +26,70 @@ public class PerfectBinaryTreeNode<T> extends PerfectBinaryTree<T>
   List<PerfectBinaryTree<T>> getChildren() { return children; }
 
   public int getDepth() { return depth; }
-  public int getWidth() { return children.length(); }
 
-  public PerfectBinaryTree<T> add(PerfectBinaryTree<T> other)
+  public void add(PerfectBinaryTree<T> other)
   { if (other.getDepth() == depth-1)
-    { return new PerfectBinaryTreeNode<T>(depth, children.cons(other));
+    { children.add(other);
     } else
     { throw new UnsupportedOperationException("This would unbalance the tree depths");
     }
   }
 
-  PerfectBinaryTree<T> walk(int index)
-  { return children.index(index);
+  public PerfectBinaryTreeNode<T> clone()
+  { List<PerfectBinaryTree<T>> clonedChildren = new ArrayList<>(children.size());
+    for (PerfectBinaryTree<T> child : children)
+    { clonedChildren.add(child.clone());
+    }
+    return new PerfectBinaryTreeNode<>(depth, clonedChildren);
   }
 
+  public PerfectBinaryTree<T> walk(int index)
+  { return children.get(index);
+  }
+
+  public void forEach(Consumer<T> function)
+  { for (PerfectBinaryTree<T> child : children)
+    { child.forEach(function);
+    }
+  }
+
+  int getWidth() { return children.size(); }
   boolean canMap(PerfectBinaryTree<?> other)
   { return other instanceof PerfectBinaryTreeLeaf
       || ((PerfectBinaryTreeNode<?>) other).getWidth() == getWidth();
   }
 
-  public <U> PerfectBinaryTree<U> foldRight(BiFunction<U, T, U> function, U start)
+  public <U> PerfectBinaryTree<U> foldLeavesLeft(BiFunction<U, T, U> function, U start)
   { if (depth == 1)
-    { return new PerfectBinaryTreeLeaf<U>
-        (children
-          .map(child -> ((PerfectBinaryTreeLeaf<T>) child).value)
-          .foldLeft(Java8.BiFunction_F2(function), start));
+    { for (PerfectBinaryTree<T> child : children)
+      { T value = ((PerfectBinaryTreeLeaf<T>) child).getValue();
+        start = function.apply(start, value);
+      }
+      return new PerfectBinaryTreeLeaf<U>(start);
     } else
-    { return new PerfectBinaryTreeNode<U>(depth-1, children.map(child -> child.foldRight(function, start)));
+    { List<PerfectBinaryTree<U>> newChildren = new ArrayList<>(children.size());
+      for (PerfectBinaryTree<T> child : children)
+      { newChildren.add(child.foldLeavesLeft(function, start));
+      }
+      return new PerfectBinaryTreeNode<U>(getDepth()-1, newChildren);
+    }
+  }
+
+  public <U> PerfectBinaryTree<U> foldLeavesRight(BiFunction<U, T, U> function, U start)
+  { if (depth == 1)
+    { ListIterator iterator = children.listIterator(children.size());
+      while (iterator.hasPrevious())
+      { T value = ((PerfectBinaryTreeLeaf<T>) iterator.previous()).getValue();
+        start = function.apply(start, value);
+      }
+      return new PerfectBinaryTreeLeaf<U>(start);
+    } else
+    { // Only fold leaves rightwards
+      List<PerfectBinaryTree<U>> newChildren = new ArrayList<>(children.size());
+      for (PerfectBinaryTree<T> child : children)
+      { newChildren.add(child.foldLeavesRight(function, start));
+      }
+      return new PerfectBinaryTreeNode<U>(getDepth()-1, newChildren);
     }
   }
 

@@ -18,28 +18,28 @@ public class ASTNonLiteralIdentifierMatchVisitor extends ASTMatchVisitor
   @Override
   public Substitution visit(ConsValue consCell)
   { Substitution returnValue = new Substitution();
-    returnValue.put(variable, consCell);
+    returnValue.put(variable.getValue(), variable.getSourceInfo(), consCell);
     return returnValue;
   }
 
   @Override
   public Substitution visit(IdentifierValue identifier)
   { Substitution returnValue = new Substitution();
-    returnValue.put(variable, identifier);
+    returnValue.put(variable.getValue(), variable.getSourceInfo(), identifier);
     return returnValue;
   }
 
   @Override
   public Substitution visit(NullValue nil)
   { Substitution returnValue = new Substitution();
-    returnValue.put(variable, nil);
+    returnValue.put(variable.getValue(), variable.getSourceInfo(), nil);
     return returnValue;
   }
 
   @Override
   public Substitution visit(SelfquotingValue object)
   { Substitution returnValue = new Substitution();
-    returnValue.put(variable, object);
+    returnValue.put(variable.getValue(), variable.getSourceInfo(), object);
     return returnValue;
   }
 }

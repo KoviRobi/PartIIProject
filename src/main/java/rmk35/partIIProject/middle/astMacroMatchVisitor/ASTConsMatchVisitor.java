@@ -28,7 +28,7 @@ public class ASTConsMatchVisitor extends ASTNoMatchVisitor
     if (carSubstitution == null || cdrSubstitution == null)
     { return null;
     } else
-    { carSubstitution.merge(cdrSubstitution);
+    { carSubstitution.merge(cdrSubstitution, consCell.getSourceInfo());
       return carSubstitution;
     }
   }

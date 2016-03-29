@@ -47,7 +47,7 @@ public class ASTConsStarMatchVisitor extends ASTMatchVisitor
     if (cdrSubstitution == null)
     { return null;
     } else
-    { returnSubstitution.merge(cdrSubstitution);
+    { returnSubstitution.merge(cdrSubstitution, consCell.getSourceInfo());
       return returnSubstitution;
     }
   }

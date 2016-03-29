@@ -1,7 +1,7 @@
 package rmk35.partIIProject.utility;
 
-import fj.data.List;
-
+import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.BiFunction;
 
 /* A binary tree that always maintains
@@ -16,21 +16,33 @@ public class PerfectBinaryTreeLeaf<T> extends PerfectBinaryTree<T>
   }
 
   public int getDepth() { return 0; }
-  public int getWidth() { return 0; }
   public T getValue() { return value; }
 
-  public PerfectBinaryTree<T> add(PerfectBinaryTree<T> other)
+  public void add(PerfectBinaryTree<T> other)
   { throw new UnsupportedOperationException("Can't add to a leaf");
   }
 
-  public <U> PerfectBinaryTree<U> foldRight(BiFunction<U, T, U> function, U start)
+  public <U> PerfectBinaryTree<U> foldLeavesLeft(BiFunction<U, T, U> function, U start)
   { throw new UnsupportedOperationException("Can't fold a leaf");
   }
 
-  PerfectBinaryTree<T> walk(int index)
+  public <U> PerfectBinaryTree<U> foldLeavesRight(BiFunction<U, T, U> function, U start)
+  { throw new UnsupportedOperationException("Can't fold a leaf");
+  }
+
+  public PerfectBinaryTree<T> walk(int index)
   { return this;
   }
 
+  public void forEach(Consumer<T> function)
+  { function.accept(value);
+  }
+
+  public PerfectBinaryTreeLeaf<T> clone()
+  { return new PerfectBinaryTreeLeaf<>(getValue());
+  }
+
+  int getWidth() { return 0; }
   boolean canMap(PerfectBinaryTree<?> other)
   { return true;
   }

@@ -83,7 +83,7 @@ public class ASTMacroRewriteVisitor extends ASTVisitor<Pair<RuntimeValue, Enviro
             if (carRewritten == null)
             { return new Pair<>(cddrRewritten, returnEnvironment);
             } else
-            { PerfectBinaryTree<Function<RuntimeValue, RuntimeValue>> carFolded = carRewritten.foldRight(
+            { PerfectBinaryTree<Function<RuntimeValue, RuntimeValue>> carFolded = carRewritten.foldLeavesRight(
                   (Function<RuntimeValue, RuntimeValue> acc, RuntimeValue element) -> x -> new ConsValue(element, acc.apply(x), list.getSourceInfo())
                 , x -> x);
               return new Pair<>(PerfectBinaryTree.map(carFolded, cddrRewritten,
@@ -117,7 +117,7 @@ public class ASTMacroRewriteVisitor extends ASTVisitor<Pair<RuntimeValue, Enviro
       }
 
       if (nonLiterals.contains(identifierName))
-      { return new Pair<>(substitution.get(identifier), returnEnvironment); // May return null
+      { return new Pair<>(substitution.get(identifierName), returnEnvironment); // May return null
       } else
       { return new Pair<>(new PerfectBinaryTreeLeaf<RuntimeValue>(new IdentifierValue(newIdentifierName, identifier.getSourceInfo())), returnEnvironment);
       }

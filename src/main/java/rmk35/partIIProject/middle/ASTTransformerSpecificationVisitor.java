@@ -38,7 +38,7 @@ public class ASTTransformerSpecificationVisitor extends ASTUnexpectedVisitor<Syn
   public SyntaxBinding visit(ConsValue consCell)
   { String syntaxRules = consCell.getCar().accept(new ASTExpectIdentifierVisitor()).getValue();
     if (! (environment.lookUp(syntaxRules) instanceof SyntaxRulesBinding))
-    { throw new SyntaxErrorException("I was expecting \"syntax-rules\" maybe it has been rebound?", consCell.getSourceInfo());
+    { throw new SyntaxErrorException("I was expecting \"syntax-rules\", maybe it has been rebound?", consCell.getSourceInfo());
     }
     Environment ellipsisEnvironment = new Environment(environment, /* subEnvironment */ false);
     ConsValue second = consCell.getCdr().accept(new ASTExpectConsVisitor());
