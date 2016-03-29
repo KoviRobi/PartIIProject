@@ -82,3 +82,10 @@
 ((test-class 'new) 'printMessage 0)
 ((test-class 'new) 'printStaticMessage '(1 2 3))
 (test-class 'printStaticMessage '(4 5 6))
+
+; Closure
+((lambda (x)
+  ((lambda (y)
+    (println x))
+   "y-arg"))
+ "x-arg")

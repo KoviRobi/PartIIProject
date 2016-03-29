@@ -51,8 +51,9 @@ public class InnerClass extends OutputClass
     int index = 1; // 0 is 'this'
     for (IdentifierStatement closureName : closureVariables)
     { String identifierName = closureName.getName();
-      Statement storeStatement = new DefineStatement(new ClosureIdentifierStatement(identifierName), new LocalIdentifierStatement(identifierName, index));
-      storeStatement.generateOutput(mainClass, this, initializerMethod);
+      new DefineStatement(new ClosureIdentifierStatement(identifierName), new LocalIdentifierStatement(identifierName, index)).generateOutput(mainClass, this, initializerMethod);
+      // DefineStatement returns an unspecified value
+      initializerMethod.addInstruction(new PopInstruction());
       index++;
     }
     // Overwrite initializer

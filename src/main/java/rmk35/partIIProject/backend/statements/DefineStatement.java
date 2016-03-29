@@ -27,7 +27,7 @@ public class DefineStatement extends Statement
   }
 
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
-  { method.addInstruction(new CommentPseudoInstruction("SetStatement"));
+  { method.addInstruction(new CommentPseudoInstruction("Define statement"));
     if (value == null)
     { method.addInstruction(new NullConstantInstruction());
     } else
