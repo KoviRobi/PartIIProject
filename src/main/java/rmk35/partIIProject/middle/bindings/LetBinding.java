@@ -1,19 +1,20 @@
 package rmk35.partIIProject.middle.bindings;
 
 import rmk35.partIIProject.SyntaxErrorException;
+
 import rmk35.partIIProject.utility.Pair;
+import rmk35.partIIProject.utility.PerfectBinaryTree;
+import rmk35.partIIProject.utility.PerfectBinaryTreeLeaf;
+import rmk35.partIIProject.utility.PerfectBinaryTreeNode;
 
 import rmk35.partIIProject.runtime.RuntimeValue;
-import rmk35.partIIProject.runtime.ConsValue;
 
 import rmk35.partIIProject.middle.Environment;
-import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectConsVisitor;
-import rmk35.partIIProject.middle.astExpectVisitor.ASTListFoldVisitor;
-import rmk35.partIIProject.middle.ASTBindingSpecificationVisitor;
+import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectIdentifierVisitor;
+import rmk35.partIIProject.middle.ASTMatcher;
 import rmk35.partIIProject.middle.ASTConvertVisitor;
 
 import rmk35.partIIProject.backend.statements.Statement;
-import rmk35.partIIProject.backend.statements.IdentifierStatement;
 import rmk35.partIIProject.backend.statements.BeginStatement;
 import rmk35.partIIProject.backend.statements.DefineStatement;
 
@@ -26,29 +27,42 @@ import lombok.ToString;
 public class LetBinding extends SintacticBinding
 { @Override
   public Statement applicate(Environment environment, RuntimeValue operator, RuntimeValue operands)
-  { ConsValue first = operands.accept(new ASTExpectConsVisitor());
-    //  Copy environment for lexical effect
-    Environment letEnvironment = new Environment(environment, false);
-
-    // ToDo: named let, could optimise to use goto
-    List<Pair<String, Statement>> bindingSpecifications = first.getCar().accept(new ASTListFoldVisitor<>(new ArrayList<>(),
-      (List<Pair<String, Statement>> list, RuntimeValue ast) -> { list.add(ast.accept(new ASTBindingSpecificationVisitor(letEnvironment))); return list; } ));
-
-    List<Statement> bindingStatements = new ArrayList<>();
-    for (Pair<String, Statement> binding : bindingSpecifications)
-    { letEnvironment.addLocalVariable(binding.getFirst());
-      IdentifierStatement local = (IdentifierStatement) letEnvironment.lookUpAsStatement(binding.getFirst(), operator.getSourceInfo());
-      bindingStatements.add(new DefineStatement(local, binding.getSecond()));
+  { //  Copy environment for lexical effect
+    Environment letEnvironment = new Environment(environment, /* subEnvironment */ false);
+    ASTMatcher simpleLetSubstitution = new ASTMatcher("(((name value) ...) body ...)", operands);
+    if (simpleLetSubstitution.matched())
+    { /* Case for simple let */
+      List<Statement> letStatements = new ArrayList<>();
+      if (simpleLetSubstitution.get("name") != null)
+      { PerfectBinaryTree.map
+          (simpleLetSubstitution.get("name")
+          ,simpleLetSubstitution.get("value")
+          ,(nameAST, valueAST) ->
+            { String name = nameAST.accept(new ASTExpectIdentifierVisitor()).getValue();
+              letStatements.add(new DefineStatement
+                  (letEnvironment.addLocalVariable(name).toStatement(operator.getSourceInfo())
+                  ,valueAST.accept(new ASTConvertVisitor(environment)))); /* Note the use of environment, not letEnvironment, as this is not let* */
+              return null;
+            }
+          );
+        }
+      if (simpleLetSubstitution.get("body") == null)
+      { throw new SyntaxErrorException("Empty lambda body", operator.getSourceInfo());
+      }
+      simpleLetSubstitution.get("body").forEach(value -> letStatements.add(value.accept(new ASTConvertVisitor(letEnvironment))));
+      return new BeginStatement(letStatements);
     }
 
-    // Implicit begin (superset of the standard but useful)
-    List<Statement> body = first.getCdr().accept
-      (new ASTListFoldVisitor<List<Statement>>(new ArrayList<>(),
-        (list, ast) -> { list.add(ast.accept(new ASTConvertVisitor(letEnvironment))); return list; } ));
-    if (body.isEmpty())
-    { throw new SyntaxErrorException("Empty lambda body", operator.getSourceInfo());
+    ASTMatcher namedLetSubstitution = new ASTMatcher("(loop-name ((name value) ...) body ...)", operands);
+    if (namedLetSubstitution.matched())
+    { /* Case for named let */
+      RuntimeValue functionalForm = namedLetSubstitution.transform(
+        "(begin\n" +
+        "  (define loop-name (begin))\n" +
+        "  (set! loop-name (lambda (name ...) body ...))\n" +
+        "  (loop-name value ...))");
+      return functionalForm.accept(new ASTConvertVisitor(letEnvironment));
     }
-    bindingStatements.addAll(body);
-    return new BeginStatement(bindingStatements);
+    throw new SyntaxErrorException("Malformed let", operator.getSourceInfo());
   }
 }

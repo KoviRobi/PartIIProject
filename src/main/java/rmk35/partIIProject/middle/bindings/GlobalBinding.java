@@ -12,7 +12,7 @@ public class GlobalBinding extends VariableBinding
 { String identifier;
 
   @Override
-  public IdentifierStatement toStatement(SourceInfo sourceInfo)
+  public GlobalIdentifierStatement toStatement(SourceInfo sourceInfo)
   { return new GlobalIdentifierStatement(identifier);
   }
 

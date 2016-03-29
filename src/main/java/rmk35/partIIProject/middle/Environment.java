@@ -51,13 +51,17 @@ public class Environment
   { return lookUp(identifier).toStatement(sourceInfo);
   }
 
-  public void addGlobalVariable(String identifier)
-  { addBinding(identifier, new GlobalBinding(identifier));
+  public GlobalBinding addGlobalVariable(String identifier)
+  { GlobalBinding binding = new GlobalBinding(identifier);
+    addBinding(identifier, binding);
+    return binding;
   }
 
-  public void addLocalVariable(String identifier)
-  { addBinding(identifier, new LocalBinding(identifier, localsCount));
+  public LocalBinding addLocalVariable(String identifier)
+  { LocalBinding binding = new LocalBinding(identifier, localsCount);
+    addBinding(identifier, binding);
     localsCount++;
+    return binding;
   }
 
   public void addGlobalVariables(Collection<String> identifiers)
@@ -72,8 +76,9 @@ public class Environment
     }
   }
 
-  public void addBinding(String identifier, Binding binding)
+  public Binding addBinding(String identifier, Binding binding)
   { bindings.put(identifier, binding);
+    return binding;
   }
 
   public Binding removeBinding(String identifier)

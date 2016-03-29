@@ -22,7 +22,8 @@ import rmk35.partIIProject.runtime.VectorValue;
 
 import rmk35.partIIProject.middle.bindings.Binding;
 import rmk35.partIIProject.middle.bindings.EllipsisBinding;
-
+import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectNilVisitor;
+import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectConsVisitor;
 import rmk35.partIIProject.middle.astMacroMatchVisitor.astMatchVisitorReturn.Substitution;
 
 import java.util.Collection;
@@ -63,9 +64,9 @@ public class ASTMacroRewriteVisitor extends ASTVisitor<Pair<RuntimeValue, Enviro
       { IdentifierValue carIdentifier = (IdentifierValue) car;
         if (definitionEnvironment.lookUpSilent(carIdentifier.getValue()) instanceof EllipsisBinding)
         { Binding storedBinding = definitionEnvironment.removeBinding(carIdentifier.getValue());
-          ConsValue cdrConsValue = (ConsValue) cdr;
+          ConsValue cdrConsValue = cdr.accept(new ASTExpectConsVisitor());
           Pair<PerfectBinaryTree<RuntimeValue>, Environment> returnValue = cdrConsValue.getCar().accept(this);
-          NullValue endNullValue = (NullValue) cdrConsValue.getCdr();
+          cdrConsValue.getCdr().accept(new ASTExpectNilVisitor());
           definitionEnvironment.addBinding(carIdentifier.getValue(), storedBinding);
           return returnValue;
         }

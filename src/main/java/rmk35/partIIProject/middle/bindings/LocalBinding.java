@@ -18,7 +18,7 @@ public class LocalBinding extends VariableBinding
   }
 
   @Override
-  public IdentifierStatement toStatement(SourceInfo sourceInfo)
+  public LocalIdentifierStatement toStatement(SourceInfo sourceInfo)
   { return new LocalIdentifierStatement(identifier, localIndex);
   }
 
