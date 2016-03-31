@@ -29,10 +29,10 @@ public abstract class ReflectiveEnvironment extends EnvironmentValue
     for (Field field : this.getClass().getFields())
     { if (Modifier.isPublic(field.getModifiers()))
       { if (RuntimeValue.class.isAssignableFrom(field.getType()))
-        { addBinding(IdentifierValue.schemifyName(field.getName()), new FieldBinding(this.getClass().getName().replace('.', '/'), field.getName()));
+        { addBinding(IdentifierValue.schemifyName("scm" + field.getName()), new FieldBinding(this.getClass().getName().replace('.', '/'), field.getName()));
         } else if (Binding.class.isAssignableFrom(field.getType()))
         { try
-          { addBinding(IdentifierValue.schemifyName(field.getName()), (Binding) field.get(this));
+          { addBinding(IdentifierValue.schemifyName("scm" + field.getName()), (Binding) field.get(this));
           } catch (IllegalAccessException e)
           { throw new RuntimeException(e);
           }

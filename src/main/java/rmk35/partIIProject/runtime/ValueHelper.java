@@ -31,8 +31,6 @@ public class ValueHelper
       { array[i] = toSchemeValue(objectArray[i]);
       }
       return new VectorValue(array);
-    } else if (value instanceof Method)
-    { return new MethodValue((Method) value);
     } else if (value instanceof Class)
     { return new ClassValue((Class) value);
     } else

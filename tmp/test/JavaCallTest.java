@@ -3,7 +3,7 @@ package test;
 import java.util.List;
 
 public class JavaCallTest
-{ String message;
+{ public String message;
   public static final String secretMessage = "Shh, don't tell anyone!";
 
   public JavaCallTest()

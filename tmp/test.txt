@@ -1,9 +1,8 @@
 (import (scheme base)
         (scheme java))
 
-(define system-out (static-field "java.lang.System" "out"))
-(define output-stream-println (method system-out "println" "java.lang.Object"))
-(define println (lambda (value) (java output-stream-println system-out value)))
+(define system-out (static-field (class 'java.lang.System) 'out))
+(define println (lambda (value) (system-out 'println value)))
 
 (println " - Syntax ambiguity with #|a|#|b|#|c#|")
 (println " - On track")
@@ -77,13 +76,15 @@
   4))
 
 ; Message passing tests
-(define test-class (class "test.JavaCallTest"))
+(define test-class (class 'test.JavaCallTest))
 (println test-class)
 (println (test-class 'getConstructors))
 (define test-object (test-class 'new "Hello, world!"))
-((test-class 'new "Hello, world!") 'printMessage)
+(test-object 'printMessage)
+(println (field test-object 'message))
+(println (static-field test-class 'secretMessage))
 ((test-class 'new) 'printMessage 0)
-((test-class 'new) 'printStaticMessage '(1 2 3))
+(test-object 'printStaticMessage '(1 2 3))
 (test-class 'printStaticMessage '(4 5 6))
 
 ; Closure

@@ -12,6 +12,11 @@ public class ClassValue extends ObjectValue
   { super(innerClass);
     this.innerClass = innerClass;
   }
+
+  public Class<?> toJavaValue()
+  { return innerClass;
+  }
+
   @Override
   public RuntimeValue apply(RuntimeValue argument)
   { ConsValue first = (ConsValue) argument;

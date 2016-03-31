@@ -5,6 +5,7 @@ import rmk35.partIIProject.SyntaxErrorException;
 
 import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.EnvironmentValue;
+import rmk35.partIIProject.runtime.IdentifierValue;
 import rmk35.partIIProject.runtime.UnspecifiedValue;
 
 import rmk35.partIIProject.middle.bindings.Binding;
@@ -38,7 +39,9 @@ public class EnvironmentImporter
       for (Map.Entry<String, Binding> binding : foreignEnvironment.entrySet())
       { if (binding.getValue().runtime())
         { sequenceStatement.add(new InstructionStatement(new DupInstruction())); // Invariant, Environment (to clone from) on stack
-          sequenceStatement.add(new DefineStatement(environment.addGlobalVariable(binding.getKey()).toStatement(importSet.getSourceInfo()), binding.getValue().toStatement(importSet.getSourceInfo())));
+          sequenceStatement.add(new DefineStatement
+            (environment.addGlobalVariable(binding.getKey()).toStatement(importSet.getSourceInfo()),
+            binding.getValue().toStatement(importSet.getSourceInfo())));
           sequenceStatement.add(new InstructionStatement(new PopInstruction())); // Pop result of define
         } else
         { environment.addBinding(binding.getKey(), binding.getValue());

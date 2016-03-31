@@ -1,25 +1,19 @@
-find . -name '*.java' | xargs g '[Tt][Oo][Dd][Oo]'
-find . -name '*.java' | xargs g '[Ff][Ii][Xx][Mm][Ee]'
-find . -name '*.java' | xargs g '[Nn][Ee][Xx][Tt]'
-find . -name '*.java' | xargs g '[Xx][Xx][Xx]'
+g '[Tt][Oo][Dd][Oo]' `{find . -name '*.java'}
+g '[Ff][Ii][Xx][Mm][Ee]' `{find . -name '*.java'}
+g '[Nn][Ee][Xx][Tt]' `{find . -name '*.java'}
+g '[Xx][Xx][Xx]' `{find . -name '*.java'}
 
 Inconsistency: some Statements take other Statements, others just rely on values on top of the stack
   - could be used to ensure right number of arguments on stack
 Immutable data (e.g. quoted data)
 Improper list lambdas (perhaps TODO1 could help)
-Make java calls not syntactic
 Definitions
  - Internal definitions
-Library import (need an ImportBinding probably)
 Proper line numbers
 Make middle neater by using macro matching
 More efficient macro matching (regular expression simple and fast)
 Split trampolines, as they are doing two things at the moment, trampoline and CallValue
 Sort out nil vs null discrepancy
-Possibly move static stuff out to a single class (stuff like ObjectType that is used multiple places)
 
 R7RS P. 25
 In a program or library declaration, it is an error to import the same identifier more than once with different bindings, or to redefine or mutate an imported binding with a definition or with set!, or to refer to an identifier before it is imported. However, a REPL should permit these actions.
-
-- Have Libraries a special class that can get loaded by a class loader?
-  - Or possibly have libraries as subclasses of Environment
