@@ -39,7 +39,7 @@ public class ByteCodeMethod
   }
 
   private void addInstruction(Instruction instruction, List<String> instructionList)
-  {instruction.simulateLimits(this);
+  { instruction.simulateLimits(this);
     instructionList.add(instruction.byteCode());
   }
   public void addInstruction(Instruction instruction)
@@ -53,7 +53,7 @@ public class ByteCodeMethod
 
   public void decrementStackCount(int i)
   { stackCount -= i;
-    if (stackCount < 0) throw new InternalCompilerException("Simulated stack underflown");
+    if (stackCount < 0) throw new InternalCompilerException("Simulated stack underflown with instructions" + instructions);
   }
 
   private void checkReturnStackCount()

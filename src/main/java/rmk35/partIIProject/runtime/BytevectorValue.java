@@ -16,9 +16,8 @@ import rmk35.partIIProject.backend.instructions.NewPrimitiveArrayInstruction;
 import rmk35.partIIProject.backend.instructions.IntegerConstantInstruction;
 import rmk35.partIIProject.backend.instructions.ByteArrayStoreInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
-import rmk35.partIIProject.backend.instructions.types.VoidType;
-import rmk35.partIIProject.backend.instructions.types.ArrayType;
-import rmk35.partIIProject.backend.instructions.types.ByteType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.voidType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.byteArrayType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +25,7 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class BytevectorValue implements SelfquotingValue
+public class BytevectorValue extends SelfquotingValue
 { byte[] value;
   SourceInfo sourceInfo;
 
@@ -80,7 +79,7 @@ public class BytevectorValue implements SelfquotingValue
       method.addInstruction(new IntegerConstantInstruction(value[i]));
       method.addInstruction(new ByteArrayStoreInstruction());
     }
-    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), BytevectorValue.class.getName().replace('.', '/') + "/<init>", new ArrayType(new ByteType())));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, BytevectorValue.class.getName().replace('.', '/') + "/<init>", byteArrayType));
   }
 
   @Override

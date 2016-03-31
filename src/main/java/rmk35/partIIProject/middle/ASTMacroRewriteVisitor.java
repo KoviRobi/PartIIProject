@@ -19,6 +19,7 @@ import rmk35.partIIProject.runtime.CharacterValue;
 import rmk35.partIIProject.runtime.NumberValue;
 import rmk35.partIIProject.runtime.StringValue;
 import rmk35.partIIProject.runtime.VectorValue;
+import rmk35.partIIProject.runtime.EnvironmentValue;
 
 import rmk35.partIIProject.middle.bindings.Binding;
 import rmk35.partIIProject.middle.bindings.EllipsisBinding;
@@ -29,43 +30,43 @@ import rmk35.partIIProject.middle.astMacroMatchVisitor.astMatchVisitorReturn.Sub
 import java.util.Collection;
 import java.util.function.Function;
 
-public class ASTMacroRewriteVisitor extends ASTVisitor<Pair<RuntimeValue, Environment>>
+public class ASTMacroRewriteVisitor extends ASTVisitor<Pair<RuntimeValue, EnvironmentValue>>
 { Substitution substitution;
-  Environment definitionEnvironment;
-  Environment useEnvironment;
-  Environment returnEnvironment;
+  EnvironmentValue definitionEnvironment;
+  EnvironmentValue useEnvironment;
+  EnvironmentValue returnEnvironment;
   Collection<String> nonLiterals;
 
-  public ASTMacroRewriteVisitor(Substitution substitution, Environment definitionEnvironment, Environment useEnvironment, Collection<String> nonLiterals)
+  public ASTMacroRewriteVisitor(Substitution substitution, EnvironmentValue definitionEnvironment, EnvironmentValue useEnvironment, Collection<String> nonLiterals)
   { this.substitution = substitution;
     this.definitionEnvironment = definitionEnvironment;
     this.useEnvironment = useEnvironment;
-    this.returnEnvironment = new Environment(useEnvironment, /* subEnvironment */ false);
+    this.returnEnvironment = new EnvironmentValue(useEnvironment, /* mutable */ true);
     this.nonLiterals = nonLiterals;
   }
 
   @Override
-  public Pair<RuntimeValue, Environment> visit(RuntimeValue value)
-  { Pair<PerfectBinaryTree<RuntimeValue>, Environment> internalValue = value.accept(new InternalASTMacroRewriteVisitor());
+  public Pair<RuntimeValue, EnvironmentValue> visit(RuntimeValue value)
+  { Pair<PerfectBinaryTree<RuntimeValue>, EnvironmentValue> internalValue = value.accept(new InternalASTMacroRewriteVisitor());
     // For multiple possibilities (as a result of matching ellipsis) we return a tree, but ellipsis in pattern remove a level of that tree
     // so we expect a leaf
     if (internalValue.getFirst().getDepth() != 0) throw new SyntaxErrorException("Not enough ellipses, got: " + internalValue.getFirst(), value.getSourceInfo());
     return new Pair<>(((PerfectBinaryTreeLeaf<RuntimeValue>) internalValue.getFirst()).getValue(), internalValue.getSecond());
   }
 
-  private class InternalASTMacroRewriteVisitor extends ASTVisitor<Pair<PerfectBinaryTree<RuntimeValue>, Environment>>
+  private class InternalASTMacroRewriteVisitor extends ASTVisitor<Pair<PerfectBinaryTree<RuntimeValue>, EnvironmentValue>>
   {
     @Override
-    public Pair<PerfectBinaryTree<RuntimeValue>, Environment> visit(ConsValue list)
+    public Pair<PerfectBinaryTree<RuntimeValue>, EnvironmentValue> visit(ConsValue list)
     { RuntimeValue car = list.getCar();
       RuntimeValue cdr = list.getCdr();
       // Escaping ellipses (... foo) is the same as foo without ellipsis binding, e.g. in (... ...) which should rewrite to ...
       if (car instanceof IdentifierValue)
       { IdentifierValue carIdentifier = (IdentifierValue) car;
-        if (definitionEnvironment.lookUpSilent(carIdentifier.getValue()) instanceof EllipsisBinding)
+        if (definitionEnvironment.getOrNull(carIdentifier.getValue()) instanceof EllipsisBinding)
         { Binding storedBinding = definitionEnvironment.removeBinding(carIdentifier.getValue());
           ConsValue cdrConsValue = cdr.accept(new ASTExpectConsVisitor());
-          Pair<PerfectBinaryTree<RuntimeValue>, Environment> returnValue = cdrConsValue.getCar().accept(this);
+          Pair<PerfectBinaryTree<RuntimeValue>, EnvironmentValue> returnValue = cdrConsValue.getCar().accept(this);
           cdrConsValue.getCdr().accept(new ASTExpectNilVisitor());
           definitionEnvironment.addBinding(carIdentifier.getValue(), storedBinding);
           return returnValue;
@@ -76,7 +77,7 @@ public class ASTMacroRewriteVisitor extends ASTVisitor<Pair<RuntimeValue, Enviro
       { ConsValue cdrCons = (ConsValue) cdr;
         if (cdrCons.getCar() instanceof IdentifierValue)
         { IdentifierValue cadrIdentifier = (IdentifierValue) cdrCons.getCar();
-          if (definitionEnvironment.lookUpSilent(cadrIdentifier.getValue()) instanceof EllipsisBinding)
+          if (definitionEnvironment.getOrNull(cadrIdentifier.getValue()) instanceof EllipsisBinding)
           { PerfectBinaryTree<RuntimeValue> carRewritten = car.accept(this).getFirst();
             PerfectBinaryTree<RuntimeValue> cddrRewritten = cdrCons.getCdr() // Ignore ellipsis
               .accept(this).getFirst();
@@ -102,10 +103,10 @@ public class ASTMacroRewriteVisitor extends ASTVisitor<Pair<RuntimeValue, Enviro
     }
 
     @Override
-    public Pair<PerfectBinaryTree<RuntimeValue>, Environment> visit(IdentifierValue identifier)
+    public Pair<PerfectBinaryTree<RuntimeValue>, EnvironmentValue> visit(IdentifierValue identifier)
     { String identifierName = identifier.getValue();
-      Binding useBinding = useEnvironment.lookUpSilent(identifierName);
-      Binding definitionBinding = definitionEnvironment.lookUpSilent(identifierName);
+      Binding useBinding = useEnvironment.getOrNull(identifierName);
+      Binding definitionBinding = definitionEnvironment.getOrNull(identifierName);
       // Don't rename if we don't have to
       String newIdentifierName =
         (useBinding == null || useBinding.equals(definitionBinding))
@@ -125,17 +126,17 @@ public class ASTMacroRewriteVisitor extends ASTVisitor<Pair<RuntimeValue, Enviro
     }
 
     @Override
-    public Pair<PerfectBinaryTree<RuntimeValue>, Environment> visit(NullValue nil)
+    public Pair<PerfectBinaryTree<RuntimeValue>, EnvironmentValue> visit(NullValue nil)
     { return new Pair<>(new PerfectBinaryTreeLeaf<RuntimeValue>(nil), returnEnvironment);
     }
 
     @Override
-    public Pair<PerfectBinaryTree<RuntimeValue>, Environment> visit(SelfquotingValue object)
+    public Pair<PerfectBinaryTree<RuntimeValue>, EnvironmentValue> visit(SelfquotingValue object)
     { return new Pair<>(new PerfectBinaryTreeLeaf<RuntimeValue>(object), returnEnvironment);
     }
 
     @Override
-    public Pair<PerfectBinaryTree<RuntimeValue>, Environment> visit(VectorValue vector)
+    public Pair<PerfectBinaryTree<RuntimeValue>, EnvironmentValue> visit(VectorValue vector)
     { throw new UnsupportedOperationException("Vectors are not fully supported yet");
     }
   }

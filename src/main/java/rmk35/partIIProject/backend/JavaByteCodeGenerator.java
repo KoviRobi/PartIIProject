@@ -7,7 +7,7 @@ import java.util.List;
 
 public class JavaByteCodeGenerator
 { public static OutputClass generateOutput(MainClass mainClass, List<Statement> statements)
-  { (new BeginStatement(statements)).generateOutput(mainClass, mainClass, mainClass.getPrimaryMethod());
+  { (new BeginStatement(statements)).generateOutput(mainClass, mainClass.mainInnerClass, mainClass.getPrimaryMethod());
     return mainClass;
   }
 }

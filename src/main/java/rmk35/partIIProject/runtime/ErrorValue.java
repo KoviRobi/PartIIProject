@@ -48,4 +48,9 @@ public class ErrorValue implements RuntimeValue
   public Object toJavaValue()
   { return this;
   }
+
+  @Override
+  public boolean mutable()
+  { return false;
+  }
 }

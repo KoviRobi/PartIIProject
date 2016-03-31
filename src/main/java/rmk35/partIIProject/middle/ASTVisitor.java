@@ -24,6 +24,7 @@ import rmk35.partIIProject.runtime.MethodValue;
 import rmk35.partIIProject.runtime.ObjectValue;
 import rmk35.partIIProject.runtime.ErrorValue;
 import rmk35.partIIProject.runtime.UnspecifiedValue;
+import rmk35.partIIProject.runtime.EnvironmentValue;
 
 public abstract class ASTVisitor<T>
 { // This is subclass only access modifier, as below explicitly lists all values,
@@ -54,4 +55,5 @@ public abstract class ASTVisitor<T>
   public T visit(ObjectValue object) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
   public T visit(ErrorValue error) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
   public T visit(UnspecifiedValue unspecified) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
+  public T visit(EnvironmentValue unspecified) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
 }

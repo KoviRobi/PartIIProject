@@ -7,8 +7,8 @@ import rmk35.partIIProject.utility.Pair;
 
 import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.ConsValue;
+import rmk35.partIIProject.runtime.EnvironmentValue;
 
-import rmk35.partIIProject.middle.Environment;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectConsVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTListFoldVisitor;
 import rmk35.partIIProject.middle.ASTSyntaxSpecificationVisitor;
@@ -25,10 +25,10 @@ import lombok.ToString;
 @ToString
 public class LetSyntaxBinding extends SintacticBinding
 { @Override
-  public Statement applicate(Environment environment, RuntimeValue operator, RuntimeValue operands)
+  public Statement applicate(EnvironmentValue environment, RuntimeValue operator, RuntimeValue operands)
   { ConsValue first = operands.accept(new ASTExpectConsVisitor());
     //  Copy environment for lexical effect
-    Environment letEnvironment = new Environment(environment, false);
+    EnvironmentValue letEnvironment = new EnvironmentValue(environment, /* mutable */ true);
 
     // XXX To think about: letrec-syntax in particular this and looking up a variable in the environment to see if it has changed
 

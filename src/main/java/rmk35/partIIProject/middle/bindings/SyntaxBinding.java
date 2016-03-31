@@ -6,10 +6,10 @@ import rmk35.partIIProject.utility.Pair;
 
 import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.ConsValue;
+import rmk35.partIIProject.runtime.EnvironmentValue;
 
 import rmk35.partIIProject.frontend.SourceInfo;
 
-import rmk35.partIIProject.middle.Environment;
 import rmk35.partIIProject.middle.astMacroMatchVisitor.ASTCompilePatternVisitor;
 import rmk35.partIIProject.middle.astMacroMatchVisitor.ASTMatchVisitor;
 import rmk35.partIIProject.middle.ASTConvertVisitor;
@@ -29,11 +29,11 @@ import lombok.ToString;
 
 @ToString
 public class SyntaxBinding extends SintacticBinding
-{ Environment definitionEnvironment;
+{ EnvironmentValue definitionEnvironment;
   Collection<String> literals;
   List<Pair<ASTMatchVisitor, Pair<Collection<String>, RuntimeValue>>> patternsAndTemplates;
 
-  public SyntaxBinding(Environment definitionEnvironment, Collection<String> literals, List<Pair<RuntimeValue, RuntimeValue>> patternsAndTemplates)
+  public SyntaxBinding(EnvironmentValue definitionEnvironment, Collection<String> literals, List<Pair<RuntimeValue, RuntimeValue>> patternsAndTemplates)
   { this.definitionEnvironment = definitionEnvironment;
     this.literals = literals;
     this.patternsAndTemplates = new ArrayList<>(patternsAndTemplates.size());
@@ -44,13 +44,13 @@ public class SyntaxBinding extends SintacticBinding
   }
 
   @Override
-  public Statement applicate(Environment useEnvironment, RuntimeValue operator, RuntimeValue operands)
+  public Statement applicate(EnvironmentValue useEnvironmentValue, RuntimeValue operator, RuntimeValue operands)
   { // See Macros That Work, figure 3
     for (Pair<ASTMatchVisitor, Pair<Collection<String>, RuntimeValue>> pair : patternsAndTemplates)
-    { pair.getFirst().setUseEnvironment(useEnvironment);
+    { pair.getFirst().setUseEnvironment(useEnvironmentValue);
       Substitution substitution = (new ConsValue(operator, operands, operator.getSourceInfo())).accept(pair.getFirst());
       if (substitution != null)
-      { Pair<RuntimeValue, Environment> rewritten = pair.getSecond().getSecond().accept(new ASTMacroRewriteVisitor(substitution, definitionEnvironment, useEnvironment, pair.getSecond().getFirst()));
+      { Pair<RuntimeValue, EnvironmentValue> rewritten = pair.getSecond().getSecond().accept(new ASTMacroRewriteVisitor(substitution, definitionEnvironment, useEnvironmentValue, pair.getSecond().getFirst()));
         return rewritten.getFirst().accept(new ASTConvertVisitor(rewritten.getSecond()));
       }
     }

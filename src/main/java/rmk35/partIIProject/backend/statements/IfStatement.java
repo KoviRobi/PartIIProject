@@ -11,8 +11,8 @@ import rmk35.partIIProject.backend.instructions.InterfaceCallInstruction;
 import rmk35.partIIProject.backend.instructions.IfNotEqualsInstruction;
 import rmk35.partIIProject.backend.instructions.GotoInstruction;
 import rmk35.partIIProject.backend.instructions.LabelPseudoInstruction;
-import rmk35.partIIProject.backend.instructions.types.ObjectType;
-import rmk35.partIIProject.backend.instructions.types.BooleanType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.booleanType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.runtimeValueType;
 
 import java.util.Collection;
 import java.util.TreeSet;
@@ -24,7 +24,6 @@ public class IfStatement extends Statement
 { Statement predicate;
   Statement trueCase;
   Statement falseCase;
-  private static final ObjectType runtimeValueType = new ObjectType(RuntimeValue.class);
 
   public IfStatement(Statement predicate, Statement trueCase, Statement falseCase)
   { this.predicate = predicate;
@@ -38,7 +37,7 @@ public class IfStatement extends Statement
     // Top of stack is now predicate's value
     // XXX Speed: if we make booleans unique, we could use "if_acmpeq" to compare false
     (new BooleanValue(false)).generateByteCode(mainClass, outputClass, method);
-    method.addInstruction(new InterfaceCallInstruction(/* static */ false, new BooleanType(), RuntimeValue.class.getName().replace('.', '/') + "/eq", runtimeValueType));
+    method.addInstruction(new InterfaceCallInstruction(/* static */ false, booleanType, RuntimeValue.class.getName().replace('.', '/') + "/eq", runtimeValueType));
 
     // Stack now contains 1 if predicate is false, otherwise 0.
     String uniqueID = outputClass.uniqueID();

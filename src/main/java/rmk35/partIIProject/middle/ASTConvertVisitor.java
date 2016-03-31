@@ -6,9 +6,10 @@ import rmk35.partIIProject.runtime.ConsValue;
 import rmk35.partIIProject.runtime.IdentifierValue;
 import rmk35.partIIProject.runtime.NullValue;
 import rmk35.partIIProject.runtime.SelfquotingValue;
+import rmk35.partIIProject.runtime.EnvironmentValue;
 
 import rmk35.partIIProject.backend.statements.Statement;
-import rmk35.partIIProject.backend.statements.PrimitiveValueStatement;
+import rmk35.partIIProject.backend.statements.RuntimeValueStatement;
 
 import lombok.Data;
 
@@ -16,9 +17,9 @@ import lombok.Data;
 
 @Data
 public class ASTConvertVisitor extends ASTVisitor<Statement>
-{ Environment environment; /* STATE */
+{ EnvironmentValue environment; /* STATE */
 
-  public ASTConvertVisitor(Environment environment)
+  public ASTConvertVisitor(EnvironmentValue environment)
   { this.environment =  environment;
   }
 
@@ -29,7 +30,7 @@ public class ASTConvertVisitor extends ASTVisitor<Statement>
 
   @Override
   public Statement visit(IdentifierValue identifier)
-  { return environment.lookUpAsStatement(identifier.getValue(), identifier.getSourceInfo());
+  { return environment.getOrGlobal(identifier.getValue()).toStatement(identifier.getSourceInfo());
   }
 
   @Override
@@ -39,6 +40,6 @@ public class ASTConvertVisitor extends ASTVisitor<Statement>
 
   @Override
   protected Statement visit(SelfquotingValue object)
-  { return new PrimitiveValueStatement(object);
+  { return new RuntimeValueStatement(object);
   }
 }

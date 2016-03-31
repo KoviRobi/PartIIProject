@@ -17,9 +17,10 @@ import rmk35.partIIProject.backend.instructions.NewReferenceArrayInstruction;
 import rmk35.partIIProject.backend.instructions.DupInstruction;
 import rmk35.partIIProject.backend.instructions.ReferenceArrayStoreInstruction;
 import rmk35.partIIProject.backend.instructions.StaticCallInstruction;
-import rmk35.partIIProject.backend.instructions.types.JVMType;
-import rmk35.partIIProject.backend.instructions.types.ObjectType;
-import rmk35.partIIProject.backend.instructions.types.ArrayType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.runtimeValueType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.objectValueType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.stringType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.stringArrayType;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -34,10 +35,6 @@ public class JavaMethodStatement extends Statement
   Statement methodName;
   List<Statement> arguments;
 
-  private static final ObjectType runtimeValueType = new ObjectType(RuntimeValue.class);
-  private static final ObjectType objectValueType = new ObjectType(ObjectValue.class);
-  private static final ObjectType stringType = new ObjectType(String.class);
-
   public JavaMethodStatement(Statement object, Statement methodName, List<Statement> arguments)
   { this.object = object;
     this.methodName = methodName;
@@ -47,10 +44,10 @@ public class JavaMethodStatement extends Statement
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("JavaMethodStatement"));
     object.generateOutput(mainClass, outputClass, method);
-    method.addInstruction(new StaticCallInstruction(new ObjectType(RuntimeValue.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(RuntimeValue.class)));
+    method.addInstruction(new StaticCallInstruction(runtimeValueType, TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", runtimeValueType));
     method.addInstruction(new CheckCastInstruction(ObjectValue.class));
     methodName.generateOutput(mainClass, outputClass, method);
-    method.addInstruction(new StaticCallInstruction(new ObjectType(RuntimeValue.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(RuntimeValue.class)));
+    method.addInstruction(new StaticCallInstruction(runtimeValueType, TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", runtimeValueType));
     method.addInstruction(new CheckCastInstruction(StringValue.class));
     method.addInstruction(new VirtualCallInstruction(stringType, StringValue.class.getName().replace('.', '/') + "/getValue"));
 
@@ -62,14 +59,14 @@ public class JavaMethodStatement extends Statement
     { method.addInstruction(new DupInstruction()); // Invariant: Array on top of stack
       method.addInstruction(new IntegerConstantInstruction(i));
       argument.generateOutput(mainClass, outputClass, method);
-      method.addInstruction(new StaticCallInstruction(new ObjectType(RuntimeValue.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(RuntimeValue.class)));
+      method.addInstruction(new StaticCallInstruction(runtimeValueType, TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", runtimeValueType));
       method.addInstruction(new CheckCastInstruction(StringValue.class));
       method.addInstruction(new VirtualCallInstruction(stringType, StringValue.class.getName().replace('.', '/') + "/getValue"));
       method.addInstruction(new ReferenceArrayStoreInstruction());
       i++;
     }
 
-    method.addInstruction(new StaticCallInstruction(runtimeValueType, JavaMethodStatement.class.getName().replace('.', '/') + "/getMethod", objectValueType, stringType, new ArrayType(stringType)));
+    method.addInstruction(new StaticCallInstruction(runtimeValueType, JavaMethodStatement.class.getName().replace('.', '/') + "/getMethod", objectValueType, stringType, stringArrayType));
   }
 
   @Override

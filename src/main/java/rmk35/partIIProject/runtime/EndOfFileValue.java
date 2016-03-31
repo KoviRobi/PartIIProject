@@ -13,7 +13,7 @@ import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
 import rmk35.partIIProject.backend.instructions.DupInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
-import rmk35.partIIProject.backend.instructions.types.VoidType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.voidType;
 
 import lombok.Value;
 
@@ -51,7 +51,7 @@ public class EndOfFileValue implements RuntimeValue
   { method.addInstruction(new CommentPseudoInstruction("ByteCode for " + EndOfFileValue.class.getName()));
     method.addInstruction(new NewObjectInstruction(EndOfFileValue.class));
     method.addInstruction(new DupInstruction());
-    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), EndOfFileValue.class.getName().replace('.', '/') + "/<init>"));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, EndOfFileValue.class.getName().replace('.', '/') + "/<init>"));
   }
 
   @Override
@@ -60,5 +60,10 @@ public class EndOfFileValue implements RuntimeValue
   @Override
   public Object toJavaValue()
   { return this;
+  }
+
+  @Override
+  public boolean mutable()
+  { return false;
   }
 }

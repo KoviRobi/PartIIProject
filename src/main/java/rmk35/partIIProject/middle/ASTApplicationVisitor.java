@@ -8,6 +8,7 @@ import rmk35.partIIProject.runtime.ConsValue;
 import rmk35.partIIProject.runtime.IdentifierValue;
 import rmk35.partIIProject.runtime.NullValue;
 import rmk35.partIIProject.runtime.SelfquotingValue;
+import rmk35.partIIProject.runtime.EnvironmentValue;
 
 import rmk35.partIIProject.middle.astExpectVisitor.ASTListFoldVisitor;
 
@@ -21,10 +22,10 @@ import lombok.Value;
 
 @Value
 public class ASTApplicationVisitor extends ASTVisitor<Statement>
-{ Environment environment;
+{ EnvironmentValue environment;
   RuntimeValue arguments;
 
-  public ASTApplicationVisitor(Environment environment, RuntimeValue arguments)
+  public ASTApplicationVisitor(EnvironmentValue environment, RuntimeValue arguments)
   { this.environment = environment;
     this.arguments = arguments;
   }
@@ -38,7 +39,7 @@ public class ASTApplicationVisitor extends ASTVisitor<Statement>
 
   @Override
   public Statement visit(IdentifierValue identifier) throws SyntaxErrorException
-  { return environment.lookUp(identifier.getValue()).applicate(environment, identifier, arguments);
+  { return environment.getOrGlobal(identifier.getValue()).applicate(environment, identifier, arguments);
   }
 
   @Override

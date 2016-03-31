@@ -1,3 +1,6 @@
+(import (scheme base)
+        (scheme java))
+
 (define system-out (static-field "java.lang.System" "out"))
 (define output-stream-println (method system-out "println" "java.lang.Object"))
 (define println (lambda (value) (java output-stream-println system-out value)))
@@ -104,11 +107,6 @@
   (cdr (n (lambda (x) (cons (add (car x) one) (car x)))
                               (cons zero zero) )) ))
 (define if (lambda (p t f) ((p t f))))
-
-(println true)
-(println (zero? zero))
-(println (zero? one))
-(println (zero? (sub1 one)))
 
 (let loop ((n (lambda (f x) (f (f (f x))))))
   (if (zero? n)

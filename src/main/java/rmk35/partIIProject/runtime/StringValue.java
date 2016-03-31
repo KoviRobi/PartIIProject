@@ -14,13 +14,13 @@ import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
 import rmk35.partIIProject.backend.instructions.DupInstruction;
 import rmk35.partIIProject.backend.instructions.StringConstantInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
-import rmk35.partIIProject.backend.instructions.types.VoidType;
-import rmk35.partIIProject.backend.instructions.types.ObjectType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.voidType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.stringType;
 
 import lombok.Data;
 
 @Data
-public class StringValue implements SelfquotingValue
+public class StringValue extends SelfquotingValue
 { String value;
   SourceInfo sourceInfo;
 
@@ -67,7 +67,7 @@ public class StringValue implements SelfquotingValue
     method.addInstruction(new NewObjectInstruction(StringValue.class));
     method.addInstruction(new DupInstruction());
     method.addInstruction(new StringConstantInstruction(value));
-    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), StringValue.class.getName().replace('.', '/') + "/<init>", new ObjectType(String.class)));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, StringValue.class.getName().replace('.', '/') + "/<init>", stringType));
   }
 
   @Override

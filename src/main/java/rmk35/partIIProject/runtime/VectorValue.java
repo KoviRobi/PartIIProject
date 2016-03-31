@@ -17,9 +17,8 @@ import rmk35.partIIProject.backend.instructions.NewReferenceArrayInstruction;
 import rmk35.partIIProject.backend.instructions.IntegerConstantInstruction;
 import rmk35.partIIProject.backend.instructions.ReferenceArrayStoreInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
-import rmk35.partIIProject.backend.instructions.types.VoidType;
-import rmk35.partIIProject.backend.instructions.types.ArrayType;
-import rmk35.partIIProject.backend.instructions.types.ObjectType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.voidType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.runtimeValueArrayType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +26,7 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class VectorValue implements SelfquotingValue
+public class VectorValue extends SelfquotingValue
 { RuntimeValue[] value;
   SourceInfo sourceInfo;
 
@@ -84,7 +83,7 @@ public class VectorValue implements SelfquotingValue
       value[i].generateByteCode(mainClass, outputClass, method);
       method.addInstruction(new ReferenceArrayStoreInstruction());
     }
-    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), VectorValue.class.getName().replace('.', '/') + "/<init>", new ArrayType(new ObjectType(RuntimeValue.class))));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, VectorValue.class.getName().replace('.', '/') + "/<init>", runtimeValueArrayType));
   }
 
   @Override

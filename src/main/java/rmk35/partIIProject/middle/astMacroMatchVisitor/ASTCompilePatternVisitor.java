@@ -2,6 +2,8 @@ package rmk35.partIIProject.middle.astMacroMatchVisitor;
 
 import rmk35.partIIProject.SyntaxErrorException;
 
+import rmk35.partIIProject.utility.Pair;
+
 import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.ConsValue;
 import rmk35.partIIProject.runtime.IdentifierValue;
@@ -9,10 +11,8 @@ import rmk35.partIIProject.runtime.NullValue;
 import rmk35.partIIProject.runtime.SelfquotingValue;
 // Literals
 import rmk35.partIIProject.runtime.VectorValue;
+import rmk35.partIIProject.runtime.EnvironmentValue;
 
-import rmk35.partIIProject.utility.Pair;
-
-import rmk35.partIIProject.middle.Environment;
 import rmk35.partIIProject.middle.ASTVisitor;
 import rmk35.partIIProject.middle.bindings.EllipsisBinding;
 
@@ -22,9 +22,9 @@ import java.util.HashSet;
 public class ASTCompilePatternVisitor extends ASTVisitor<Pair<ASTMatchVisitor, Collection<String>>>
 { Collection<String> literals;
   Collection<String> nonLiterals;
-  Environment definitionEnvironment;
+  EnvironmentValue definitionEnvironment;
 
-  public ASTCompilePatternVisitor(Collection<String> literals, Environment definitionEnvironment)
+  public ASTCompilePatternVisitor(Collection<String> literals, EnvironmentValue definitionEnvironment)
   { this.literals = literals;
     this.nonLiterals = new HashSet<>();
     this.definitionEnvironment = definitionEnvironment;
@@ -38,7 +38,7 @@ public class ASTCompilePatternVisitor extends ASTVisitor<Pair<ASTMatchVisitor, C
     { ConsValue cdrCons = (ConsValue) cdr;
       if (cdrCons.getCar() instanceof IdentifierValue)
       { IdentifierValue cadrIdentifier = (IdentifierValue) cdrCons.getCar();
-        if (definitionEnvironment.lookUpSilent(cadrIdentifier.getValue()) instanceof EllipsisBinding)
+        if (definitionEnvironment.getOrNull(cadrIdentifier.getValue()) instanceof EllipsisBinding)
         { return new Pair<>(new ASTConsStarMatchVisitor(car.accept(this).getFirst(), cdrCons.getCdr().accept(this).getFirst()), nonLiterals);
         }
       }
@@ -51,7 +51,7 @@ public class ASTCompilePatternVisitor extends ASTVisitor<Pair<ASTMatchVisitor, C
   public Pair<ASTMatchVisitor, Collection<String>> visit(IdentifierValue identifier)
   { if (literals.contains(identifier.getValue()))
     { return new Pair<>(new ASTLiteralIdentifierMatchVisitor(definitionEnvironment, identifier), nonLiterals);
-    } else if (definitionEnvironment.lookUpSilent(identifier.getValue()) instanceof EllipsisBinding)
+    } else if (definitionEnvironment.getOrNull(identifier.getValue()) instanceof EllipsisBinding)
     { throw new SyntaxErrorException("Unexpected ellipsis", identifier.getSourceInfo());
     } else if (identifier.getValue().equals("_"))
     { return new Pair<>(new ASTAnyMatchVisitor(), nonLiterals);

@@ -8,8 +8,8 @@ import rmk35.partIIProject.utility.PerfectBinaryTreeLeaf;
 import rmk35.partIIProject.utility.PerfectBinaryTreeNode;
 
 import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.EnvironmentValue;
 
-import rmk35.partIIProject.middle.Environment;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectIdentifierVisitor;
 import rmk35.partIIProject.middle.ASTMatcher;
 import rmk35.partIIProject.middle.ASTConvertVisitor;
@@ -26,9 +26,9 @@ import lombok.ToString;
 @ToString
 public class LetBinding extends SintacticBinding
 { @Override
-  public Statement applicate(Environment environment, RuntimeValue operator, RuntimeValue operands)
+  public Statement applicate(EnvironmentValue environment, RuntimeValue operator, RuntimeValue operands)
   { //  Copy environment for lexical effect
-    Environment letEnvironment = new Environment(environment, /* subEnvironment */ false);
+    EnvironmentValue letEnvironment = new EnvironmentValue(environment, /* mutable */ true);
     ASTMatcher simpleLetSubstitution = new ASTMatcher("(((name value) ...) body ...)", operands);
     if (simpleLetSubstitution.matched())
     { /* Case for simple let */

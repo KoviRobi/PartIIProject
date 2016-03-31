@@ -1,12 +1,11 @@
 package rmk35.partIIProject.middle.bindings;
 
-import rmk35.partIIProject.runtime.RuntimeValue;
-
 import rmk35.partIIProject.SyntaxErrorException;
 
-import rmk35.partIIProject.frontend.SourceInfo;
+import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.EnvironmentValue;
 
-import rmk35.partIIProject.middle.Environment;
+import rmk35.partIIProject.frontend.SourceInfo;
 
 import rmk35.partIIProject.backend.statements.Statement;
 
@@ -22,7 +21,7 @@ public class MarkerBinding implements Binding
   }
 
   @Override
-  public Statement applicate(Environment useEnvironment, RuntimeValue operator, RuntimeValue operands)
+  public Statement applicate(EnvironmentValue useEnvironment, RuntimeValue operator, RuntimeValue operands)
   { throw new SyntaxErrorException("Tried to use applicate on an ellipsis binding", operator.getSourceInfo());
   }
 
@@ -34,5 +33,10 @@ public class MarkerBinding implements Binding
   @Override
   public Binding subEnvironment()
   { return this;
+  }
+
+  @Override
+  public boolean runtime()
+  { return false;
   }
 }

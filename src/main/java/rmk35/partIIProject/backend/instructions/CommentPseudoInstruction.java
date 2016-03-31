@@ -15,6 +15,6 @@ public class CommentPseudoInstruction implements Instruction
   }
 
   public String byteCode()
-  { return "  ; " + commentText;
+  { return "  ; " + commentText.replace("\n", "\\n");
   }
 }

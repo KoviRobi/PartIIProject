@@ -6,6 +6,7 @@ import rmk35.partIIProject.utility.Pair;
 import rmk35.partIIProject.utility.PerfectBinaryTree;
 
 import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.EnvironmentValue;
 
 import rmk35.partIIProject.frontend.SchemeParser;
 
@@ -20,18 +21,19 @@ import java.util.HashSet;
 import java.util.Collection;
 
 public class ASTMatcher
-{ Environment environment;
+{ EnvironmentValue environment;
   ASTCompilePatternVisitor patternCompiler;
 
   Substitution match;
   Collection<String> nonLiterals;
 
   public ASTMatcher(String pattern, RuntimeValue body, String... literals)
-  { environment = new Environment();
+  { environment = new EnvironmentValue(/* mutable */ true);
     environment.addBinding("...", new EllipsisBinding());
     patternCompiler = new ASTCompilePatternVisitor(new HashSet<>(Arrays.asList(literals)), environment);
     Pair<ASTMatchVisitor, Collection<String>> compiledPattern = parseData(pattern).accept(patternCompiler);
     nonLiterals = compiledPattern.getSecond();
+    compiledPattern.getFirst().setUseEnvironment(environment);
     match = body.accept(compiledPattern.getFirst());
   }
 
@@ -48,5 +50,10 @@ public class ASTMatcher
 
   static RuntimeValue parseData(String pattern)
   { return SchemeParser.read(pattern);
+  }
+
+  @Override
+  public String toString()
+  { return match.toString();
   }
 }

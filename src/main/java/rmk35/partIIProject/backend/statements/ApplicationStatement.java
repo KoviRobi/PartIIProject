@@ -17,10 +17,9 @@ import rmk35.partIIProject.backend.instructions.DupX1Instruction;
 import rmk35.partIIProject.backend.instructions.SwapInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
 import rmk35.partIIProject.backend.instructions.StaticCallInstruction;
-import rmk35.partIIProject.backend.instructions.types.ObjectType;
-import rmk35.partIIProject.backend.instructions.types.BooleanType;
-import rmk35.partIIProject.backend.instructions.types.IntegerType;
-import rmk35.partIIProject.backend.instructions.types.VoidType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.voidType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.runtimeValueType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.lambdaValueType;
 
 import java.util.List;
 import java.util.ListIterator;
@@ -34,9 +33,6 @@ public class ApplicationStatement extends Statement
 { Statement operator;
   List<Statement> operands;
 
-  private static final VoidType voidType = new VoidType();
-  private static final ObjectType runtimeType = new ObjectType(RuntimeValue.class);
-
   public ApplicationStatement(Statement operator, List<Statement> operands)
   { this.operator = operator;
     this.operands = operands;
@@ -48,7 +44,7 @@ public class ApplicationStatement extends Statement
     method.addInstruction(new DupInstruction());
 
     operator.generateOutput(mainClass, outputClass, method);
-    method.addInstruction(new StaticCallInstruction(new ObjectType(RuntimeValue.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(RuntimeValue.class)));
+    method.addInstruction(new StaticCallInstruction(runtimeValueType, TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", runtimeValueType));
     method.addInstruction(new CheckCastInstruction(LambdaValue.class));
 
     // Create a new list of operands
@@ -65,14 +61,14 @@ public class ApplicationStatement extends Statement
       method.addInstruction(new SwapInstruction());
       /* Generate output so now Cons, Cons, Runtime, Car */
       operand.generateOutput(mainClass, outputClass, method);
-      method.addInstruction(new StaticCallInstruction(new ObjectType(RuntimeValue.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(RuntimeValue.class)));
+      method.addInstruction(new StaticCallInstruction(runtimeValueType, TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", runtimeValueType));
       /* Swap with generated output so now Cons, Cons, Car, Runtime */
       method.addInstruction(new SwapInstruction());
-      method.addInstruction(new NonVirtualCallInstruction(voidType, ConsValue.class.getName().replace('.', '/') + "/<init>", runtimeType, runtimeType));
+      method.addInstruction(new NonVirtualCallInstruction(voidType, ConsValue.class.getName().replace('.', '/') + "/<init>", runtimeValueType, runtimeValueType));
     }
 
     // Wrap call in a TrampolineVisitor
-    method.addInstruction(new NonVirtualCallInstruction(voidType, TrampolineValue.class.getName().replace('.', '/') + "/<init>", new ObjectType(LambdaValue.class), runtimeType));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, TrampolineValue.class.getName().replace('.', '/') + "/<init>", lambdaValueType, runtimeValueType));
   }
 
   @Override

@@ -23,4 +23,9 @@ public abstract class SintacticBinding implements Binding
   public Binding subEnvironment()
   { return this;
   }
+
+  @Override
+  public boolean runtime()
+  { return false;
+  }
 }

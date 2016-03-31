@@ -31,4 +31,9 @@ public class LocalBinding extends VariableBinding
   public Binding subEnvironment()
   { return new ClosureBinding(identifier);
   }
+
+  @Override
+  public boolean runtime()
+  { return false;
+  }
 }

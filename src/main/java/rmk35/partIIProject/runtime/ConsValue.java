@@ -14,8 +14,8 @@ import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
 import rmk35.partIIProject.backend.instructions.DupInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
-import rmk35.partIIProject.backend.instructions.types.VoidType;
-import rmk35.partIIProject.backend.instructions.types.ObjectType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.voidType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.runtimeValueType;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -28,10 +28,6 @@ public class ConsValue implements PrimitiveValue
   RuntimeValue cdr;
   SourceInfo sourceInfo;
 
-  @Deprecated
-  public ConsValue(PrimitiveValue car, PrimitiveValue cdr)
-  { this((RuntimeValue) car, (RuntimeValue) cdr);
-  }
   @Deprecated
   public ConsValue(RuntimeValue car, RuntimeValue cdr)
   { this(car, cdr, null);
@@ -74,7 +70,7 @@ public class ConsValue implements PrimitiveValue
     method.addInstruction(new DupInstruction());
     car.generateByteCode(mainClass, outputClass, method);
     cdr.generateByteCode(mainClass, outputClass, method);
-    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), ConsValue.class.getName().replace('.', '/') + "/<init>", new ObjectType(PrimitiveValue.class), new ObjectType(PrimitiveValue.class)));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, ConsValue.class.getName().replace('.', '/') + "/<init>", runtimeValueType, runtimeValueType));
   }
 
   @Override
@@ -97,5 +93,10 @@ public class ConsValue implements PrimitiveValue
     { // Not sure how to represent improper lists, so just returning this
       return this;
     }
+  }
+
+  @Override
+  public boolean mutable()
+  { return true;
   }
 }

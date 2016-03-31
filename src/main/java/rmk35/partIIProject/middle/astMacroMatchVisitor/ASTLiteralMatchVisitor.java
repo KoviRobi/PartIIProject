@@ -20,4 +20,9 @@ public class ASTLiteralMatchVisitor extends ASTNoMatchVisitor
     { return null;
     }
   }
+
+  @Override
+  public String toString()
+  { return storedObject.toString();
+  }
 }

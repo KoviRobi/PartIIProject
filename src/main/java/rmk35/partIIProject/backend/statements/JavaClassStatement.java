@@ -12,7 +12,8 @@ import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.CheckCastInstruction;
 import rmk35.partIIProject.backend.instructions.VirtualCallInstruction;
 import rmk35.partIIProject.backend.instructions.StaticCallInstruction;
-import rmk35.partIIProject.backend.instructions.types.ObjectType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.stringType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.runtimeValueType;
 
 import java.util.Collection;
 import java.util.TreeSet;
@@ -23,9 +24,6 @@ import lombok.ToString;
 public class JavaClassStatement extends Statement
 { Statement className;
 
-  private static final ObjectType stringType = new ObjectType(String.class);
-  private static final ObjectType runtimeValueType = new ObjectType(RuntimeValue.class);
-
   public JavaClassStatement(Statement className)
   { this.className = className;
   }
@@ -33,7 +31,7 @@ public class JavaClassStatement extends Statement
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("JavaClassStatement"));
     className.generateOutput(mainClass, outputClass, method);
-    method.addInstruction(new StaticCallInstruction(new ObjectType(RuntimeValue.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(RuntimeValue.class)));
+    method.addInstruction(new StaticCallInstruction(runtimeValueType, TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", runtimeValueType));
     method.addInstruction(new CheckCastInstruction(StringValue.class));
     method.addInstruction(new VirtualCallInstruction(stringType, StringValue.class.getName().replace('.', '/') + "/getValue"));
     method.addInstruction(new StaticCallInstruction(runtimeValueType, JavaClassStatement.class.getName().replace('.', '/') + "/getClass", stringType));

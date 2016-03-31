@@ -10,6 +10,8 @@ public interface RuntimeValue extends AST
 { boolean equal(RuntimeValue other);
   boolean eqv(RuntimeValue other);
   boolean eq(RuntimeValue other);
+
+  boolean mutable();
   void generateByteCode(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method);
   Object toJavaValue();
 }

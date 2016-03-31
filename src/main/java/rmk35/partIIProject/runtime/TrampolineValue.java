@@ -77,4 +77,9 @@ public class TrampolineValue implements RuntimeValue
 
   @Override
   public Object toJavaValue() { throw new InternalCompilerException("A trampoline is an internal data structure, it should not be externally visible."); }
+
+  @Override
+  public boolean mutable()
+  { return false;
+  }
 }

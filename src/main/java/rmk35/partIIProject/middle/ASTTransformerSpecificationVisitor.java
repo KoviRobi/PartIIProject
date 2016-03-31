@@ -7,8 +7,8 @@ import rmk35.partIIProject.utility.Pair;
 import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.ConsValue;
 import rmk35.partIIProject.runtime.IdentifierValue;
+import rmk35.partIIProject.runtime.EnvironmentValue;
 
-import rmk35.partIIProject.middle.Environment;
 import rmk35.partIIProject.middle.bindings.SyntaxBinding;
 import rmk35.partIIProject.middle.bindings.SyntaxRulesBinding;
 import rmk35.partIIProject.middle.bindings.EllipsisBinding;
@@ -28,19 +28,19 @@ import lombok.Value;
  */
 @Value
 public class ASTTransformerSpecificationVisitor extends ASTUnexpectedVisitor<SyntaxBinding>
-{ Environment environment;
+{ EnvironmentValue environment;
 
-  public ASTTransformerSpecificationVisitor(Environment environment)
+  public ASTTransformerSpecificationVisitor(EnvironmentValue environment)
   { this.environment = environment;
   }
 
   @Override
   public SyntaxBinding visit(ConsValue consCell)
   { String syntaxRules = consCell.getCar().accept(new ASTExpectIdentifierVisitor()).getValue();
-    if (! (environment.lookUp(syntaxRules) instanceof SyntaxRulesBinding))
+    if (! (environment.getOrGlobal(syntaxRules) instanceof SyntaxRulesBinding))
     { throw new SyntaxErrorException("I was expecting \"syntax-rules\", maybe it has been rebound?", consCell.getSourceInfo());
     }
-    Environment ellipsisEnvironment = new Environment(environment, /* subEnvironment */ false);
+    EnvironmentValue ellipsisEnvironment = new EnvironmentValue(environment, /* mutable */ true);
     ConsValue second = consCell.getCdr().accept(new ASTExpectConsVisitor());
     RuntimeValue literalsAST;
     if (second.getCar() instanceof IdentifierValue)

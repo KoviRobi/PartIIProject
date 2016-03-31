@@ -15,8 +15,10 @@ import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
 import rmk35.partIIProject.backend.instructions.DupInstruction;
 import rmk35.partIIProject.backend.instructions.StringConstantInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
-import rmk35.partIIProject.backend.instructions.types.VoidType;
-import rmk35.partIIProject.backend.instructions.types.ObjectType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.voidType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.stringType;
+
+import java.util.Formatter;
 
 import lombok.Value;
 
@@ -69,7 +71,7 @@ public class IdentifierValue implements PrimitiveValue
     method.addInstruction(new NewObjectInstruction(IdentifierValue.class));
     method.addInstruction(new DupInstruction());
     method.addInstruction(new StringConstantInstruction(value));
-    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), IdentifierValue.class.getName().replace('.', '/') + "/<init>", new ObjectType(String.class)));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, IdentifierValue.class.getName().replace('.', '/') + "/<init>", stringType));
   }
 
   @Override
@@ -78,13 +80,43 @@ public class IdentifierValue implements PrimitiveValue
   }
 
   @Override
-  public boolean equals(Object other)
-  { return other instanceof IdentifierValue
-        && value.equals(((IdentifierValue)other).value);
+  public Object toJavaValue()
+  { return this;
   }
 
   @Override
-  public Object toJavaValue()
-  { return this;
+  public boolean mutable()
+  { return false;
+  }
+
+  @Override
+  public boolean equals(Object other)
+  { return other instanceof RuntimeValue && equal((RuntimeValue) other);
+  }
+
+  public static String javaifyName(String name)
+  { StringBuilder returnValue = new StringBuilder();
+    for (int i = 0; i < name.length(); i++)
+    { if ('a' < name.codePointAt(i) && name.codePointAt(i) < 'z')
+      { returnValue.appendCodePoint(name.codePointAt(i));
+      } else
+      { returnValue.append("X");
+        returnValue.append(new Formatter().format("%06x", name.codePointAt(i)));
+      }
+    }
+    return returnValue.toString();
+  }
+
+  public static String schemifyName(String name)
+  { StringBuilder returnValue = new StringBuilder();
+    for (int i = 0; i < name.length(); i++)
+    { if (name.codePointAt(i) == 'X')
+      { returnValue.appendCodePoint(Integer.parseInt(name.substring(i+1, i+7), 16));
+        i += 6;
+      } else
+      { returnValue.appendCodePoint(name.codePointAt(i));
+      }
+    }
+    return returnValue.toString();
   }
 }

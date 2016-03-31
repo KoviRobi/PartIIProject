@@ -19,9 +19,9 @@ import rmk35.partIIProject.backend.instructions.CheckCastInstruction;
 import rmk35.partIIProject.backend.instructions.PopInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
 import rmk35.partIIProject.backend.instructions.VirtualCallInstruction;
-import rmk35.partIIProject.backend.instructions.types.JVMType;
 import rmk35.partIIProject.backend.instructions.types.ObjectType;
-import rmk35.partIIProject.backend.instructions.types.VoidType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.voidType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.runtimeValueType;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -35,9 +35,6 @@ public class InnerClass extends OutputClass
   String comment;
 
   private ObjectType[] constructorTypes;
-
-  private static final JVMType voidType = new VoidType();
-  private static final ObjectType runtimeValueType = new ObjectType(RuntimeValue.class);
 
   public InnerClass(String name, List<IdentifierStatement> closureVariables, int variableCount, MainClass mainClass, String comment)
   { super(name);

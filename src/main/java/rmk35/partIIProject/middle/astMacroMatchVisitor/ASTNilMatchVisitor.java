@@ -10,4 +10,9 @@ public class ASTNilMatchVisitor extends ASTNoMatchVisitor
   public Substitution visit(NullValue nil)
   { return new Substitution();
   }
+
+  @Override
+  public String toString()
+  { return "()";
+  }
 }

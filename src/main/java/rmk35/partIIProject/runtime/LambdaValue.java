@@ -38,4 +38,9 @@ public abstract class LambdaValue implements RuntimeValue, Function<RuntimeValue
   public Object toJavaValue()
   { return this;
   }
+
+  @Override
+  public boolean mutable()
+  { return false;
+  }
 }

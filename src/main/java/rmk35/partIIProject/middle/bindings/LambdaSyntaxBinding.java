@@ -5,8 +5,8 @@ import rmk35.partIIProject.SyntaxErrorException;
 
 import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.ConsValue;
+import rmk35.partIIProject.runtime.EnvironmentValue;
 
-import rmk35.partIIProject.middle.Environment;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectConsVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectIdentifierVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTImproperListFoldVisitor;
@@ -26,12 +26,14 @@ import lombok.ToString;
 @ToString
 public class LambdaSyntaxBinding extends SintacticBinding
 { @Override
-  public Statement applicate(Environment environment, RuntimeValue operator, RuntimeValue operands)
+  public Statement applicate(EnvironmentValue environment, RuntimeValue operator, RuntimeValue operands)
   { ConsValue first = operands.accept(new ASTExpectConsVisitor());
-    Environment bodyEnvironment = new Environment(environment, /* subEnvironment */ true);
+    EnvironmentValue bodyEnvironment = environment.subEnvironment();
     List<String> formals = first.getCar().accept(new ASTImproperListFoldVisitor<List<String>>(new ArrayList<String>(),
       (List<String> list, RuntimeValue ast) -> { list.add(ast.accept(new ASTExpectIdentifierVisitor()).getValue()); return list; } ));
-    bodyEnvironment.addLocalVariables(formals);
+    for (String formal : formals)
+    { bodyEnvironment.addLocalVariable(formal);
+    }
 
     List<Statement> body = first.getCdr().accept
       (new ASTListFoldVisitor<List<Statement>>(new ArrayList<>(),
@@ -45,8 +47,8 @@ public class LambdaSyntaxBinding extends SintacticBinding
     // Look up in the current environment, as these will be used to get the be variable value
     // to save them in the created function's closure
     for (String variable : bodyStatement.getFreeIdentifiers())
-    { if (bodyEnvironment.lookUp(variable).shouldSaveToClosure()) // Note the use of bodyEnvironment here and environment below
-      { closureVariables.add((IdentifierStatement)environment.lookUpAsStatement(variable, operator.getSourceInfo()));
+    { if (bodyEnvironment.getOrGlobal(variable).shouldSaveToClosure()) // Note the use of bodyEnvironment here and environment below
+      { closureVariables.add((IdentifierStatement) environment.getOrGlobal(variable).toStatement(operator.getSourceInfo()));
       }
     }
 

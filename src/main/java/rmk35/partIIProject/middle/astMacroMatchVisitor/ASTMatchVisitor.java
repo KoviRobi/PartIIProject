@@ -3,8 +3,8 @@ package rmk35.partIIProject.middle.astMacroMatchVisitor;
 import rmk35.partIIProject.InternalCompilerException;
 
 import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.EnvironmentValue;
 
-import rmk35.partIIProject.middle.Environment;
 import rmk35.partIIProject.middle.ASTVisitor;
 
 import rmk35.partIIProject.middle.astMacroMatchVisitor.astMatchVisitorReturn.Substitution;
@@ -13,12 +13,12 @@ import rmk35.partIIProject.middle.astMacroMatchVisitor.astMatchVisitorReturn.Sub
     null means "no match"
  */
 public abstract class ASTMatchVisitor extends ASTVisitor<Substitution>
-{ Environment useEnvironment = null;
-  public final void setUseEnvironment(Environment environment)
+{ EnvironmentValue useEnvironment = null;
+  public void setUseEnvironment(EnvironmentValue environment)
   { useEnvironment = environment;
   }
 
-  final Environment getUseEnvironment()
+  final EnvironmentValue getUseEnvironment()
   { if (useEnvironment == null) throw new InternalCompilerException("Macro use environment got before set");
     return useEnvironment;
   }

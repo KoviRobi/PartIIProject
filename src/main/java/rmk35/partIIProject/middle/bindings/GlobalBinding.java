@@ -29,4 +29,9 @@ public class GlobalBinding extends VariableBinding
   public Binding subEnvironment()
   { return this;
   }
+
+  @Override
+  public boolean runtime()
+  { return false;
+  }
 }

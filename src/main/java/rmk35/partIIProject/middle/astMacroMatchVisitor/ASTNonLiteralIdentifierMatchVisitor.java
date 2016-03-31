@@ -42,4 +42,9 @@ public class ASTNonLiteralIdentifierMatchVisitor extends ASTMatchVisitor
     returnValue.put(variable.getValue(), variable.getSourceInfo(), object);
     return returnValue;
   }
+
+  @Override
+  public String toString()
+  { return "[" + variable.getValue() + "]";
+  }
 }

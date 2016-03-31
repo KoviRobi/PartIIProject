@@ -8,8 +8,8 @@ import rmk35.partIIProject.utility.PerfectBinaryTreeLeaf;
 import rmk35.partIIProject.utility.PerfectBinaryTreeNode;
 
 import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.EnvironmentValue;
 
-import rmk35.partIIProject.middle.Environment;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectIdentifierVisitor;
 import rmk35.partIIProject.middle.ASTMatcher;
 import rmk35.partIIProject.middle.ASTConvertVisitor;
@@ -26,7 +26,7 @@ import lombok.ToString;
 @ToString
 public class BeginBinding extends SintacticBinding
 { @Override
-  public Statement applicate(Environment environment, RuntimeValue operator, RuntimeValue operands)
+  public Statement applicate(EnvironmentValue environment, RuntimeValue operator, RuntimeValue operands)
   { ASTMatcher beginSubstitution = new ASTMatcher("(body ...)", operands);
     if (beginSubstitution.matched())
     { /* Case for simple let */

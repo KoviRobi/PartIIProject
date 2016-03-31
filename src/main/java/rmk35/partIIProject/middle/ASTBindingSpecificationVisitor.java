@@ -1,5 +1,7 @@
 package rmk35.partIIProject.middle;
 
+import rmk35.partIIProject.runtime.EnvironmentValue;
+
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectIdentifierVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTPairMapVisitor;
 
@@ -10,7 +12,7 @@ import lombok.Value;
  */
 @Value
 public class ASTBindingSpecificationVisitor extends ASTPairMapVisitor<String, Statement>
-{ public ASTBindingSpecificationVisitor(Environment environment)
+{ public ASTBindingSpecificationVisitor(EnvironmentValue environment)
   { super(a -> a.accept(new ASTExpectIdentifierVisitor()).getValue(), b -> b.accept(new ASTConvertVisitor(environment)));
   }
 }

@@ -13,7 +13,7 @@ import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
 import rmk35.partIIProject.backend.instructions.DupInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
-import rmk35.partIIProject.backend.instructions.types.VoidType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.voidType;
 
 import java.util.ArrayList;
 
@@ -53,7 +53,7 @@ public class NullValue implements PrimitiveValue
   { method.addInstruction(new CommentPseudoInstruction("ByteCode for " + NullValue.class.getName()));
     method.addInstruction(new NewObjectInstruction(NullValue.class));
     method.addInstruction(new DupInstruction());
-    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), NullValue.class.getName().replace('.', '/') + "/<init>"));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, NullValue.class.getName().replace('.', '/') + "/<init>"));
   }
 
   @Override
@@ -62,5 +62,10 @@ public class NullValue implements PrimitiveValue
   @Override
   public Object toJavaValue()
   { return new ArrayList<>();
+  }
+
+  @Override
+  public boolean mutable()
+  { return false;
   }
 }

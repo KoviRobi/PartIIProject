@@ -7,8 +7,7 @@ import rmk35.partIIProject.runtime.ConsValue;
 import rmk35.partIIProject.runtime.IdentifierValue;
 import rmk35.partIIProject.runtime.NullValue;
 import rmk35.partIIProject.runtime.SelfquotingValue;
-
-import rmk35.partIIProject.middle.Environment;
+import rmk35.partIIProject.runtime.EnvironmentValue;
 
 import rmk35.partIIProject.middle.astMacroMatchVisitor.astMatchVisitorReturn.Substitution;
 
@@ -19,6 +18,13 @@ public class ASTConsStarMatchVisitor extends ASTMatchVisitor
   public ASTConsStarMatchVisitor(ASTMatchVisitor carVisitor, ASTMatchVisitor cdrVisitor)
   { this.carVisitor = carVisitor;
     this.cdrVisitor = cdrVisitor;
+  }
+
+  @Override
+  public void setUseEnvironment(EnvironmentValue environment)
+  { super.setUseEnvironment(environment);
+    carVisitor.setUseEnvironment(environment);
+    cdrVisitor.setUseEnvironment(environment);
   }
 
   @Override
@@ -66,5 +72,10 @@ public class ASTConsStarMatchVisitor extends ASTMatchVisitor
   @Override
   protected Substitution visit(SelfquotingValue object)
   { return object.accept(cdrVisitor);
+  }
+
+  @Override
+  public String toString()
+  { return "(" + carVisitor.toString() + " ... . " + cdrVisitor.toString() + ")";
   }
 }

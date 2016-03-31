@@ -9,7 +9,7 @@ import rmk35.partIIProject.backend.instructions.LocalLoadInstruction;
 import rmk35.partIIProject.backend.instructions.GetFieldInstruction;
 import rmk35.partIIProject.backend.instructions.SwapInstruction;
 import rmk35.partIIProject.backend.instructions.PutFieldInstruction;
-import rmk35.partIIProject.backend.instructions.types.ObjectType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.runtimeValueType;
 
 import java.util.Collection;
 import java.util.TreeSet;
@@ -22,7 +22,6 @@ import lombok.ToString;
 @ToString
 public class ClosureIdentifierStatement extends IdentifierStatement
 { String name;
-  private static final ObjectType type = new ObjectType(RuntimeValue.class);
 
   public ClosureIdentifierStatement(String name)
   { this.name = name;
@@ -31,18 +30,18 @@ public class ClosureIdentifierStatement extends IdentifierStatement
   @Override
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("ClosureIdentifierStatement Get"));
-    method.addInstruction(new LocalLoadInstruction(type, 0)); // 'this', the current object
+    method.addInstruction(new LocalLoadInstruction(runtimeValueType, 0)); // 'this', the current object
     // Note using outputClass, whereas for GlobalIdentifierStatement, we are using mainClass
-    method.addInstruction(new GetFieldInstruction(type, outputClass.getName() + "/" + name));
+    method.addInstruction(new GetFieldInstruction(runtimeValueType, outputClass.getName() + "/" + name));
   }
 
   @Override
   public void generateSetOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("ClosureIdentifierStatement Set"));
-    method.addInstruction(new LocalLoadInstruction(type, 0)); // 'this', the current object
+    method.addInstruction(new LocalLoadInstruction(runtimeValueType, 0)); // 'this', the current object
     method.addInstruction(new SwapInstruction()); // Swap object and value for PutFieldInstruction
     // Note using outputClass, whereas for GlobalIdentifierStatement, we are using mainClass
-    method.addInstruction(new PutFieldInstruction(type, outputClass.getName() + "/" + name));
+    method.addInstruction(new PutFieldInstruction(runtimeValueType, outputClass.getName() + "/" + name));
   }
 
   @Override
@@ -59,6 +58,6 @@ public class ClosureIdentifierStatement extends IdentifierStatement
 
   @Override
   public void ensureExistence(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
-  { outputClass.ensureFieldExists("private", name, type);
+  { outputClass.ensureFieldExists("private", name, runtimeValueType);
   }
 }

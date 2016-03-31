@@ -14,11 +14,10 @@ import rmk35.partIIProject.backend.instructions.IntegerConstantInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
 import rmk35.partIIProject.backend.instructions.StaticCallInstruction;
 import rmk35.partIIProject.backend.instructions.PopInstruction;
-import rmk35.partIIProject.backend.instructions.types.JVMType;
-import rmk35.partIIProject.backend.instructions.types.VoidType;
-import rmk35.partIIProject.backend.instructions.types.IntegerType;
-import rmk35.partIIProject.backend.instructions.types.ObjectType;
-import rmk35.partIIProject.backend.instructions.types.ArrayType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.voidType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.stringArrayType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.lambdaValueType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.runtimeValueType;
 
 import java.util.Set;
 import java.util.HashSet;
@@ -34,8 +33,6 @@ public class MainClass extends OutputClass
 { List<InnerClass> innerClasses;
   InnerClass mainInnerClass;
 
-  private static final JVMType voidType = new VoidType();
-
   public MainClass(String name)
   { this(name, new ArrayList<>());
   }
@@ -46,7 +43,7 @@ public class MainClass extends OutputClass
     mainInnerClass = new InnerClass(mainInnerClassName, new ArrayList<>(), 0, this, "Main inner class");
     addInnerClass(mainInnerClass);
 
-    ByteCodeMethod mainMethod = new ByteCodeMethod(voidType, "public static", "main", new ArrayType(new ObjectType(String.class)));
+    ByteCodeMethod mainMethod = new ByteCodeMethod(voidType, "public static", "main", stringArrayType);
     mainMethod.addInstruction(new NewObjectInstruction(TrampolineValue.class));
     mainMethod.addInstruction(new DupInstruction());
     mainMethod.addInstruction(new NewObjectInstruction(mainInnerClassName));
@@ -55,24 +52,14 @@ public class MainClass extends OutputClass
     mainMethod.addInstruction(new NewObjectInstruction(NullValue.class));
     mainMethod.addInstruction(new DupInstruction());
     mainMethod.addInstruction(new NonVirtualCallInstruction(voidType, NullValue.class.getName().replace('.', '/') + "/<init>"));
-    mainMethod.addInstruction(new NonVirtualCallInstruction(voidType, TrampolineValue.class.getName().replace('.', '/') + "/<init>", new ObjectType(LambdaValue.class), new ObjectType(RuntimeValue.class)));
-    mainMethod.addInstruction(new StaticCallInstruction(new ObjectType(RuntimeValue.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(RuntimeValue.class)));
+    mainMethod.addInstruction(new NonVirtualCallInstruction(voidType, TrampolineValue.class.getName().replace('.', '/') + "/<init>", lambdaValueType, runtimeValueType));
+    mainMethod.addInstruction(new StaticCallInstruction(runtimeValueType, TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", runtimeValueType));
     mainMethod.addInstruction(new PopInstruction());
     methods.put("main", mainMethod);
   }
 
   public void addInnerClass(InnerClass innerClass)
   { innerClasses.add(innerClass);
-  }
-
-  public void addGlobalBinding(String name, Class<?> binding)
-  { ByteCodeMethod initializer = getClassInitializer();
-    initializer.addInstruction(new NewObjectInstruction(binding));
-    initializer.addInstruction(new DupInstruction());
-    initializer.addInstruction(new NonVirtualCallInstruction(voidType, binding.getName().replace('.', '/') + "/<init>"));
-    GlobalIdentifierStatement destination = new GlobalIdentifierStatement(name);
-    destination.ensureExistence(this, this, initializer);
-    destination.generateSetOutput(this, this, initializer);
   }
 
   @Override

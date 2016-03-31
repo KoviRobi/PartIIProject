@@ -14,13 +14,13 @@ import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
 import rmk35.partIIProject.backend.instructions.DupInstruction;
 import rmk35.partIIProject.backend.instructions.IntegerConstantInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
-import rmk35.partIIProject.backend.instructions.types.VoidType;
-import rmk35.partIIProject.backend.instructions.types.BooleanType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.voidType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.booleanType;
 
 import lombok.Value;
 
 @Value
-public class BooleanValue implements SelfquotingValue
+public class BooleanValue extends SelfquotingValue
 { boolean value;
   SourceInfo sourceInfo;
 
@@ -62,7 +62,7 @@ public class BooleanValue implements SelfquotingValue
     method.addInstruction(new NewObjectInstruction(BooleanValue.class));
     method.addInstruction(new DupInstruction());
     method.addInstruction(new IntegerConstantInstruction(value? 1 : 0));
-    method.addInstruction(new NonVirtualCallInstruction(new VoidType(), BooleanValue.class.getName().replace('.', '/') + "/<init>", new BooleanType()));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, BooleanValue.class.getName().replace('.', '/') + "/<init>", booleanType));
   }
 
   @Override

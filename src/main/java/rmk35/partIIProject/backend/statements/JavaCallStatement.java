@@ -16,9 +16,9 @@ import rmk35.partIIProject.backend.instructions.DupInstruction;
 import rmk35.partIIProject.backend.instructions.ReferenceArrayStoreInstruction;
 import rmk35.partIIProject.backend.instructions.VirtualCallInstruction;
 import rmk35.partIIProject.backend.instructions.StaticCallInstruction;
-import rmk35.partIIProject.backend.instructions.types.JVMType;
-import rmk35.partIIProject.backend.instructions.types.ObjectType;
-import rmk35.partIIProject.backend.instructions.types.ArrayType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.objectType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.objectArrayType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.runtimeValueType;
 
 import java.util.List;
 import java.util.Collection;
@@ -34,9 +34,6 @@ public class JavaCallStatement extends Statement
   Statement thisObject;
   List<Statement> arguments;
 
-  private static final ObjectType objectType = new ObjectType(Object.class);
-  private static final ObjectType runtimeValueType = new ObjectType(RuntimeValue.class);
-
   public JavaCallStatement(Statement methodToCall, Statement thisObject, List<Statement> arguments)
   { this.methodToCall = methodToCall;
     this.thisObject = thisObject;
@@ -46,11 +43,11 @@ public class JavaCallStatement extends Statement
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("JavaCallStatement"));
     methodToCall.generateOutput(mainClass, outputClass, method);
-    method.addInstruction(new StaticCallInstruction(new ObjectType(RuntimeValue.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(RuntimeValue.class)));
+    method.addInstruction(new StaticCallInstruction(runtimeValueType, TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", runtimeValueType));
     method.addInstruction(new InterfaceCallInstruction(false, objectType, RuntimeValue.class.getName().replace('.', '/') + "/toJavaValue"));
     method.addInstruction(new CheckCastInstruction(Method.class));
     thisObject.generateOutput(mainClass, outputClass, method);
-    method.addInstruction(new StaticCallInstruction(new ObjectType(RuntimeValue.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(RuntimeValue.class)));
+    method.addInstruction(new StaticCallInstruction(runtimeValueType, TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", runtimeValueType));
     method.addInstruction(new InterfaceCallInstruction(false, objectType, RuntimeValue.class.getName().replace('.', '/') + "/toJavaValue"));
 
     // Make array for variadic arguments
@@ -61,12 +58,12 @@ public class JavaCallStatement extends Statement
     { method.addInstruction(new DupInstruction()); // Invariant: Array on top of stack
       method.addInstruction(new IntegerConstantInstruction(i));
       argument.generateOutput(mainClass, outputClass, method);
-      method.addInstruction(new StaticCallInstruction(new ObjectType(RuntimeValue.class), TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", new ObjectType(RuntimeValue.class)));
+      method.addInstruction(new StaticCallInstruction(runtimeValueType, TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", runtimeValueType));
       method.addInstruction(new InterfaceCallInstruction(false, objectType, RuntimeValue.class.getName().replace('.', '/') + "/toJavaValue"));
       method.addInstruction(new ReferenceArrayStoreInstruction());
       i++;
     }
-    method.addInstruction(new VirtualCallInstruction(objectType, Method.class.getName().replace('.', '/') + "/invoke", objectType, new ArrayType(objectType)));
+    method.addInstruction(new VirtualCallInstruction(objectType, Method.class.getName().replace('.', '/') + "/invoke", objectType, objectArrayType));
     method.addInstruction(new StaticCallInstruction(runtimeValueType, ValueHelper.class.getName().replace('.', '/') + "/toSchemeValue", objectType));
   }
 

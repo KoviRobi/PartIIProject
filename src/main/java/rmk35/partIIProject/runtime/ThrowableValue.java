@@ -59,4 +59,9 @@ public class ThrowableValue extends RuntimeException implements RuntimeValue
   public Object toJavaValue()
   { return value.toJavaValue();
   }
+
+  @Override
+  public boolean mutable()
+  { return value.mutable();
+  }
 }

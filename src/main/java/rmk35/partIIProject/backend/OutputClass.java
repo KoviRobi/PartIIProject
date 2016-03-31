@@ -6,8 +6,8 @@ import rmk35.partIIProject.backend.instructions.Instruction;
 import rmk35.partIIProject.backend.instructions.LocalLoadInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
 import rmk35.partIIProject.backend.instructions.types.JVMType;
-import rmk35.partIIProject.backend.instructions.types.VoidType;
-import rmk35.partIIProject.backend.instructions.types.ObjectType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.voidType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.objectType;
 
 import java.util.Map;
 import java.util.Hashtable;
@@ -33,15 +33,13 @@ public abstract class OutputClass
   Map<String, ByteCodeMethod> methods;
   int uniqueNumber = 0;
 
-  private static final JVMType voidType = new VoidType();
-
   public OutputClass(String name)
   { this.name = name;
     fields = new HashSet<>();
     methods = new Hashtable<>();
 
     ByteCodeMethod init = new ByteCodeMethod(voidType, "public", "<init>");
-    init.addInstruction(new LocalLoadInstruction(new ObjectType(), 0));
+    init.addInstruction(new LocalLoadInstruction(objectType, 0));
     init.addInstruction(new NonVirtualCallInstruction(voidType, getSuperClassName() + "/<init>"));
 
     methods.put("<init>", init);

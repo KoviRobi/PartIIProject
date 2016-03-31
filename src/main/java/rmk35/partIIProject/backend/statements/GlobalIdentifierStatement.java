@@ -8,7 +8,7 @@ import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.LocalLoadInstruction;
 import rmk35.partIIProject.backend.instructions.GetStaticInstruction;
 import rmk35.partIIProject.backend.instructions.PutStaticInstruction;
-import rmk35.partIIProject.backend.instructions.types.ObjectType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.runtimeValueType;
 
 import java.util.Collection;
 import java.util.TreeSet;
@@ -18,7 +18,6 @@ import lombok.ToString;
 @ToString
 public class GlobalIdentifierStatement extends IdentifierStatement
 { String name;
-  private static final ObjectType type = new ObjectType(RuntimeValue.class);
 
   public GlobalIdentifierStatement(String name)
   { this.name = name;
@@ -28,14 +27,14 @@ public class GlobalIdentifierStatement extends IdentifierStatement
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("GlobalIdentifierStatement Get"));
     // Note using mainClass, whereas for ClosureIdentifierStatement, we are using outputClass
-    method.addInstruction(new GetStaticInstruction(type, mainClass.getName() + "/" + name));
+    method.addInstruction(new GetStaticInstruction(runtimeValueType, mainClass.getName() + "/" + name));
   }
 
   @Override
   public void generateSetOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("GlobalIdentifierStatement Set"));
     // Note using mainClass, whereas for ClosureIdentifierStatement, we are using outputClass
-    method.addInstruction(new PutStaticInstruction(type, mainClass.getName() + "/" + name));
+    method.addInstruction(new PutStaticInstruction(runtimeValueType, mainClass.getName() + "/" + name));
   }
 
   @Override
@@ -50,6 +49,6 @@ public class GlobalIdentifierStatement extends IdentifierStatement
 
   @Override
   public void ensureExistence(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
-  { mainClass.ensureFieldExists("public static", name, type);
+  { mainClass.ensureFieldExists("public static", name, runtimeValueType);
   }
 }
