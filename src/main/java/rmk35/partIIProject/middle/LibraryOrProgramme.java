@@ -32,7 +32,9 @@ public class LibraryOrProgramme
 
       ASTMatcher importDeclaration = new ASTMatcher("(import import-set ...)", datum, "import");
       if (! finishedImporting && importDeclaration.matched())
-      { returnValue.add(importer.importEnvironment(importDeclaration));
+      { List<RuntimeValue> imports = new ArrayList<>();
+        importDeclaration.get("import-set").forEach(value -> imports.add(value));
+        returnValue.add(importer.importEnvironment(imports));
       } else
       { finishedImporting = true;
         returnValue.add(datum.accept(convertVisitor));

@@ -1,5 +1,7 @@
 (import (scheme base)
-        (scheme java))
+        (only (scheme java) class)
+        (except (scheme java) class field)
+        (rename (prefix (only (scheme java) field) get-) (get-field get-field-from-object)))
 
 (define system-out (static-field (class 'java.lang.System) 'out))
 (define println (lambda (value) (system-out 'println value)))
@@ -81,7 +83,7 @@
 (println (test-class 'getConstructors))
 (define test-object (test-class 'new "Hello, world!"))
 (test-object 'printMessage)
-(println (field test-object 'message))
+(println (get-field-from-object test-object 'message))
 (println (static-field test-class 'secretMessage))
 ((test-class 'new) 'printMessage 0)
 (test-object 'printStaticMessage '(1 2 3))

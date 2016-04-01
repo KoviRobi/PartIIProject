@@ -5,8 +5,6 @@ import rmk35.partIIProject.runtime.LambdaValue;
 import rmk35.partIIProject.runtime.NumberValue;
 import rmk35.partIIProject.runtime.NullValue;
 import rmk35.partIIProject.runtime.ConsValue;
-import rmk35.partIIProject.runtime.libraries.base.list.Length;
-import rmk35.partIIProject.runtime.libraries.base.list.Car;
 
 import java.util.List;
 

@@ -115,4 +115,9 @@ public class EnvironmentValue implements RuntimeValue
   public void generateByteCode(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { throw new InternalCompilerException("I don't know how to generate ByteCode for EnvironmentValue yet");
   }
+
+  @Override
+  public String toString()
+  { return bindings.toString();
+  }
 }

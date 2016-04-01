@@ -7,6 +7,7 @@ import rmk35.partIIProject.runtime.ThrowableValue;
 import rmk35.partIIProject.runtime.LambdaValue;
 import rmk35.partIIProject.runtime.BooleanValue;
 import rmk35.partIIProject.runtime.TrampolineValue;
+import rmk35.partIIProject.runtime.libraries.ReflectiveEnvironment;
 import rmk35.partIIProject.runtime.libraries.UnaryLambda;
 import rmk35.partIIProject.runtime.libraries.BinaryLambda;
 

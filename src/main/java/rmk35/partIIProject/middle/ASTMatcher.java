@@ -40,7 +40,9 @@ public class ASTMatcher
   public boolean matched() { return match != null; }
 
   public PerfectBinaryTree<RuntimeValue> get(String key)
-  { return match.get(key);
+  { return (match.get(key) != null)
+      ? match.get(key).clone()
+      : null;
   }
 
   public RuntimeValue transform(String template)
