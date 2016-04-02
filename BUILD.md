@@ -11,6 +11,6 @@ mvn 'install:install-file' \
 
 Then just run
 ```bash
-mvn package
+mvn package assembly:single
 ```
-to compile `target/part-II-project-1.0-SNAPSHOT.jar`
+to compile `target/part-II-project-1.0-SNAPSHOT-jar-with-dependencies.jar`

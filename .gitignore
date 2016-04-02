@@ -36,3 +36,8 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
+
+# Test results
+compile-error
+run-error
+result
