@@ -8,10 +8,9 @@ import rmk35.partIIProject.frontend.SchemeParser;
 import rmk35.partIIProject.middle.AST;
 import rmk35.partIIProject.middle.LibraryOrProgramme;
 
-import rmk35.partIIProject.backend.statements.Statement;
-import rmk35.partIIProject.backend.JavaByteCodeGenerator;
 import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.statements.Statement;
 
 import java.util.List;
 import java.io.IOException;
@@ -40,9 +39,10 @@ public class Compiler
   public Compiler(String fileName, String outputName) throws Exception, IOException
   { MainClass mainClass = new MainClass(outputName);
     List<RuntimeValue> parsedFile = SchemeParser.parseFile(fileName);
-    List<Statement> statements = new LibraryOrProgramme().compile(parsedFile);
+    EnvironmentValue environment = new EnvironmentValue(/* mutable */ true);
+    Statement programme = new LibraryOrProgramme(environment).compile(parsedFile);
     // Mutates mainClass
-    JavaByteCodeGenerator.generateOutput(mainClass, statements);
+    programme.generateOutput(mainClass, mainClass.getMainInnerClass(), mainClass.getPrimaryMethod());
     mainClass.saveToDisk(); // For debugging purposes
     mainClass.assembleToDisk();
   }

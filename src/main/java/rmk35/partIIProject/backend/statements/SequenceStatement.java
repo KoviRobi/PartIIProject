@@ -28,9 +28,11 @@ public class SequenceStatement extends Statement
   }
 
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
-  { method.addInstruction(new CommentPseudoInstruction("SequenceStatement"));
-    for (Statement statement : statements)
-    { statement.generateOutput(mainClass, outputClass, method);
+  { if (! statements.isEmpty())
+    { method.addInstruction(new CommentPseudoInstruction("SequenceStatement"));
+      for (Statement statement : statements)
+      { statement.generateOutput(mainClass, outputClass, method);
+      }
     }
   }
 

@@ -2,6 +2,8 @@ package rmk35.partIIProject.backend;
 
 import rmk35.partIIProject.InternalCompilerException;
 
+import rmk35.partIIProject.runtime.IdentifierValue;
+
 import rmk35.partIIProject.backend.instructions.Instruction;
 import rmk35.partIIProject.backend.instructions.LocalLoadInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
@@ -48,6 +50,10 @@ public abstract class OutputClass
 
   public String getName()
   { return name;
+  }
+
+  public String getJavaName()
+  { return IdentifierValue.javaifyName(name);
   }
 
   public String uniqueID()

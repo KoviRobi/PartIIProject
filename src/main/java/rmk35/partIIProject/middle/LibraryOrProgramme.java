@@ -6,14 +6,20 @@ import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.EnvironmentValue;
 
 import rmk35.partIIProject.backend.statements.Statement;
+import rmk35.partIIProject.backend.statements.BeginStatement;
 
 import java.util.List;
 import java.util.ArrayList;
 
 public class LibraryOrProgramme
-{ public List<Statement> compile(List<RuntimeValue> data)
+{ EnvironmentValue environment;
+
+  public LibraryOrProgramme(EnvironmentValue environment)
+  { this.environment = environment;
+  }
+
+  public Statement compile(List<RuntimeValue> data)
   { List<Statement> returnValue = new ArrayList<>(data.size());
-    EnvironmentValue environment = new EnvironmentValue(/* mutable */ true);
     EnvironmentImporter importer = new EnvironmentImporter(environment);
     ASTConvertVisitor convertVisitor = new ASTConvertVisitor(environment);
     boolean finishedImporting = false;
@@ -34,12 +40,15 @@ public class LibraryOrProgramme
       if (! finishedImporting && importDeclaration.matched())
       { List<RuntimeValue> imports = new ArrayList<>();
         importDeclaration.get("import-set").forEach(value -> imports.add(value));
-        returnValue.add(importer.importEnvironment(imports));
+        importer.importEnvironment(imports);
       } else
-      { finishedImporting = true;
+      { if (! finishedImporting)
+        { returnValue.add(environment.getInitializer());
+          finishedImporting = true;
+        }
         returnValue.add(datum.accept(convertVisitor));
       }
     }
-    return returnValue;
+    return new BeginStatement(returnValue);
   }
 }

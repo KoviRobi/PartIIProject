@@ -38,26 +38,24 @@ public class EnvironmentImporter
   { this.environment = environment;
   }
 
-  public Statement importEnvironment(List<RuntimeValue> importSets)
-  { List<Statement> sequenceStatement = new ArrayList<>();
-    for (RuntimeValue importSet : importSets)
+  public void importEnvironment(List<RuntimeValue> importSets)
+  { for (RuntimeValue importSet : importSets)
     { EnvironmentValue foreignEnvironment = getEnvironment(importSet);
-      sequenceStatement.add(new RuntimeValueStatement(foreignEnvironment));
+      environment.addToInitializer(new RuntimeValueStatement(foreignEnvironment));
       for (Map.Entry<String, Binding> binding : foreignEnvironment.entrySet())
       { if (binding.getValue().runtime())
-        { sequenceStatement.add(new InstructionStatement(new DupInstruction())); // Invariant, Environment (to clone from) on stack
-          sequenceStatement.add(new DefineStatement
+        { environment.addToInitializer(new InstructionStatement(new DupInstruction())); // Invariant, Environment (to clone from) on stack
+          environment.addToInitializer(new DefineStatement
             (environment.addGlobalVariable(binding.getKey()).toStatement(importSet.getSourceInfo()),
             binding.getValue().toStatement(importSet.getSourceInfo())));
-          sequenceStatement.add(new InstructionStatement(new PopInstruction())); // Pop result of define
+          environment.addToInitializer(new InstructionStatement(new PopInstruction())); // Pop result of define
         } else
         { environment.addBinding(binding.getKey(), binding.getValue());
         }
       }
-      sequenceStatement.add(new InstructionStatement(new PopInstruction()));
+      environment.addToInitializer(new InstructionStatement(new PopInstruction())); // Pop environment
     }
-    sequenceStatement.add(new RuntimeValueStatement(new UnspecifiedValue()));
-    return new SequenceStatement(sequenceStatement); // Pop environment
+    environment.addToInitializer(new RuntimeValueStatement(new UnspecifiedValue()));
   }
 
   public EnvironmentValue getEnvironment(RuntimeValue importSet)

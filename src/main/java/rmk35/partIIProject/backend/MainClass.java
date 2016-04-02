@@ -42,7 +42,7 @@ public class MainClass extends OutputClass
     ByteCodeMethod mainMethod = new ByteCodeMethod(voidType, "public static", "main", stringArrayType);
     mainMethod.addInstruction(new NewObjectInstruction(TrampolineValue.class));
     mainMethod.addInstruction(new DupInstruction());
-    mainMethod.addInstruction(new NewObjectInstruction(mainInnerClassName));
+    mainMethod.addInstruction(new NewObjectInstruction(mainInnerClass.getName()));
     mainMethod.addInstruction(new DupInstruction());
     mainInnerClass.invokeConstructor(this, this, mainMethod);
     mainMethod.addInstruction(new NewObjectInstruction(NullValue.class));
