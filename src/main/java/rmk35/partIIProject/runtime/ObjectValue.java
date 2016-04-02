@@ -1,9 +1,12 @@
 package rmk35.partIIProject.runtime;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.lang.reflect.Method;
+import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.MalformedParametersException;
 
 public class ObjectValue extends LambdaValue
 { private Object innerObject;
@@ -26,6 +29,11 @@ public class ObjectValue extends LambdaValue
   { return innerObject.toString();
   }
 
+  @Override
+  public String writeString()
+  { return "#<java object: " + toString() + ">";
+  }
+
   public boolean equal(RuntimeValue other)
   { return this.equals(other); // Java Object equals
   }
@@ -35,31 +43,81 @@ public class ObjectValue extends LambdaValue
   public RuntimeValue apply(RuntimeValue argument)
   { ConsValue first = (ConsValue) argument;
     String message = ((IdentifierValue) first.getCar()).getValue();
-    Object[] arguments =
-      (first.getCdr() instanceof NullValue)
-        ? new Object[0]
-        : ((List) first.getCdr().toJavaValue()).toArray();
-    try // Try to find a matching method,
-         // Class.getMethod does not take
-         // casting into account hence this horribleness
-    { Method[] methods = innerObject.getClass().getMethods();
-methodsLoop:
-      for (Method method : methods)
-      { Class<?>[] parameterTypes = method.getParameterTypes();
-        if (!method.getName().equals(message)) continue;
-        if (parameterTypes.length != arguments.length) continue;
-        for (int i = 0; i < parameterTypes.length; i++)
-        { if (!parameterTypes[i].isInstance(arguments[i])) continue methodsLoop;
-        }
-        Object[] castedArguments = new Object[arguments.length];
-        for (int i = 0; i < parameterTypes.length; i++)
-        { castedArguments[i] = parameterTypes[i].cast(arguments[i]);
-        }
-        return ValueHelper.toSchemeValue(method.invoke(innerObject, castedArguments));
+    Object[] arguments = ((List) first.getCdr().toJavaValue()).toArray();
+    try
+    { List<Method> methods = applicableMethods(message, arguments, innerObject.getClass().getMethods());
+      if (methods.isEmpty())
+      { throw new NoSuchMethodException("Method with name \"" + message + "\" that takes \"" + Arrays.toString(arguments) + "\".");
       }
-      throw new NoSuchMethodException("Method with name \"" + message + "\" that takes \"" + Arrays.toString(arguments) + "\".");
+      Method method = getMostSpecificMethod(methods);
+      Object[] castArguments = new Object[arguments.length];
+      Class<?>[] parameterTypes = method.getParameterTypes();
+      for (int i = 0; i < arguments.length; i++)
+      { castArguments[i] = parameterTypes[i].cast(arguments[i]);
+      }
+      return ValueHelper.toSchemeValue(method.invoke(innerObject, castArguments));
     } catch (NoSuchMethodException | IllegalArgumentException | IllegalAccessException | InvocationTargetException e)
     { throw new RuntimeException(e);
     }
+  }
+
+  public static <T extends Executable> List<T> applicableMethods(String name, Object[] arguments, T[] methods)
+  { List<T> returnValue = new ArrayList<>();
+         // Try to find a matching method,
+         // Class.getMethod does not take
+         // casting into account hence this horribleness
+    for (T method : methods)
+    { Class<?>[] parameterTypes = method.getParameterTypes();
+      if (! method.getName().equals(name)) continue;
+      if (parameterTypes.length != arguments.length) continue;
+      if (! objectsSubtypeClasses(arguments, parameterTypes)) continue;
+      returnValue.add(method);
+    }
+    return returnValue;
+  }
+
+  static boolean objectsSubtypeClasses(Object[] a, Class<?>[] b)
+  { if (a.length != b.length) throw new MalformedParametersException("Two arrays don't have the same length.");
+    for (int i = 0; i < a.length; i++)
+    { if (! objectSubtypesClass(a[i], b[i])) return false;
+    }
+    return true;
+  }
+
+  static boolean classesSubtypeClasses(Class<?>[] a, Class<?>[] b)
+  { if (a.length != b.length) throw new MalformedParametersException("Two arrays don't have the same length.");
+    for (int i = 0; i < a.length; i++)
+    { if (! classSubtypesClass(a[i], b[i])) return false;
+    }
+    return true;
+  }
+
+  // a is subtype of b
+  static boolean objectSubtypesClass(Object a, Class<?> b)
+  { return (a.getClass().isArray() && ((Object[]) a).length == 0) ||
+      classSubtypesClass(a.getClass(), b);
+  }
+
+  // a is subtype of b
+  static boolean classSubtypesClass(Class<?> a, Class<?> b)
+  { if (a.isArray() && b.isArray())
+    { return classSubtypesClass(a.getComponentType(), b.getComponentType());
+    } else
+    { return b.isAssignableFrom(a);
+    }
+  }
+
+  // Undefined when methods don't have total order, e.g. when there are items
+  // which are neither sub are supertypes of each other
+  public static <T extends Executable> T getMostSpecificMethod(List<T> methods)
+  { T returnValue = null;
+    for (T method : methods)
+    { if (returnValue == null)
+      { returnValue = method;
+      } else if (classesSubtypeClasses(method.getParameterTypes(), returnValue.getParameterTypes()))
+      { returnValue = method;
+      }
+    }
+    return returnValue;
   }
 }

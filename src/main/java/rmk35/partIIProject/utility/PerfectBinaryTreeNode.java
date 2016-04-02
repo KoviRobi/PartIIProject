@@ -77,7 +77,7 @@ public class PerfectBinaryTreeNode<T> extends PerfectBinaryTree<T>
 
   public <U> PerfectBinaryTree<U> foldLeavesRight(BiFunction<U, T, U> function, U start)
   { if (depth == 1)
-    { ListIterator iterator = children.listIterator(children.size());
+    { ListIterator<PerfectBinaryTree<T>> iterator = children.listIterator(children.size());
       while (iterator.hasPrevious())
       { T value = ((PerfectBinaryTreeLeaf<T>) iterator.previous()).getValue();
         start = function.apply(start, value);

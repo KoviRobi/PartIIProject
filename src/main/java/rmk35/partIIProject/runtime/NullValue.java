@@ -23,7 +23,6 @@ import lombok.Value;
 public class NullValue implements PrimitiveValue
 { SourceInfo sourceInfo;
 
-  @Deprecated
   public NullValue()
   { this(null);
   }

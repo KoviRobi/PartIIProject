@@ -11,7 +11,7 @@ import rmk35.partIIProject.runtime.libraries.ReflectiveEnvironment;
 
 public class java extends ReflectiveEnvironment
 { public java() { bind(); }
-  public RuntimeValue clasX000073 =
+  public RuntimeValue clas$000073 =
   new UnaryLambda()
   { @Override
     public RuntimeValue run(RuntimeValue name)
@@ -37,7 +37,7 @@ public class java extends ReflectiveEnvironment
     }
   };
 
-  public RuntimeValue staticX00002Dfield =
+  public RuntimeValue static_field =
   new BinaryLambda()
   { @Override
     public RuntimeValue run(RuntimeValue classValue, RuntimeValue fieldName)

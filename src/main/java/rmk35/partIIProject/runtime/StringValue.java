@@ -24,7 +24,6 @@ public class StringValue extends SelfquotingValue
 { String value;
   SourceInfo sourceInfo;
 
-  @Deprecated
   public StringValue(String value)
   { this(value, null);
   }
@@ -40,7 +39,9 @@ public class StringValue extends SelfquotingValue
   public String getValue() { return value; }
   public SourceInfo getSourceInfo() { return sourceInfo; }
   @Override
-  public String toString() { return "\"" + value + "\""; }
+  public String toString() { return value; }
+  @Override
+  public String writeString() { return "\"" + toString() + "\""; }
 
   @Override
   public boolean eq(RuntimeValue other)

@@ -14,4 +14,6 @@ public interface RuntimeValue extends AST
   boolean mutable();
   void generateByteCode(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method);
   Object toJavaValue();
+  default String displayString() { return toString(); }
+  default String writeString() { return toString(); }
 }

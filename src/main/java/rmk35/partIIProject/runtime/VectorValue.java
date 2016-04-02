@@ -30,7 +30,6 @@ public class VectorValue extends SelfquotingValue
 { RuntimeValue[] value;
   SourceInfo sourceInfo;
 
-  @Deprecated
   public VectorValue(RuntimeValue[] value)
   { this(value, null);
   }
@@ -103,6 +102,6 @@ public class VectorValue extends SelfquotingValue
     for (int i = 0; i < value.length; i++)
     { returnValue[i] = value[i].toJavaValue();
     }
-    return returnValue;
+    return ValueHelper.downCastedArrayClone(returnValue);
   }
 }

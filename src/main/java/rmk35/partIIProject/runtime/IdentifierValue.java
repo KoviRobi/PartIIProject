@@ -29,7 +29,6 @@ public class IdentifierValue implements PrimitiveValue
 { String value;
   SourceInfo sourceInfo;
 
-  @Deprecated
   public IdentifierValue(String value)
   { this(value, null);
   }
@@ -99,10 +98,14 @@ public class IdentifierValue implements PrimitiveValue
   public static String javaifyName(String name)
   { StringBuilder returnValue = new StringBuilder("scm_");
     for (int i = 0; i < name.length(); i++)
-    { if ('a' <= name.codePointAt(i) && name.codePointAt(i) <= 'z')
+    { if (('a' <= name.codePointAt(i) && name.codePointAt(i) <= 'z') ||
+          ('0' <= name.codePointAt(i) && name.codePointAt(i) <= '9') ||
+          ('A' <= name.codePointAt(i) && name.codePointAt(i) <= 'Z'))
       { returnValue.appendCodePoint(name.codePointAt(i));
+      } else if ('-' == name.codePointAt(i))
+      { returnValue.append("_");
       } else
-      { returnValue.append("X");
+      { returnValue.append("$");
         returnValue.append(String.format("%06X", name.codePointAt(i)));
       }
     }
@@ -112,9 +115,11 @@ public class IdentifierValue implements PrimitiveValue
   public static String schemifyName(String name)
   { StringBuilder returnValue = new StringBuilder();
     for (int i = 4; i < name.length(); i++)
-    { if (name.codePointAt(i) == 'X')
+    { if (name.codePointAt(i) == '$')
       { returnValue.appendCodePoint(Integer.parseInt(name.substring(i+1, i+7), 16));
         i += 6;
+      } else if ('_' == name.codePointAt(i))
+      { returnValue.append("-");
       } else
       { returnValue.appendCodePoint(name.codePointAt(i));
       }

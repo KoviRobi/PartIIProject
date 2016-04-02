@@ -28,7 +28,6 @@ public class ConsValue implements PrimitiveValue
   RuntimeValue cdr;
   SourceInfo sourceInfo;
 
-  @Deprecated
   public ConsValue(RuntimeValue car, RuntimeValue cdr)
   { this(car, cdr, null);
   }
@@ -75,7 +74,20 @@ public class ConsValue implements PrimitiveValue
 
   @Override
   public String toString()
-  { return "(" + car.toString() + " . " + cdr.toString() + ")";
+  { StringBuilder returnValue = new StringBuilder("(");
+    returnValue.append(getCar());
+    RuntimeValue list = getCdr();
+    while (list instanceof ConsValue)
+    { returnValue.append(" ");
+      returnValue.append(((ConsValue) list).getCar());
+      list = ((ConsValue) list).getCdr();
+    }
+    if (! (list instanceof NullValue))
+    { // Not sure how to represent improper lists, so just returning this
+      returnValue.append(" . ");
+      returnValue.append(list.toString());
+    }
+    return returnValue.toString();
   }
 
   @Override

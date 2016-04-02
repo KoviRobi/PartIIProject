@@ -24,7 +24,6 @@ public class BooleanValue extends SelfquotingValue
 { boolean value;
   SourceInfo sourceInfo;
 
-  @Deprecated
   public BooleanValue(boolean value)
   { this(value, null);
   }

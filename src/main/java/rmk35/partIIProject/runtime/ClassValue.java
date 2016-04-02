@@ -1,8 +1,10 @@
 package rmk35.partIIProject.runtime;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
@@ -21,55 +23,42 @@ public class ClassValue extends ObjectValue
   public RuntimeValue apply(RuntimeValue argument)
   { ConsValue first = (ConsValue) argument;
     String message = ((IdentifierValue) first.getCar()).getValue();
-    Object[] arguments =
-      (first.getCdr() instanceof NullValue)
-        ? new Object[0]
-        : ((List) first.getCdr().toJavaValue()).toArray();
+    Object[] arguments = ((List) first.getCdr().toJavaValue()).toArray();
     if (message.equals("new"))
     { try // Try to find a matching constructor,
            // Class.getConstructor does not take
            // casting into account hence this horribleness
-      { Constructor[] constructors = innerClass.getConstructors();
-constructorsLoop:
-        for (Constructor constructor : constructors)
-        { Class<?>[] parameterTypes = constructor.getParameterTypes();
-          if (parameterTypes.length != arguments.length) continue;
-          for (int i = 0; i < parameterTypes.length; i++)
-          { if (!parameterTypes[i].isInstance(arguments[i])) continue constructorsLoop;
-          }
-          Object[] castedArguments = new Object[arguments.length];
-          for (int i = 0; i < parameterTypes.length; i++)
-          { castedArguments[i] = parameterTypes[i].cast(arguments[i]);
-          }
-          return ValueHelper.toSchemeValue(constructor.newInstance(castedArguments));
+      { List<Constructor> applicableConstructors = applicableMethods(innerClass.getName(), arguments, innerClass.getConstructors());
+        if (applicableConstructors.isEmpty())
+        { throw new NoSuchMethodException("Constructor not found that takes \"" + Arrays.toString(arguments) + "\".");
         }
-        throw new NoSuchMethodException("Constructor not found that takes \"" + Arrays.toString(arguments) + "\".");
-      } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e)
+        Constructor constructor = getMostSpecificMethod(applicableConstructors);
+        Object[] castArguments = new Object[arguments.length];
+        Class<?>[] parameterTypes = constructor.getParameterTypes();
+        for (int i = 0; i < arguments.length; i++)
+        { castArguments[i] = parameterTypes[i].cast(arguments[i]);
+        }
+        return ValueHelper.toSchemeValue(constructor.newInstance(castArguments));
+      } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e)
       { throw new RuntimeException(e);
       }
     } else // Try to find a static method on the Object
             // that this class represents, before
             // finding a method on the Class itself (super.apply(...) call)
-    { try // Try to find a matching method,
-           // Class.getMethod does not take
-           // casting into account hence this horribleness
-      { Method[] methods = innerClass.getMethods();
-methodsLoop:
-        for (Method method : methods)
-        { Class<?>[] parameterTypes = method.getParameterTypes();
-          if (!method.getName().equals(message)) continue;
-          if (!method.toString().contains("static")) continue;
-          if (parameterTypes.length != arguments.length) continue;
-          for (int i = 0; i < parameterTypes.length; i++)
-          { if (!parameterTypes[i].isInstance(arguments[i])) continue methodsLoop;
-          }
-          Object[] castedArguments = new Object[arguments.length];
-          for (int i = 0; i < parameterTypes.length; i++)
-          { castedArguments[i] = parameterTypes[i].cast(arguments[i]);
-          }
-          return ValueHelper.toSchemeValue(method.invoke(null, castedArguments));
+    { try
+      { List<Method> staticMethods = new ArrayList<>();
+        for (Method method : innerClass.getMethods())
+        { if (Modifier.isStatic(method.getModifiers())) staticMethods.add(method);
         }
-        return super.apply(argument);
+        List<Method> methods = applicableMethods(message, arguments, staticMethods.toArray(new Method[0]));
+        if (methods.isEmpty()) return super.apply(argument);
+        Method method = getMostSpecificMethod(methods);
+        Object[] castArguments = new Object[arguments.length];
+        Class<?>[] parameterTypes = method.getParameterTypes();
+        for (int i = 0; i < arguments.length; i++)
+        { castArguments[i] = parameterTypes[i].cast(arguments[i]);
+        }
+        return ValueHelper.toSchemeValue(method.invoke(null, castArguments));
       } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e)
       { throw new RuntimeException(e);
       }

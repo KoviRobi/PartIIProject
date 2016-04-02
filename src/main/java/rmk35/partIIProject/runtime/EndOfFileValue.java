@@ -21,7 +21,6 @@ import lombok.Value;
 public class EndOfFileValue implements RuntimeValue
 { SourceInfo sourceInfo;
 
-  @Deprecated
   public EndOfFileValue()
   { this(null);
   }

@@ -21,7 +21,6 @@ import lombok.Value;
 public class UnspecifiedValue implements RuntimeValue
 { SourceInfo sourceInfo;
 
-  @Deprecated
   public UnspecifiedValue()
   { this(null);
   }

@@ -1,8 +1,8 @@
 class test.JavaCallTest
-[Ljava.lang.Object;@5e9f23b4
-Constructed with object: Hello, world!
-Constructed with object: Hello, world!
+[Ljava.lang.reflect.Constructor;@3d646c37
+Constructed with string: Hello, world!
+Constructed with string: Hello, world!
 Shh, don't tell anyone!
-Nullary constructor, but what does 0 mean?
+Nullary constructor at ID 0.
 You gave me [1, 2, 3].
 You gave me [4, 5, 6].

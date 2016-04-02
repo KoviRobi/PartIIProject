@@ -13,7 +13,11 @@ import rmk35.partIIProject.middle.bindings.GlobalBinding;
 import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.ByteCodeMethod;
+import rmk35.partIIProject.backend.statements.Statement;
+import rmk35.partIIProject.backend.statements.SequenceStatement;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.Map;
 import java.util.HashMap;
@@ -21,6 +25,7 @@ import java.util.HashMap;
 public class EnvironmentValue implements RuntimeValue
 { Map<String, Binding> bindings = new HashMap<>();
   boolean mutable = false;
+  List<Statement> initializer = new ArrayList<>();
   int localsCount = 1; // Local 0 is 'this' for inner or String[] arguments for main methods
 
   public EnvironmentValue() { }
@@ -32,6 +37,14 @@ public class EnvironmentValue implements RuntimeValue
     { addBinding(binding.getKey(), binding.getValue());
     }
     this.mutable = mutable;
+  }
+
+  public void addToInitializer(Statement statement)
+  { initializer.add(statement);
+  }
+
+  public Statement getInitializer()
+  { return new SequenceStatement(initializer);
   }
 
   public Set<Map.Entry<String, Binding>> entrySet() { return bindings.entrySet(); }

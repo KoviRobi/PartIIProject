@@ -24,7 +24,6 @@ public class CharacterValue extends SelfquotingValue
 { char value;
   SourceInfo sourceInfo;
 
-  @Deprecated
   public CharacterValue(char value)
   { this(value, null);
   }

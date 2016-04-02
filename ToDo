@@ -7,7 +7,7 @@ Inconsistency: some Statements take other Statements, others just rely on values
   - could be used to ensure right number of arguments on stack
 Immutable data (e.g. quoted data)
 Improper list lambdas
-Definitions
+Definitions (function)
  - Internal definitions
 Proper line numbers
 Make middle neater by using macro matching

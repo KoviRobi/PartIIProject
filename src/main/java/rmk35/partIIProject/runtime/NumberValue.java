@@ -24,11 +24,9 @@ public class NumberValue extends SelfquotingValue
 { Integer value;
   SourceInfo sourceInfo;
 
-  @Deprecated
   public NumberValue(Integer value)
   { this(value, null);
   }
-  @Deprecated
   public NumberValue(int value)
   { this(value, null);
   }
