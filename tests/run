@@ -2,14 +2,14 @@
 
 JAR=../target/part-II-project-1.0-SNAPSHOT-jar-with-dependencies.jar
 CLASSPATH="-classpath .:$JAR:../target/classes:../src/main/java"
-TESTS="lambda    application    java-calls    macros    tail-calls    syntax-error    quote    exceptions    closures    macro-defining-macro    quasiquote"
+FILE=$(basename $1)
 
 rm -f *.j *.class || true
 
 term=win
 
-#$term jdb -launch -classpath ../src/main/java:$JAR:../target/classes rmk35.partIIProject.Compiler ${1}
-java -classpath ../src/main/java:$JAR:../target/classes rmk35.partIIProject.Compiler ${1}
+#$term jdb -launch -classpath ../src/main/java:$JAR:../target/classes rmk35.partIIProject.Compiler ${FILE}
+java -classpath ../src/main/java:$JAR:../target/classes rmk35.partIIProject.Compiler ${FILE}
 
-#$term jdb -launch -classpath .:../src/main/java:$JAR ${1%.scm}
-java -classpath .:$JAR ${1%.scm}
+#$term jdb -launch -classpath .:../src/main/java:$JAR ${FILE%.scm}
+java -classpath .:$JAR ${FILE%.scm}

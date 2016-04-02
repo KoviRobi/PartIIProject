@@ -1,16 +1,12 @@
 package rmk35.partIIProject.backend;
 
 import rmk35.partIIProject.runtime.TrampolineValue;
-import rmk35.partIIProject.runtime.LambdaValue;
-import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.NullValue;
 
 import rmk35.partIIProject.backend.statements.Statement;
-import rmk35.partIIProject.backend.statements.GlobalIdentifierStatement;
 import rmk35.partIIProject.backend.instructions.Instruction;
 import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
 import rmk35.partIIProject.backend.instructions.DupInstruction;
-import rmk35.partIIProject.backend.instructions.IntegerConstantInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
 import rmk35.partIIProject.backend.instructions.StaticCallInstruction;
 import rmk35.partIIProject.backend.instructions.PopInstruction;
@@ -60,6 +56,14 @@ public class MainClass extends OutputClass
 
   public void addInnerClass(InnerClass innerClass)
   { innerClasses.add(innerClass);
+  }
+
+  public List<InnerClass> getInnerClasses()
+  { return innerClasses;
+  }
+
+  public InnerClass getMainInnerClass()
+  { return mainInnerClass;
   }
 
   @Override

@@ -11,13 +11,13 @@ import lombok.Value;
 public class GlobalBinding extends VariableBinding
 { String identifier;
 
+  public GlobalBinding(String identifier)
+  { this.identifier = identifier;
+  }
+
   @Override
   public GlobalIdentifierStatement toStatement(SourceInfo sourceInfo)
   { return new GlobalIdentifierStatement(identifier);
-  }
-
-  public GlobalBinding(String identifier)
-  { this.identifier = identifier;
   }
 
   @Override

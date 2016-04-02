@@ -3,7 +3,6 @@ package rmk35.partIIProject.backend.statements;
 import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.ByteCodeMethod;
-import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.LocalLoadInstruction;
 import rmk35.partIIProject.backend.instructions.GetFieldInstruction;
@@ -32,7 +31,7 @@ public class ClosureIdentifierStatement extends IdentifierStatement
   { method.addInstruction(new CommentPseudoInstruction("ClosureIdentifierStatement Get"));
     method.addInstruction(new LocalLoadInstruction(runtimeValueType, 0)); // 'this', the current object
     // Note using outputClass, whereas for GlobalIdentifierStatement, we are using mainClass
-    method.addInstruction(new GetFieldInstruction(runtimeValueType, outputClass.getName() + "/" + name));
+    method.addInstruction(new GetFieldInstruction(runtimeValueType, outputClass.getName() + "/" + getJavaName()));
   }
 
   @Override
@@ -41,7 +40,7 @@ public class ClosureIdentifierStatement extends IdentifierStatement
     method.addInstruction(new LocalLoadInstruction(runtimeValueType, 0)); // 'this', the current object
     method.addInstruction(new SwapInstruction()); // Swap object and value for PutFieldInstruction
     // Note using outputClass, whereas for GlobalIdentifierStatement, we are using mainClass
-    method.addInstruction(new PutFieldInstruction(runtimeValueType, outputClass.getName() + "/" + name));
+    method.addInstruction(new PutFieldInstruction(runtimeValueType, outputClass.getName() + "/" + getJavaName()));
   }
 
   @Override
@@ -58,6 +57,6 @@ public class ClosureIdentifierStatement extends IdentifierStatement
 
   @Override
   public void ensureExistence(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
-  { outputClass.ensureFieldExists("private", name, runtimeValueType);
+  { outputClass.ensureFieldExists("private", getJavaName(), runtimeValueType);
   }
 }

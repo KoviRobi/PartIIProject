@@ -37,6 +37,8 @@ public class DefineStatement extends Statement
 
   @Override
   public Collection<String> getFreeIdentifiers()
-  { return new TreeSet<String>();
+  { Collection<String> returnValue = new TreeSet<>();
+    returnValue.addAll(value.getFreeIdentifiers());
+    return returnValue;
   }
 }

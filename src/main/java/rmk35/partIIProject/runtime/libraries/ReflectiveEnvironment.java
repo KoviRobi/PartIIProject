@@ -28,16 +28,18 @@ public abstract class ReflectiveEnvironment extends EnvironmentValue
   { setMutable(true);
     for (Field field : this.getClass().getFields())
     { if (Modifier.isPublic(field.getModifiers()))
-      { if (RuntimeValue.class.isAssignableFrom(field.getType()))
-        { addBinding(IdentifierValue.schemifyName("scm" + field.getName()), new FieldBinding(this.getClass().getName().replace('.', '/'), field.getName()));
+      { String javaName = field.getName();
+        String schemeName = IdentifierValue.schemifyName("scm_" + javaName);
+        if (RuntimeValue.class.isAssignableFrom(field.getType()))
+        { addBinding(schemeName, new FieldBinding(this.getClass().getName().replace('.', '/'), schemeName, javaName));
         } else if (Binding.class.isAssignableFrom(field.getType()))
         { try
-          { addBinding(IdentifierValue.schemifyName("scm" + field.getName()), (Binding) field.get(this));
+          { addBinding(schemeName, (Binding) field.get(this));
           } catch (IllegalAccessException e)
           { throw new RuntimeException(e);
           }
         } else
-        { throw new InternalCompilerException("Not sure how to deal with " + field + " as an binding");
+        { throw new InternalCompilerException("Not sure how to deal with " + field + " as a binding");
         }
       }
     }

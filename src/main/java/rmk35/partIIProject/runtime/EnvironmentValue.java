@@ -60,7 +60,7 @@ public class EnvironmentValue implements RuntimeValue
   }
 
   public GlobalBinding addGlobalVariable(String identifier)
-  { return addBinding(identifier, new GlobalBinding(IdentifierValue.javaifyName(identifier)));
+  { return addBinding(identifier, new GlobalBinding(identifier));
   }
 
   public Binding removeBinding(String identifier)

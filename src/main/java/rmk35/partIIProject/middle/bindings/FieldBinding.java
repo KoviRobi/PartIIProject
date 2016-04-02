@@ -9,16 +9,18 @@ import lombok.Value;
 @Value
 public class FieldBinding extends VariableBinding
 { String containingClass;
-  String identifier;
+  String schemeName;
+  String javaName;
 
-  public FieldBinding(String containingClass, String identifier)
+  public FieldBinding(String containingClass, String schemeName, String javaName)
   { this.containingClass = containingClass;
-    this.identifier = identifier;
+    this.schemeName = schemeName;
+    this.javaName = javaName;
   }
 
   @Override
   public FieldIdentifierStatement toStatement(SourceInfo sourceInfo)
-  { return new FieldIdentifierStatement(containingClass, identifier);
+  { return new FieldIdentifierStatement(containingClass, schemeName, javaName);
   }
 
   @Override

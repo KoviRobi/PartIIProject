@@ -44,7 +44,9 @@ public class LocalIdentifierStatement extends IdentifierStatement
 
   @Override
   public Collection<String> getFreeIdentifiers()
-  { return new TreeSet<String>();
+  { Collection<String> returnValue = new TreeSet<>();
+    returnValue.add(getName());
+    return returnValue;
   }
 
   @Override
