@@ -87,6 +87,7 @@ public class ConsValue implements PrimitiveValue
       returnValue.append(" . ");
       returnValue.append(list.toString());
     }
+    returnValue.append(")");
     return returnValue.toString();
   }
 

@@ -1,8 +1,11 @@
 package rmk35.partIIProject.runtime;
 
+import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationTargetException;
@@ -50,12 +53,7 @@ public class ObjectValue extends LambdaValue
       { throw new NoSuchMethodException("Method with name \"" + message + "\" that takes \"" + Arrays.toString(arguments) + "\".");
       }
       Method method = getMostSpecificMethod(methods);
-      Object[] castArguments = new Object[arguments.length];
-      Class<?>[] parameterTypes = method.getParameterTypes();
-      for (int i = 0; i < arguments.length; i++)
-      { castArguments[i] = parameterTypes[i].cast(arguments[i]);
-      }
-      return ValueHelper.toSchemeValue(method.invoke(innerObject, castArguments));
+      return ValueHelper.toSchemeValue(method.invoke(innerObject, ValueHelper.castEach(arguments, method.getParameterTypes())));
     } catch (NoSuchMethodException | IllegalArgumentException | IllegalAccessException | InvocationTargetException e)
     { throw new RuntimeException(e);
     }
@@ -70,6 +68,7 @@ public class ObjectValue extends LambdaValue
     { Class<?>[] parameterTypes = method.getParameterTypes();
       if (! method.getName().equals(name)) continue;
       if (parameterTypes.length != arguments.length) continue;
+      System.out.println(Arrays.toString(parameterTypes));
       if (! objectsSubtypeClasses(arguments, parameterTypes)) continue;
       returnValue.add(method);
     }
@@ -98,16 +97,27 @@ public class ObjectValue extends LambdaValue
       classSubtypesClass(a.getClass(), b);
   }
 
+  public final static Map<Class<?>, Class<?>> primitivesMap = new HashMap<Class<?>, Class<?>>();
+  static {
+    primitivesMap.put(boolean.class, Boolean.class);
+    primitivesMap.put(byte.class, Byte.class);
+    primitivesMap.put(short.class, Short.class);
+    primitivesMap.put(char.class, Character.class);
+    primitivesMap.put(int.class, Integer.class);
+    primitivesMap.put(long.class, Long.class);
+    primitivesMap.put(float.class, Float.class);
+    primitivesMap.put(double.class, Double.class);
+  }
+  static Class<?> fromPrimitive(Class<?> c)
+  { return c.isPrimitive() ? primitivesMap.get(c) : c;
+  }
   // a is subtype of b
   static boolean classSubtypesClass(Class<?> a, Class<?> b)
-  { if (a.isArray() && b.isArray())
-    { return classSubtypesClass(a.getComponentType(), b.getComponentType());
-    } else
-    { return b.isAssignableFrom(a);
-    }
+  { return (a.isArray() && b.isArray() && classSubtypesClass(a.getComponentType(), b.getComponentType())) ||
+      b.isAssignableFrom(a) || fromPrimitive(b).isAssignableFrom(fromPrimitive(a));
   }
 
-  // Undefined when methods don't have total order, e.g. when there are items
+  // Undefined when methods don't have a least element
   // which are neither sub are supertypes of each other
   public static <T extends Executable> T getMostSpecificMethod(List<T> methods)
   { T returnValue = null;

@@ -33,17 +33,12 @@ public class ValueHelper
       { array[i] = toSchemeValue(objectArray[i]);
       }
       Class<RuntimeValue> lowestType = (Class<RuntimeValue>) arrayLowestElementType(array);
-      if (lowestType == null)
-      { return new VectorValue(array);
-      } else
-      { RuntimeValue[] returnValue = (RuntimeValue[]) Array.newInstance(lowestType, array.length);
-        for (int i = 0; i < array.length; i++)
-        { returnValue[i] =array[i];
-        }
-        return new VectorValue(returnValue);
-      }
+      return new VectorValue
+        ((lowestType == null) ? array : (RuntimeValue[]) cast(array, lowestType));
     } else if (value instanceof Class)
     { return new ClassValue((Class) value);
+    } else if (value == null)
+    { return new UnspecifiedValue();
     } else
     { return new ObjectValue(value);
     }
@@ -91,16 +86,43 @@ public class ValueHelper
     return type;
   }
 
-  public static Object[] downCastedArrayClone(Object[] array)
-  { Class<?> lowestType = arrayLowestElementType(array);
-     if (lowestType == null)
-    { return new Object[0];
-    } else
-    { Object[] returnValue = (Object[]) Array.newInstance(lowestType, array.length);
-      for (int i = 0; i < array.length; i++)
-      { returnValue[i] = array[i];
+  // Assuming object is not a primitive, or a primitive array
+  // Returns null if cast cannot work
+  public static Object cast(Object object, Class<?> type)
+  { if (type.isArray() && object instanceof Object[])
+    { Object[] originalArray = (Object[]) object;
+      Object[] returnValue = (Object[]) Array.newInstance(type.getComponentType(), originalArray.length);
+      for (int i = 0; i < originalArray.length; i++)
+      { returnValue[i] = cast(originalArray[i], type.getComponentType());
+        if (returnValue[i] == null) return null;
       }
       return returnValue;
+    } else if (type.equals(boolean.class) && object instanceof Boolean)
+    { return ((Boolean)  object).booleanValue();
+    } else if (type.equals(byte.class) && object instanceof Byte)
+    { return ((Byte)  object).byteValue();
+    } else if (type.equals(short.class) && object instanceof Short)
+    { return ((Short)  object).shortValue();
+    } else if (type.equals(char.class) && object instanceof Character)
+    { return ((Character)  object).charValue();
+    } else if (type.equals(int.class) && object instanceof Integer)
+    { return ((Integer)  object).intValue();
+    } else if (type.equals(long.class) && object instanceof Long)
+    { return ((Long)  object).longValue();
+    } else if (type.equals(float.class) && object instanceof Float)
+    { return ((Float)  object).floatValue();
+    } else if (type.equals(double.class) && object instanceof Double)
+    { return ((Double)  object).doubleValue();
+    } else
+    { return type.cast(object);
     }
+  }
+
+  public static Object[] castEach(Object[] objects, Class<?>[] classes)
+  { Object[] returnValue = new Object[classes.length];
+    for (int i = 0; i < objects.length; i++)
+    { returnValue[i] = ValueHelper.cast(objects[i], classes[i]);
+    }
+    return returnValue;
   }
 }

@@ -102,6 +102,9 @@ public class VectorValue extends SelfquotingValue
     for (int i = 0; i < value.length; i++)
     { returnValue[i] = value[i].toJavaValue();
     }
-    return ValueHelper.downCastedArrayClone(returnValue);
+    Class<?> lowestType = ValueHelper.arrayLowestElementType(returnValue);
+    return (lowestType == null)
+      ? new Object[0]
+      : (Object[]) ValueHelper.cast(returnValue, lowestType);
   }
 }

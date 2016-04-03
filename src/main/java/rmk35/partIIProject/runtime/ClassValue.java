@@ -33,12 +33,7 @@ public class ClassValue extends ObjectValue
         { throw new NoSuchMethodException("Constructor not found that takes \"" + Arrays.toString(arguments) + "\".");
         }
         Constructor constructor = getMostSpecificMethod(applicableConstructors);
-        Object[] castArguments = new Object[arguments.length];
-        Class<?>[] parameterTypes = constructor.getParameterTypes();
-        for (int i = 0; i < arguments.length; i++)
-        { castArguments[i] = parameterTypes[i].cast(arguments[i]);
-        }
-        return ValueHelper.toSchemeValue(constructor.newInstance(castArguments));
+        return ValueHelper.toSchemeValue(constructor.newInstance(ValueHelper.castEach(arguments, constructor.getParameterTypes())));
       } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e)
       { throw new RuntimeException(e);
       }
@@ -53,12 +48,7 @@ public class ClassValue extends ObjectValue
         List<Method> methods = applicableMethods(message, arguments, staticMethods.toArray(new Method[0]));
         if (methods.isEmpty()) return super.apply(argument);
         Method method = getMostSpecificMethod(methods);
-        Object[] castArguments = new Object[arguments.length];
-        Class<?>[] parameterTypes = method.getParameterTypes();
-        for (int i = 0; i < arguments.length; i++)
-        { castArguments[i] = parameterTypes[i].cast(arguments[i]);
-        }
-        return ValueHelper.toSchemeValue(method.invoke(null, castArguments));
+        return ValueHelper.toSchemeValue(method.invoke(null, ValueHelper.castEach(arguments, method.getParameterTypes())));
       } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e)
       { throw new RuntimeException(e);
       }
