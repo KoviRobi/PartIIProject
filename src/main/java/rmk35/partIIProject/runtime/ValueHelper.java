@@ -34,7 +34,7 @@ public class ValueHelper
       }
       Class<RuntimeValue> lowestType = (Class<RuntimeValue>) arrayLowestElementType(array);
       return new VectorValue
-        ((lowestType == null) ? array : (RuntimeValue[]) cast(array, lowestType));
+        ((lowestType == null) ? array : (RuntimeValue[]) castArray(array, lowestType));
     } else if (value instanceof Class)
     { return new ClassValue((Class) value);
     } else if (value == null)
@@ -116,6 +116,15 @@ public class ValueHelper
     } else
     { return type.cast(object);
     }
+  }
+
+  public static Object castArray(Object[] objects, Class<?> componentType)
+  { Object[] returnValue = (Object[]) Array.newInstance(componentType, objects.length);
+    for (int i = 0; i < objects.length; i++)
+    { returnValue[i] = cast(objects[i], componentType);
+      if (returnValue[i] == null) return null;
+    }
+    return returnValue;
   }
 
   public static Object[] castEach(Object[] objects, Class<?>[] classes)

@@ -105,6 +105,6 @@ public class VectorValue extends SelfquotingValue
     Class<?> lowestType = ValueHelper.arrayLowestElementType(returnValue);
     return (lowestType == null)
       ? new Object[0]
-      : (Object[]) ValueHelper.cast(returnValue, lowestType);
+      : (Object[]) ValueHelper.castArray(returnValue, lowestType);
   }
 }

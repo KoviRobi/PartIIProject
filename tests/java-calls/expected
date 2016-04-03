@@ -1,5 +1,5 @@
 class test.JavaCallTest
-[Ljava.lang.reflect.Constructor;@3d646c37
+#(public test.JavaCallTest() public test.JavaCallTest(java.lang.Object) public test.JavaCallTest(java.lang.String) public test.JavaCallTest(java.util.List))
 Constructed with string: Hello, world!
 Constructed with string: Hello, world!
 Shh, don't tell anyone!

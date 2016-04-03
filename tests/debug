@@ -7,5 +7,6 @@ CLASSPATH="-classpath .:$JAR:$DIR/../target/classes:$DIR/../src/main/java"
 
 rm -f *.j *.class || true
 
-java -classpath ../src/main/java:$JAR:../target/classes rmk35.partIIProject.Compiler ${FILE}
-java -classpath .:$JAR ${FILE%.scm}
+term=win
+$term jdb -launch $CLASSPATH rmk35.partIIProject.Compiler ${FILE}
+$term jdb -launch $CLASSPATHR ${FILE%.scm}

@@ -68,7 +68,6 @@ public class ObjectValue extends LambdaValue
     { Class<?>[] parameterTypes = method.getParameterTypes();
       if (! method.getName().equals(name)) continue;
       if (parameterTypes.length != arguments.length) continue;
-      System.out.println(Arrays.toString(parameterTypes));
       if (! objectsSubtypeClasses(arguments, parameterTypes)) continue;
       returnValue.add(method);
     }
