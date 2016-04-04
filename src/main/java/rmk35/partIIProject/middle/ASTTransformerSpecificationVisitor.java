@@ -9,6 +9,7 @@ import rmk35.partIIProject.runtime.ConsValue;
 import rmk35.partIIProject.runtime.IdentifierValue;
 import rmk35.partIIProject.runtime.EnvironmentValue;
 
+import rmk35.partIIProject.middle.bindings.Binding;
 import rmk35.partIIProject.middle.bindings.SyntaxBinding;
 import rmk35.partIIProject.middle.bindings.SyntaxRulesBinding;
 import rmk35.partIIProject.middle.bindings.EllipsisBinding;
@@ -40,21 +41,29 @@ public class ASTTransformerSpecificationVisitor extends ASTUnexpectedVisitor<Syn
     if (! (environment.getOrGlobal(syntaxRules) instanceof SyntaxRulesBinding))
     { throw new SyntaxErrorException("I was expecting \"syntax-rules\", maybe it has been rebound?", consCell.getSourceInfo());
     }
-    EnvironmentValue ellipsisEnvironment = new EnvironmentValue(environment, /* mutable */ true);
+    String ellipsisString;
     ConsValue second = consCell.getCdr().accept(new ASTExpectConsVisitor());
     RuntimeValue literalsAST;
     if (second.getCar() instanceof IdentifierValue)
-    { ellipsisEnvironment.addBinding(((IdentifierValue) second.getCar()).getValue(), new EllipsisBinding());
+    { ellipsisString = ((IdentifierValue) second.getCar()).getValue();
       literalsAST = second.getCdr();
     } else
-    { ellipsisEnvironment.addBinding("...", new EllipsisBinding());
+    { ellipsisString = "...";
       literalsAST = second;
     }
+    Binding oldEllipsisBinding = environment.getOrNull(ellipsisString);
+    environment.addBinding(ellipsisString, new EllipsisBinding());
     ConsValue literalsCell = literalsAST.accept(new ASTExpectConsVisitor());
     List<String> literals = literalsCell.getCar().accept(new ASTListFoldVisitor<>(new ArrayList<>(),
       (list, ast) -> { list.add(ast.accept(new ASTExpectIdentifierVisitor()).getValue()); return list; } ));
     List<Pair<RuntimeValue, RuntimeValue>> patternAndTemplate = literalsCell.getCdr().accept(new ASTListFoldVisitor<>(new ArrayList<>(),
       (list, current) -> { list.add(current.accept(new ASTPairMapVisitor<>(x -> x, y -> y))); return list; } ));
-    return new SyntaxBinding(ellipsisEnvironment, literals, patternAndTemplate);
+    SyntaxBinding returnValue = new SyntaxBinding(environment, literals, patternAndTemplate, ellipsisString);
+    if (oldEllipsisBinding == null)
+    { environment.removeBinding(ellipsisString);
+    } else
+    { environment.addBinding(ellipsisString, oldEllipsisBinding);
+    }
+    return returnValue;
   }
 }

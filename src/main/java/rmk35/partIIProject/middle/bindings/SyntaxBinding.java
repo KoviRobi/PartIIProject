@@ -32,8 +32,9 @@ public class SyntaxBinding extends SintacticBinding
 { EnvironmentValue definitionEnvironment;
   Collection<String> literals;
   List<Pair<ASTMatchVisitor, Pair<Collection<String>, RuntimeValue>>> patternsAndTemplates;
+  String ellipsisString;
 
-  public SyntaxBinding(EnvironmentValue definitionEnvironment, Collection<String> literals, List<Pair<RuntimeValue, RuntimeValue>> patternsAndTemplates)
+  public SyntaxBinding(EnvironmentValue definitionEnvironment, Collection<String> literals, List<Pair<RuntimeValue, RuntimeValue>> patternsAndTemplates, String ellipsisString)
   { this.definitionEnvironment = definitionEnvironment;
     this.literals = literals;
     this.patternsAndTemplates = new ArrayList<>(patternsAndTemplates.size());
@@ -41,6 +42,7 @@ public class SyntaxBinding extends SintacticBinding
     { Pair<ASTMatchVisitor, Collection<String>> compiledPattern = pair.getFirst().accept(new ASTCompilePatternVisitor(literals, definitionEnvironment));
       this.patternsAndTemplates.add(new Pair<>(compiledPattern.getFirst(), new Pair<>(compiledPattern.getSecond(), pair.getSecond())));
     }
+    this.ellipsisString = ellipsisString;
   }
 
   @Override
@@ -50,7 +52,14 @@ public class SyntaxBinding extends SintacticBinding
     { pair.getFirst().setUseEnvironment(useEnvironmentValue);
       Substitution substitution = (new ConsValue(operator, operands, operator.getSourceInfo())).accept(pair.getFirst());
       if (substitution != null)
-      { Pair<RuntimeValue, EnvironmentValue> rewritten = pair.getSecond().getSecond().accept(new ASTMacroRewriteVisitor(substitution, definitionEnvironment, useEnvironmentValue, pair.getSecond().getFirst()));
+      { Binding oldEllipsisBinding = definitionEnvironment.getOrNull(ellipsisString);
+        definitionEnvironment.addBinding(ellipsisString, new EllipsisBinding());
+        Pair<RuntimeValue, EnvironmentValue> rewritten = pair.getSecond().getSecond().accept(new ASTMacroRewriteVisitor(substitution, definitionEnvironment, useEnvironmentValue, pair.getSecond().getFirst()));
+        if (oldEllipsisBinding == null)
+        { definitionEnvironment.removeBinding(ellipsisString);
+        } else
+        { definitionEnvironment.addBinding(ellipsisString, oldEllipsisBinding);
+        }
         return rewritten.getFirst().accept(new ASTConvertVisitor(rewritten.getSecond()));
       }
     }
