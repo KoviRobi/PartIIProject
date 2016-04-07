@@ -1,8 +1,8 @@
-#!/bin/sh -e
+#!/bin/sh
 
 JAR=../../target/part-II-project-1.0-SNAPSHOT-jar-with-dependencies.jar
 CLASSPATH="-classpath .:$JAR:../../target/classes:../../src/main/java"
-TESTS=${1:-"imports    lambda    application    java-calls    macros    tail-calls    syntax-error    quote    exceptions    closures    macro-defining-macro    quasiquote"}
+TESTS=${1:-*/}
 
 rm -f *.j *.class || true
 
@@ -10,10 +10,10 @@ rm -f *.j *.class || true
 term=win
 
 for test in $TESTS; do
-  cd $test
+  cd $test || continue
   if [ -x ./hook ]; then ./hook; fi
   echo -n Test $test
-  java $CLASSPATH rmk35.partIIProject.Compiler test.scm 2>compile-error || test -e expected-compile-failure || { echo Error, logged in $test/compile-error; false; }
+  java $CLASSPATH rmk35.partIIProject.Compiler test.scm 2>compile-error || test -e expected-compile-failure || { echo Error, logged in $test/compile-error; false; } &&
 
   test -f expected-compile-failure ||
   { timeout 1s java $CLASSPATH test > result 2>run-error || test -e expected-run-failure || { echo Error, logged in $test/run-error and output in $test/result; false; };

@@ -29,13 +29,11 @@ public class SetBinding extends SintacticBinding
     Statement expression = second.getCar().accept(new ASTConvertVisitor(environment));
     second.getCdr().accept(new ASTExpectNilVisitor());
 
-    IdentifierStatement variableStatement;
-    if (variableBinding != null && variableBinding instanceof IdentifierStatement)
-    { variableStatement = (IdentifierStatement) variableBinding;
-    } else // Overwrite binding
-    { variableStatement = new GlobalIdentifierStatement(variable);
+    if (variableBinding == null || ! (variableBinding instanceof IdentifierStatement))
+    { environment.addGlobalVariable(variable);
     }
 
+    IdentifierStatement variableStatement = (IdentifierStatement) environment.getOrGlobal(variable).toStatement(operator.getSourceInfo());
     return new SetStatement(variableStatement, expression);
   }
 }

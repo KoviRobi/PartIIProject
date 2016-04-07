@@ -20,10 +20,13 @@ import rmk35.partIIProject.backend.statements.Statement;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.lang.reflect.Method;
+import java.lang.reflect.Constructor;
 
 public class eval extends ReflectiveEnvironment
 { public eval() { bind(); }
   static int replCounter = 0;
+  static LoadClass loader = new LoadClass();
   public RuntimeValue eval =
   new BinaryLambda()
   { @Override
@@ -34,25 +37,23 @@ public class eval extends ReflectiveEnvironment
         expressionList.add(expression);
         Statement programme = new LibraryOrProgramme((EnvironmentValue) environment).compile(expressionList);
         programme.generateOutput(mainClass, mainClass.getMainInnerClass(), mainClass.getPrimaryMethod());
-        LoadClass loader = new LoadClass();
         for (InnerClass innerClass : mainClass.getInnerClasses())
         { if ( innerClass != mainClass.getMainInnerClass())
           { loader.defineClass(innerClass.getName(), innerClass.assembledByteCode());
           }
         }
+        loader.defineClass(mainClass.getName(), mainClass.assembledByteCode());
         Class<?> mainInnerClass = loader.defineClass(mainClass.getMainInnerClass().getName(), mainClass.getMainInnerClass().assembledByteCode());
-        return ValueHelper.toSchemeValue(mainInnerClass);
+        Constructor constructor = mainInnerClass.getConstructor();
+        constructor.setAccessible(true);
+        Method method = mainInnerClass.getMethod("apply", RuntimeValue.class);
+        method.setAccessible(true);
+        return ValueHelper.toSchemeValue(method.invoke(constructor.newInstance(), new NullValue()));
       } catch (Exception e)
       { throw new RuntimeException(e);
       }
     }
   };
-
-  class LoadClass extends ClassLoader
-  { Class<?> defineClass(String name, byte[] bytes)
-    { return defineClass(name, bytes, 0, bytes.length);
-    }
-  }
 
   public RuntimeValue mutable_environment =
   new LambdaValue()
@@ -75,4 +76,10 @@ public class eval extends ReflectiveEnvironment
       return returnEnvironment;
     }
   };
+}
+
+class LoadClass extends ClassLoader
+{ Class<?> defineClass(String name, byte[] bytes)
+  { return defineClass(name, bytes, 0, bytes.length);
+  }
 }

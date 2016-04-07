@@ -1,20 +1,23 @@
-g -i 'todo'	`{find . -name '*.java'}
+g -i 'todo'		`{find . -name '*.java'}
 g -i 'fixme'	`{find . -name '*.java'}
-g -i 'next'	`{find . -name '*.java'}
-g -i  'xxx'	`{find . -name '*.java'}
+g -i 'next'		`{find . -name '*.java'}
+g -i 'xxx'		`{find . -name '*.java'}
 
-Inconsistency: some Statements take other Statements, others just rely on values on top of the stack
-  - could be used to ensure right number of arguments on stack
-Immutable data (e.g. quoted data)
+Immutable data (e.g. quoted data) - nice but not necessary
 Improper list lambdas
 Definitions (function)
  - Internal definitions
 Proper line numbers
 Make middle neater by using macro matching
-More efficient macro matching (regular expression simple and fast)
+More efficient macro matching (regular expression simple and fast) --- Measure performance to see if we need this
 Split trampolines, as they are doing two things at the moment, trampoline and CallValue
 Sort out nil vs null discrepancy
-Check name mangling works
+Have the bind() call of the reflective environment be something that is called after the environment is initialised, this way when main classes become environments for libraries, we have regularity
+eval tail call
+Java call order, e.g. CLOS is left to right for specialisation
+Display and write don't do newlines
+
+current implementation of store is broken, closures should not change store location or environment binding (e.g. for macros)
 
 R7RS P. 25
 In a program or library declaration, it is an error to import the same identifier more than once with different bindings, or to redefine or mutate an imported binding with a definition or with set!, or to refer to an identifier before it is imported. However, a REPL should permit these actions.

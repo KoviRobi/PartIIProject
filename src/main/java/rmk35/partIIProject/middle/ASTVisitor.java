@@ -46,12 +46,12 @@ public abstract class ASTVisitor<T>
   public T visit(VectorValue vector) throws SyntaxErrorException { return visit((SelfquotingValue)vector); }
 
   // Other RuntimeValue subtypes (these are not PrimitiveValue subtypes), usually an error
-  public T visit(LambdaValue lambda) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
-  public T visit(TrampolineValue trampoline) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
-  public T visit(EndOfFileValue eof) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
-  public T visit(ThrowableValue throwable) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
-  public T visit(ObjectValue object) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
-  public T visit(ErrorValue error) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
-  public T visit(UnspecifiedValue unspecified) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
-  public T visit(EnvironmentValue unspecified) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state"); }
+  public T visit(LambdaValue lambda) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Don't know what to do with a function!"); }
+  public T visit(TrampolineValue trampoline) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Got a trampoline, this should not be visible!"); }
+  public T visit(EndOfFileValue eof) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Got an end-of-file value too soon!"); }
+  public T visit(ThrowableValue throwable) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Don't know what to do with a thrown value!"); }
+  public T visit(ObjectValue object) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Don't know what to do with an encapsulated Java object!"); }
+  public T visit(ErrorValue error) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Don't know what to do with an error value!"); }
+  public T visit(UnspecifiedValue unspecified) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Don't know what to do with an unspecified value!"); }
+  public T visit(EnvironmentValue unspecified) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Don't know what to do with an environment!"); }
 }

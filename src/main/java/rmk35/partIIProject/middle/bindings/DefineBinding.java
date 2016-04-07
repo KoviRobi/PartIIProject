@@ -29,14 +29,11 @@ public class DefineBinding extends SintacticBinding
     Statement expression = second.getCar().accept(new ASTConvertVisitor(environment));
     second.getCdr().accept(new ASTExpectNilVisitor());
 
-    IdentifierStatement variableStatement;
-    if (variableBinding != null && variableBinding instanceof VariableBinding)
-    { variableStatement = (IdentifierStatement) environment.getOrGlobal(variable).toStatement(operator.getSourceInfo());
-    } else // Overwrite binding
-    { environment.addBinding(variable, new GlobalBinding(variable));
-      variableStatement = new GlobalIdentifierStatement(variable);
+    if (variableBinding == null || ! (variableBinding instanceof VariableBinding))
+    { environment.addGlobalVariable(variable);
     }
 
+    IdentifierStatement variableStatement = (IdentifierStatement) environment.getOrGlobal(variable).toStatement(operator.getSourceInfo());
     return new DefineStatement(variableStatement, expression);
   }
 }
