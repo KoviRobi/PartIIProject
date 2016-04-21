@@ -17,7 +17,6 @@ eval tail call
 Java call order, e.g. CLOS is left to right for specialisation
 Display and write don't do newlines
 
-current implementation of store is broken, closures should not change store location or environment binding (e.g. for macros)
+REPL does not bounce trampolines: try running ((lambda (x) (x x)) (lambda (x) (x x)))
 
-R7RS P. 25
-In a program or library declaration, it is an error to import the same identifier more than once with different bindings, or to redefine or mutate an imported binding with a definition or with set!, or to refer to an identifier before it is imported. However, a REPL should permit these actions.
+current implementation of store is broken, closures should not change store location or environment binding (e.g. for macros)
