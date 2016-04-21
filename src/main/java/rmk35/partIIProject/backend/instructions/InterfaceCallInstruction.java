@@ -21,8 +21,8 @@ public class InterfaceCallInstruction implements Instruction
   }
 
   // Called when adding to primary method
-  public void simulateLimits(ByteCodeMethod outputClass)
-  { outputClass.decrementStackCount(inputArgumentCount() - returnType.stackCount());
+  public void simulateLimits(ByteCodeMethod method)
+  { method.decrementStackCount(inputArgumentCount() - returnType.stackCount());
   }
 
   public String byteCode()

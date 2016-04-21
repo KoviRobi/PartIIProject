@@ -15,8 +15,8 @@ public class NonVirtualCallInstruction implements Instruction
   }
 
   // Called when adding to primary method
-  public void simulateLimits(ByteCodeMethod outputClass)
-  { outputClass.decrementStackCount(arguments.length + 1 - returnType.stackCount());
+  public void simulateLimits(ByteCodeMethod method)
+  { method.decrementStackCount(arguments.length + 1 - returnType.stackCount());
   }
 
   public String byteCode()

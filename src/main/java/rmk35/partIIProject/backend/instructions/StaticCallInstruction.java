@@ -15,8 +15,8 @@ public class StaticCallInstruction implements Instruction
   }
 
   // Called when adding to primary method
-  public void simulateLimits(ByteCodeMethod outputClass)
-  { outputClass.decrementStackCount(arguments.length - returnType.stackCount());
+  public void simulateLimits(ByteCodeMethod method)
+  { method.decrementStackCount(arguments.length - returnType.stackCount());
   }
 
   public String byteCode()

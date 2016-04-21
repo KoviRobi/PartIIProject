@@ -11,8 +11,8 @@ public class ReturnInstruction implements Instruction
   }
 
   // Called when adding to primary method
-  public void simulateLimits(ByteCodeMethod outputClass)
-  { outputClass.decrementStackCount(type.stackCount());
+  public void simulateLimits(ByteCodeMethod method)
+  { method.decrementStackCount(type.stackCount());
   }
 
   public String byteCode()

@@ -13,8 +13,8 @@ public class PutFieldInstruction implements Instruction
   }
 
   // Called when adding to primary method
-  public void simulateLimits(ByteCodeMethod outputClass)
-  { outputClass.decrementStackCount(2); // Object (who's field we are setting) and value
+  public void simulateLimits(ByteCodeMethod method)
+  { method.decrementStackCount(2); // Object (who's field we are setting) and value
   }
 
   public String byteCode()

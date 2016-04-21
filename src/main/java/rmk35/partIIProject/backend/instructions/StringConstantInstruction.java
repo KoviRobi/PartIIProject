@@ -10,8 +10,8 @@ public class StringConstantInstruction implements Instruction
   }
 
   // Called when adding to primary method
-  public void simulateLimits(ByteCodeMethod outputClass)
-  { outputClass.incrementStackCount(1);
+  public void simulateLimits(ByteCodeMethod method)
+  { method.incrementStackCount(1);
   }
 
   public String byteCode()
