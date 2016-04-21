@@ -24,5 +24,5 @@ public abstract class BinaryLambda extends LambdaValue
     }
   }
 
-  protected abstract RuntimeValue run(RuntimeValue first, RuntimeValue second);
+  public abstract RuntimeValue run(RuntimeValue first, RuntimeValue second);
 }

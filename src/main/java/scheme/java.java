@@ -7,7 +7,10 @@ import rmk35.partIIProject.runtime.ClassValue;
 import rmk35.partIIProject.runtime.ValueHelper;
 import rmk35.partIIProject.runtime.libraries.BinaryLambda;
 import rmk35.partIIProject.runtime.libraries.UnaryLambda;
+import rmk35.partIIProject.runtime.libraries.SyntaxBindingCreator;
 import rmk35.partIIProject.runtime.libraries.ReflectiveEnvironment;
+
+import rmk35.partIIProject.middle.bindings.Binding;
 
 public class java extends ReflectiveEnvironment
 { public java() { bind(); }
@@ -50,4 +53,8 @@ public class java extends ReflectiveEnvironment
       }
     }
   };
+
+  public Binding multi_despatch = SyntaxBindingCreator.create
+  ("(_ object (message arguments ...) ...)"
+  , "(let ((evaluated-object object)) (begin (evaluated-object message arguments ...) ...))");
 }

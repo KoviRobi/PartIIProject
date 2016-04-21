@@ -4,7 +4,14 @@
         (scheme write)
         (scheme java))
 
-(define interaction-environment (mutable-environment '(scheme base)))
+(define interaction-environment
+  (mutable-environment
+    '(scheme base)
+    '(scheme eval)
+    '(scheme java)
+    '(scheme read)
+    '(scheme repl)
+    '(scheme write)))
 
 (define onetwo (eval '(cons 1 2) interaction-environment))
 (write onetwo)

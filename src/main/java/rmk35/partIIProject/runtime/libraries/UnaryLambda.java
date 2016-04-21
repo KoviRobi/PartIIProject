@@ -24,5 +24,5 @@ public abstract class UnaryLambda extends LambdaValue
     }
   }
 
-  protected abstract RuntimeValue run(RuntimeValue first);
+  public abstract RuntimeValue run(RuntimeValue first);
 }

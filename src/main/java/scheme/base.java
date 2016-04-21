@@ -47,13 +47,13 @@ public class base extends ReflectiveEnvironment
   public RuntimeValue raise =
   new UnaryLambda()
   { @Override
-    protected RuntimeValue run(RuntimeValue first) { throw new ThrowableValue(first); }
+    public RuntimeValue run(RuntimeValue first) { throw new ThrowableValue(first); }
   };
 
   public RuntimeValue with_exception_handler =
   new BinaryLambda()
   { @Override
-    protected RuntimeValue run(RuntimeValue first, RuntimeValue second)
+    public RuntimeValue run(RuntimeValue first, RuntimeValue second)
     { LambdaValue handler = (LambdaValue) first;
       LambdaValue body = (LambdaValue) second;
       try
@@ -103,25 +103,25 @@ public class base extends ReflectiveEnvironment
   public RuntimeValue caar =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue cell) { return ((LambdaValue) car).apply(((LambdaValue) car).apply(cell)); } // FIXME: Tail calls
+    public RuntimeValue run(RuntimeValue cell) { return ((UnaryLambda) car).run(((UnaryLambda) car).run(cell)); } // FIXME: Tail calls
   };
 
   public RuntimeValue cadr =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue cell) { return ((LambdaValue) car).apply(((LambdaValue) cdr).apply(cell)); }
+    public RuntimeValue run(RuntimeValue cell) { return ((UnaryLambda) car).run(((UnaryLambda) cdr).run(cell)); }
   };
 
   public RuntimeValue cdar =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue cell) { return ((LambdaValue) cdr).apply(((LambdaValue) car).apply(cell)); }
+    public RuntimeValue run(RuntimeValue cell) { return ((UnaryLambda) cdr).run(((UnaryLambda) car).run(cell)); }
   };
 
   public RuntimeValue cddr =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue cell) { return ((LambdaValue) cdr).apply(((LambdaValue) cdr).apply(cell)); }
+    public RuntimeValue run(RuntimeValue cell) { return ((UnaryLambda) cdr).run(((UnaryLambda) cdr).run(cell)); }
   };
 
   public RuntimeValue null$00003F =
