@@ -32,25 +32,25 @@ public class base extends ReflectiveEnvironment
 { public base() { bind(); }
 
   // R7RS, Primitive Expressions, section 4.1.
-  public Binding lambda = new LambdaSyntaxBinding();
-  public Binding i$000066 = new IfBinding();
-  public Binding define = new DefineBinding();
-  public Binding set$000021 = new SetBinding();
-  public Binding let = new LetBinding();
-  public Binding define_syntax = new DefineSyntaxBinding();
-  public Binding begin = new BeginBinding();
-  public Binding let_syntax = new LetSyntaxBinding();
-  public Binding syntax_rules = new SyntaxRulesBinding();
-  public Binding syntax_error = new SyntaxErrorBinding();
-  public Binding quote = new QuoteBinding();
+  public static Binding lambda = new LambdaSyntaxBinding();
+  public static Binding i$000066 = new IfBinding();
+  public static Binding define = new DefineBinding();
+  public static Binding set$000021 = new SetBinding();
+  public static Binding let = new LetBinding();
+  public static Binding define_syntax = new DefineSyntaxBinding();
+  public static Binding begin = new BeginBinding();
+  public static Binding let_syntax = new LetSyntaxBinding();
+  public static Binding syntax_rules = new SyntaxRulesBinding();
+  public static Binding syntax_error = new SyntaxErrorBinding();
+  public static Binding quote = new QuoteBinding();
 
-  public RuntimeValue raise =
+  public static RuntimeValue raise =
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue first) { throw new ThrowableValue(first); }
   };
 
-  public RuntimeValue with_exception_handler =
+  public static RuntimeValue with_exception_handler =
   new BinaryLambda()
   { @Override
     public RuntimeValue run2(RuntimeValue first, RuntimeValue second)
@@ -65,73 +65,73 @@ public class base extends ReflectiveEnvironment
   };
 
   // R7RS, Pairs and lists, section 6.4
-  public RuntimeValue pair$00003F =
+  public static RuntimeValue pair$00003F =
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue value) { return new BooleanValue(value instanceof ConsValue); }
   };
 
-  public RuntimeValue cons =
+  public static RuntimeValue cons =
   new BinaryLambda()
   { @Override
     public RuntimeValue run2(RuntimeValue car, RuntimeValue cdr) { return new ConsValue(car, cdr); }
   };
 
-  public RuntimeValue car =
+  public static RuntimeValue car =
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue cell) { return ((ConsValue) cell).getCar(); }
   };
 
-  public RuntimeValue cdr =
+  public static RuntimeValue cdr =
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue cell) { return ((ConsValue) cell).getCdr(); }
   };
 
-  public RuntimeValue set_car$000021 =
+  public static RuntimeValue set_car$000021 =
   new BinaryLambda()
   { @Override
     public RuntimeValue run2(RuntimeValue cell, RuntimeValue value) { ((ConsValue) cell).setCar(value); return new UnspecifiedValue(); }
   };
 
-  public RuntimeValue set_cdr$000021 =
+  public static RuntimeValue set_cdr$000021 =
   new BinaryLambda()
   { @Override
     public RuntimeValue run2(RuntimeValue cell, RuntimeValue value) { ((ConsValue) cell).setCdr(value); return new UnspecifiedValue(); }
   };
 
-  public RuntimeValue caar =
+  public static RuntimeValue caar =
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) car).run(((UnaryLambda) car).run(cell)); } // FIXME: Tail calls
   };
 
-  public RuntimeValue cadr =
+  public static RuntimeValue cadr =
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) car).run(((UnaryLambda) cdr).run(cell)); }
   };
 
-  public RuntimeValue cdar =
+  public static RuntimeValue cdar =
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) cdr).run(((UnaryLambda) car).run(cell)); }
   };
 
-  public RuntimeValue cddr =
+  public static RuntimeValue cddr =
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) cdr).run(((UnaryLambda) cdr).run(cell)); }
   };
 
-  public RuntimeValue null$00003F =
+  public static RuntimeValue null$00003F =
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue value) { return new BooleanValue(value instanceof NullValue); }
   };
 
-  public RuntimeValue list$00003F =
+  public static RuntimeValue list$00003F =
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue value)
@@ -142,98 +142,98 @@ public class base extends ReflectiveEnvironment
     }
   };
 
-  public RuntimeValue make_list =
+  public static RuntimeValue make_list =
   new LambdaValue()
   { @Override
     public RuntimeValue run(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
-  public RuntimeValue list =
+  public static RuntimeValue list =
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue value) { return value; }
   };
 
-  public RuntimeValue length =
+  public static RuntimeValue length =
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
-  public RuntimeValue append =
+  public static RuntimeValue append =
   new LambdaValue()
   { @Override
     public RuntimeValue run(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
-  public RuntimeValue reverse =
+  public static RuntimeValue reverse =
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
-  public RuntimeValue list_tail =
+  public static RuntimeValue list_tail =
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
-  public RuntimeValue list_ref =
+  public static RuntimeValue list_ref =
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
-  public RuntimeValue list_set$000021 =
+  public static RuntimeValue list_set$000021 =
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
-  public RuntimeValue memq =
+  public static RuntimeValue memq =
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
-  public RuntimeValue memv =
+  public static RuntimeValue memv =
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
-  public RuntimeValue member =
+  public static RuntimeValue member =
   new LambdaValue()
   { @Override
     public RuntimeValue run(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
-  public RuntimeValue assq =
+  public static RuntimeValue assq =
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
-  public RuntimeValue assv =
+  public static RuntimeValue assv =
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
-  public RuntimeValue assoc =
+  public static RuntimeValue assoc =
   new LambdaValue()
   { @Override
     public RuntimeValue run(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
-  public RuntimeValue list_copy =
+  public static RuntimeValue list_copy =
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
   // R7RS, Pairs and lists, section 6.8
-  public RuntimeValue vector_ref =
+  public static RuntimeValue vector_ref =
   new BinaryLambda()
   { @Override
     public RuntimeValue run2(RuntimeValue vector, RuntimeValue k)

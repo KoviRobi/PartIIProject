@@ -27,7 +27,7 @@ public class eval extends ReflectiveEnvironment
 { public eval() { bind(); }
   static int replCounter = 0;
   static LoadClass loader = new LoadClass();
-  public RuntimeValue eval =
+  public static RuntimeValue eval =
   new BinaryLambda()
   { @Override
     public RuntimeValue run2(RuntimeValue expression, RuntimeValue environment)
@@ -44,22 +44,22 @@ public class eval extends ReflectiveEnvironment
         }
         loader.defineClass(mainClass.getName(), mainClass.assembledByteCode());
         Class<?> mainInnerClass = loader.defineClass(mainClass.getMainInnerClass().getName(), mainClass.getMainInnerClass().assembledByteCode());
-        Constructor constructor = mainInnerClass.getConstructor();
+        Constructor<?> constructor = mainInnerClass.getConstructor(LambdaValue.class);
         constructor.setAccessible(true);
         Method method = mainInnerClass.getMethod("apply", RuntimeValue.class);
         method.setAccessible(true);
-        return ValueHelper.toSchemeValue(method.invoke(constructor.newInstance(), new NullValue()));
+        return ValueHelper.toSchemeValue(method.invoke(constructor.newInstance((LambdaValue) null), new NullValue()));
       } catch (Exception e)
       { throw new RuntimeException(e);
       }
     }
   };
 
-  public RuntimeValue mutable_environment =
+  public static RuntimeValue mutable_environment =
   new LambdaValue()
   { public RuntimeValue run(RuntimeValue arguments)
     { EnvironmentValue returnEnvironment = new EnvironmentValue(/* mutable, for the moment */ true);
-      EnvironmentImporter importer = new EnvironmentImporter(returnEnvironment, null); // FIXME:
+      EnvironmentImporter importer = new EnvironmentImporter(returnEnvironment);
       List<RuntimeValue> importSets = new ArrayList<>();
       ASTMatcher importDeclaration = new ASTMatcher("(import-set ...)", arguments);
       importDeclaration.get("import-set").forEach(value -> importSets.add(value));
@@ -68,7 +68,7 @@ public class eval extends ReflectiveEnvironment
     }
   };
 
-  public RuntimeValue environment =
+  public static RuntimeValue environment =
   new LambdaValue()
   { public RuntimeValue run(RuntimeValue arguments)
     { EnvironmentValue returnEnvironment = (EnvironmentValue) ((LambdaValue) mutable_environment).apply(arguments);

@@ -11,7 +11,7 @@ import rmk35.partIIProject.runtime.libraries.ReflectiveEnvironment;
 public class write extends ReflectiveEnvironment
 { public write() { bind(); }
 
-  public RuntimeValue write = // FIXME:
+  public static RuntimeValue write = // FIXME:
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue object)
@@ -20,7 +20,7 @@ public class write extends ReflectiveEnvironment
     }
   };
 
-  public RuntimeValue display = // FIXME:
+  public static RuntimeValue display = // FIXME:
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue object)
@@ -29,7 +29,7 @@ public class write extends ReflectiveEnvironment
     }
   };
 
-  public RuntimeValue writeln = // FIXME:
+  public static RuntimeValue writeln = // FIXME:
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue object)
@@ -38,7 +38,7 @@ public class write extends ReflectiveEnvironment
     }
   };
 
-  public RuntimeValue displayln = // FIXME:
+  public static RuntimeValue displayln = // FIXME:
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue object)

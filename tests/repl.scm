@@ -14,8 +14,8 @@
     '(scheme write)))
 
 (define onetwo (eval '(cons 1 2) interaction-environment))
-(write onetwo)
-(write (eval '(cons 3 4) interaction-environment))
+(writeln onetwo)
+(writeln (eval '(cons 3 4) interaction-environment))
 
 (let loop ()
   ((static-field (class 'java.lang.System) 'out) 'print "> ")

@@ -14,7 +14,7 @@ import rmk35.partIIProject.middle.bindings.Binding;
 
 public class java extends ReflectiveEnvironment
 { public java() { bind(); }
-  public RuntimeValue clas$000073 =
+  public static RuntimeValue clas$000073 =
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue name)
@@ -26,7 +26,7 @@ public class java extends ReflectiveEnvironment
     }
   };
 
-  public RuntimeValue field =
+  public static RuntimeValue field =
   new BinaryLambda()
   { @Override
     public RuntimeValue run2(RuntimeValue objectValue, RuntimeValue fieldName)
@@ -40,7 +40,7 @@ public class java extends ReflectiveEnvironment
     }
   };
 
-  public RuntimeValue static_field =
+  public static RuntimeValue static_field =
   new BinaryLambda()
   { @Override
     public RuntimeValue run2(RuntimeValue classValue, RuntimeValue fieldName)
@@ -54,7 +54,7 @@ public class java extends ReflectiveEnvironment
     }
   };
 
-  public Binding multi_despatch = SyntaxBindingCreator.create
+  public static Binding multi_despatch = SyntaxBindingCreator.create
   ("(_ object (message arguments ...) ...)"
   , "(let ((evaluated-object object)) (begin (evaluated-object message arguments ...) ...))");
 }

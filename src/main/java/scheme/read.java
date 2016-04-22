@@ -19,7 +19,7 @@ import rmk35.partIIProject.frontend.SchemeParser;
 
 public class read extends ReflectiveEnvironment
 { public read() { bind(); }
-  public RuntimeValue read =
+  public static RuntimeValue read =
   new LambdaValue()
   { @Override
     public RuntimeValue run(RuntimeValue optionalPort)

@@ -34,31 +34,18 @@ import java.util.ArrayList;
 
 public class EnvironmentImporter
 { EnvironmentValue environment;
-  MainClass mainClass;
 
-  public EnvironmentImporter(EnvironmentValue environment, MainClass mainClass)
+  public EnvironmentImporter(EnvironmentValue environment)
   { this.environment = environment;
-    this.mainClass = mainClass;
   }
 
   public void importEnvironment(List<RuntimeValue> importSets)
   { for (RuntimeValue importSet : importSets)
     { EnvironmentValue foreignEnvironment = getEnvironment(importSet);
-      environment.addToInitializer(new RuntimeValueStatement(foreignEnvironment));
       for (Map.Entry<String, Binding> binding : foreignEnvironment.entrySet())
-      { if (binding.getValue().runtime())
-        { environment.addToInitializer(new InstructionStatement(new DupInstruction())); // Invariant, Environment (to clone from) on stack
-          environment.addToInitializer(new DefineStatement
-            (environment.addGlobalVariable(mainClass, binding.getKey()).toStatement(importSet.getSourceInfo()),
-            binding.getValue().toStatement(importSet.getSourceInfo())));
-          environment.addToInitializer(new InstructionStatement(new PopInstruction())); // Pop result of define
-        } else
-        { environment.addBinding(binding.getKey(), binding.getValue());
-        }
+      { environment.addBinding(binding.getKey(), binding.getValue());
       }
-      environment.addToInitializer(new InstructionStatement(new PopInstruction())); // Pop environment
     }
-    environment.addToInitializer(new RuntimeValueStatement(new UnspecifiedValue()));
   }
 
   public EnvironmentValue getEnvironment(RuntimeValue importSet)

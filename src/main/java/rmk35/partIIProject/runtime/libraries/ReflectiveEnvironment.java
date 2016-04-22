@@ -7,7 +7,7 @@ import rmk35.partIIProject.runtime.IdentifierValue;
 import rmk35.partIIProject.runtime.EnvironmentValue;
 
 import rmk35.partIIProject.middle.bindings.Binding;
-import rmk35.partIIProject.middle.bindings.FieldBinding;
+import rmk35.partIIProject.middle.bindings.StaticFieldBinding;
 
 import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
@@ -28,10 +28,11 @@ public abstract class ReflectiveEnvironment extends EnvironmentValue
   { setMutable(true);
     for (Field field : this.getClass().getFields())
     { if (Modifier.isPublic(field.getModifiers()))
-      { String javaName = field.getName();
+      { String currentClass = this.getClass().getName().replace('.', '/');
+        String javaName = field.getName();
         String schemeName = IdentifierValue.schemifyName("scm_" + javaName);
-        if (RuntimeValue.class.isAssignableFrom(field.getType()))
-        { addBinding(schemeName, new FieldBinding(this.getClass().getName().replace('.', '/'), schemeName, javaName));
+        if (RuntimeValue.class.isAssignableFrom(field.getType()) && Modifier.isStatic(field.getModifiers()))
+        { addBinding(schemeName, new StaticFieldBinding(currentClass, schemeName, javaName));
         } else if (Binding.class.isAssignableFrom(field.getType()))
         { try
           { addBinding(schemeName, (Binding) field.get(this));

@@ -23,7 +23,7 @@ public class LibraryOrProgramme
 
   public Statement compile(List<RuntimeValue> data)
   { List<Statement> returnValue = new ArrayList<>(data.size());
-    EnvironmentImporter importer = new EnvironmentImporter(environment, mainClass);
+    EnvironmentImporter importer = new EnvironmentImporter(environment);
     ASTConvertVisitor convertVisitor = new ASTConvertVisitor(environment, mainClass.getMainInnerClass(), mainClass);
     boolean finishedImporting = false;
 
@@ -45,10 +45,7 @@ public class LibraryOrProgramme
         importDeclaration.get("import-set").forEach(value -> imports.add(value));
         importer.importEnvironment(imports);
       } else
-      { if (! finishedImporting)
-        { returnValue.add(environment.getInitializer());
-          finishedImporting = true;
-        }
+      { finishedImporting = true;
         returnValue.add(datum.accept(convertVisitor));
       }
     }
