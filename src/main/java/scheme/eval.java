@@ -5,7 +5,7 @@ import rmk35.partIIProject.runtime.IdentifierValue;
 import rmk35.partIIProject.runtime.NullValue;
 import rmk35.partIIProject.runtime.LambdaValue;
 import rmk35.partIIProject.runtime.EnvironmentValue;
-import rmk35.partIIProject.runtime.ValueHelper;
+import rmk35.partIIProject.runtime.TrampolineValue;
 import rmk35.partIIProject.runtime.libraries.BinaryLambda;
 import rmk35.partIIProject.runtime.libraries.VariadicLambda;
 import rmk35.partIIProject.runtime.libraries.ReflectiveEnvironment;
@@ -46,9 +46,8 @@ public class eval extends ReflectiveEnvironment
         Class<?> mainInnerClass = loader.defineClass(mainClass.getMainInnerClass().getName(), mainClass.getMainInnerClass().assembledByteCode());
         Constructor<?> constructor = mainInnerClass.getConstructor(LambdaValue.class);
         constructor.setAccessible(true);
-        Method method = mainInnerClass.getMethod("apply", RuntimeValue.class);
-        method.setAccessible(true);
-        return ValueHelper.toSchemeValue(method.invoke(constructor.newInstance((LambdaValue) null), new NullValue()));
+        LambdaValue mainInnerLambda = (LambdaValue) constructor.newInstance((LambdaValue) null);
+        return new TrampolineValue(mainInnerLambda, new NullValue());
       } catch (Exception e)
       { throw new RuntimeException(e);
       }
