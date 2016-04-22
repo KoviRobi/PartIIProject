@@ -1,5 +1,7 @@
 package rmk35.partIIProject.backend;
 
+import rmk35.partIIProject.Compiler;
+
 import rmk35.partIIProject.runtime.TrampolineValue;
 import rmk35.partIIProject.runtime.NullValue;
 
@@ -41,8 +43,7 @@ public class MainClass extends OutputClass
     addInnerClass(mainInnerClass);
 
     ByteCodeMethod mainMethod = new ByteCodeMethod(voidType, "public static", "main", stringArrayType);
-    mainMethod.addInstruction(new NewObjectInstruction(TrampolineValue.class));
-    mainMethod.addInstruction(new DupInstruction());
+    Compiler.tailCallSettings.generateCallStart(mainMethod);
     mainMethod.addInstruction(new NewObjectInstruction(mainInnerClass.getName()));
     mainMethod.addInstruction(new DupInstruction());
     mainMethod.addInstruction(new NullConstantInstruction());
@@ -50,8 +51,8 @@ public class MainClass extends OutputClass
     mainMethod.addInstruction(new NewObjectInstruction(NullValue.class));
     mainMethod.addInstruction(new DupInstruction());
     mainMethod.addInstruction(new NonVirtualCallInstruction(voidType, NullValue.class.getName().replace('.', '/') + "/<init>"));
-    mainMethod.addInstruction(new NonVirtualCallInstruction(voidType, TrampolineValue.class.getName().replace('.', '/') + "/<init>", lambdaValueType, runtimeValueType));
-    mainMethod.addInstruction(new StaticCallInstruction(runtimeValueType, TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", runtimeValueType));
+    Compiler.tailCallSettings.generateCallEnd(mainMethod);
+    Compiler.tailCallSettings.generateContinuation(mainMethod);
     mainMethod.addInstruction(new PopInstruction());
     methods.put("main", mainMethod);
   }

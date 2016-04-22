@@ -1,7 +1,8 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.Compiler;
+
 import rmk35.partIIProject.runtime.RuntimeValue;
-import rmk35.partIIProject.runtime.TrampolineValue;
 import rmk35.partIIProject.runtime.UnspecifiedValue;
 
 import rmk35.partIIProject.backend.InnerClass;
@@ -31,7 +32,7 @@ public class BeginStatement extends Statement
   { method.addInstruction(new CommentPseudoInstruction("BeginStatement"));
     new RuntimeValueStatement(new UnspecifiedValue()).generateOutput(mainClass, outputClass, method);
     for (Statement statement : statements)
-    { method.addInstruction(new StaticCallInstruction(runtimeValueType, TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", runtimeValueType));
+    { Compiler.tailCallSettings.generateContinuation(method);
       method.addInstruction(new PopInstruction());
       statement.generateOutput(mainClass, outputClass, method);
     }

@@ -1,10 +1,11 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.Compiler;
+
 import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.LambdaValue;
 import rmk35.partIIProject.runtime.NullValue;
 import rmk35.partIIProject.runtime.ConsValue;
-import rmk35.partIIProject.runtime.TrampolineValue;
 
 import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
@@ -41,11 +42,10 @@ public class ApplicationStatement extends Statement
 
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("ApplicationStatement"));
-    method.addInstruction(new NewObjectInstruction(TrampolineValue.class));
-    method.addInstruction(new DupInstruction());
+    Compiler.tailCallSettings.generateCallStart(method);
 
     operator.generateOutput(mainClass, outputClass, method);
-    method.addInstruction(new StaticCallInstruction(runtimeValueType, TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", runtimeValueType));
+    Compiler.tailCallSettings.generateContinuation(method);
     method.addInstruction(new CheckCastInstruction(LambdaValue.class));
 
     // Create a new list of operands
@@ -62,13 +62,12 @@ public class ApplicationStatement extends Statement
       method.addInstruction(new SwapInstruction());
       /* Generate output so now Cons, Cons, Runtime, Car */
       operand.generateOutput(mainClass, outputClass, method);
-      method.addInstruction(new StaticCallInstruction(runtimeValueType, TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", runtimeValueType));
+      Compiler.tailCallSettings.generateContinuation(method);
       /* Swap with generated output so now Cons, Cons, Car, Runtime */
       method.addInstruction(new SwapInstruction());
       method.addInstruction(new NonVirtualCallInstruction(voidType, ConsValue.class.getName().replace('.', '/') + "/<init>", runtimeValueType, runtimeValueType));
     }
 
-    // Wrap call in a TrampolineVisitor
-    method.addInstruction(new NonVirtualCallInstruction(voidType, TrampolineValue.class.getName().replace('.', '/') + "/<init>", lambdaValueType, runtimeValueType));
+    Compiler.tailCallSettings.generateCallEnd(method);
   }
 }

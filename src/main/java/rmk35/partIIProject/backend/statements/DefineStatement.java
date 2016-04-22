@@ -1,7 +1,8 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.Compiler;
+
 import rmk35.partIIProject.runtime.RuntimeValue;
-import rmk35.partIIProject.runtime.TrampolineValue;
 import rmk35.partIIProject.runtime.UnspecifiedValue;
 
 import rmk35.partIIProject.backend.MainClass;
@@ -29,7 +30,7 @@ public class DefineStatement extends Statement
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("Define statement"));
     value.generateOutput(mainClass, outputClass, method);
-    method.addInstruction(new StaticCallInstruction(runtimeValueType, TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", runtimeValueType));
+    Compiler.tailCallSettings.generateContinuation(method);
     variable.ensureExistence(mainClass, outputClass, method);
     variable.generateSetOutput(mainClass, outputClass, method);
     new RuntimeValueStatement(new UnspecifiedValue()).generateOutput(mainClass, outputClass, method);

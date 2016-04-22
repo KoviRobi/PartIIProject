@@ -11,6 +11,9 @@ import rmk35.partIIProject.middle.LibraryOrProgramme;
 import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.statements.Statement;
+import rmk35.partIIProject.backend.statements.TailCallSettings;
+import rmk35.partIIProject.backend.statements.NonTailCalls;
+import rmk35.partIIProject.backend.statements.Trampolining;
 
 import java.util.List;
 import java.io.IOException;
@@ -35,6 +38,12 @@ public class Compiler
     { return fileName.substring(0, lastIndex);
     }
   }
+
+  // Settings
+  public static TailCallSettings tailCallSettings =
+    (System.getenv("tailcall") == null ||
+    System.getenv("tailcall").equals("trampoline")) ? new Trampolining()
+    : new NonTailCalls();
 
   public Compiler(String fileName, String outputName) throws Exception, IOException
   { MainClass mainClass = new MainClass(outputName);
