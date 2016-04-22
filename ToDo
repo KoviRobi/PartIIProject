@@ -16,6 +16,4 @@ Have the bind() call of the reflective environment be something that is called a
 eval tail call
 Java call order, e.g. CLOS is left to right for specialisation
 
-REPL does not bounce trampolines: try running ((lambda (x) (x x)) (lambda (x) (x x)))
-
 current implementation of store is broken for macros defining macros
