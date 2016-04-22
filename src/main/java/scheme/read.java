@@ -11,8 +11,7 @@ import rmk35.partIIProject.runtime.ThrowableValue;
 import rmk35.partIIProject.runtime.ReadErrorValue;
 import rmk35.partIIProject.runtime.EndOfFileValue;
 import rmk35.partIIProject.runtime.ValueHelper;
-import rmk35.partIIProject.runtime.libraries.BinaryLambda;
-import rmk35.partIIProject.runtime.libraries.UnaryLambda;
+import rmk35.partIIProject.runtime.libraries.VariadicLambda;
 import rmk35.partIIProject.runtime.libraries.ReflectiveEnvironment;
 
 import rmk35.partIIProject.frontend.SchemeParser;
@@ -20,7 +19,7 @@ import rmk35.partIIProject.frontend.SchemeParser;
 public class read extends ReflectiveEnvironment
 { public read() { bind(); }
   public static RuntimeValue read =
-  new LambdaValue()
+  new VariadicLambda()
   { @Override
     public RuntimeValue run(RuntimeValue optionalPort)
     { if (optionalPort instanceof NullValue)

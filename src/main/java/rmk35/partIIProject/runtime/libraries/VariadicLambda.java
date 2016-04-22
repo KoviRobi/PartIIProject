@@ -10,23 +10,13 @@ import rmk35.partIIProject.runtime.ConsValue;
 
 import java.util.List;
 
-public abstract class BinaryLambda extends LambdaValue
+public abstract class VariadicLambda extends LambdaValue
 { @Override
   public final RuntimeValue apply(RuntimeValue arguments)
-  { int length = 0;
-    RuntimeValue lengthList = arguments;
-    while (! (lengthList instanceof NullValue))
-    { lengthList = ((ConsValue) lengthList).getCdr();
-      length++;
-    }
-    if (length == 2)
-    { return run2(((ConsValue) arguments).getCar(), ((ConsValue) ((ConsValue) arguments).getCdr()).getCar());
-    } else
-    { throw new IllegalArgumentException("Expecting two RuntimeValue arguments, got " + arguments);
-    }
+  { return run(arguments);
   }
 
   public RuntimeValue run(RuntimeValue argument, RuntimeValue continuation, int programme_counter) { throw new InternalCompilerException("Called run for a built in function"); }
 
-  public abstract RuntimeValue run2(RuntimeValue first, RuntimeValue second);
+  public abstract RuntimeValue run(RuntimeValue arguments);
 }

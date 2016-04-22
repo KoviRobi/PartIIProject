@@ -14,6 +14,7 @@ import rmk35.partIIProject.runtime.ValueHelper;
 import rmk35.partIIProject.runtime.libraries.ReflectiveEnvironment;
 import rmk35.partIIProject.runtime.libraries.UnaryLambda;
 import rmk35.partIIProject.runtime.libraries.BinaryLambda;
+import rmk35.partIIProject.runtime.libraries.VariadicLambda;
 
 import rmk35.partIIProject.middle.bindings.Binding;
 import rmk35.partIIProject.middle.bindings.LambdaSyntaxBinding;
@@ -104,25 +105,25 @@ public class base extends ReflectiveEnvironment
   public static RuntimeValue caar =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) car).run(((UnaryLambda) car).run(cell)); } // FIXME: Tail calls
+    public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) car).apply(((UnaryLambda) car).apply(cell)); }
   };
 
   public static RuntimeValue cadr =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) car).run(((UnaryLambda) cdr).run(cell)); }
+    public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) car).apply(((UnaryLambda) cdr).apply(cell)); }
   };
 
   public static RuntimeValue cdar =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) cdr).run(((UnaryLambda) car).run(cell)); }
+    public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) cdr).apply(((UnaryLambda) car).apply(cell)); }
   };
 
   public static RuntimeValue cddr =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) cdr).run(((UnaryLambda) cdr).run(cell)); }
+    public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) cdr).apply(((UnaryLambda) cdr).apply(cell)); }
   };
 
   public static RuntimeValue null$00003F =
@@ -143,7 +144,7 @@ public class base extends ReflectiveEnvironment
   };
 
   public static RuntimeValue make_list =
-  new LambdaValue()
+  new VariadicLambda()
   { @Override
     public RuntimeValue run(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
@@ -161,7 +162,7 @@ public class base extends ReflectiveEnvironment
   };
 
   public static RuntimeValue append =
-  new LambdaValue()
+  new VariadicLambda()
   { @Override
     public RuntimeValue run(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
@@ -203,7 +204,7 @@ public class base extends ReflectiveEnvironment
   };
 
   public static RuntimeValue member =
-  new LambdaValue()
+  new VariadicLambda()
   { @Override
     public RuntimeValue run(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
@@ -221,7 +222,7 @@ public class base extends ReflectiveEnvironment
   };
 
   public static RuntimeValue assoc =
-  new LambdaValue()
+  new VariadicLambda()
   { @Override
     public RuntimeValue run(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };

@@ -7,7 +7,7 @@ import rmk35.partIIProject.runtime.LambdaValue;
 import rmk35.partIIProject.runtime.EnvironmentValue;
 import rmk35.partIIProject.runtime.ValueHelper;
 import rmk35.partIIProject.runtime.libraries.BinaryLambda;
-import rmk35.partIIProject.runtime.libraries.UnaryLambda;
+import rmk35.partIIProject.runtime.libraries.VariadicLambda;
 import rmk35.partIIProject.runtime.libraries.ReflectiveEnvironment;
 
 import rmk35.partIIProject.middle.ASTMatcher;
@@ -56,7 +56,7 @@ public class eval extends ReflectiveEnvironment
   };
 
   public static RuntimeValue mutable_environment =
-  new LambdaValue()
+  new VariadicLambda()
   { public RuntimeValue run(RuntimeValue arguments)
     { EnvironmentValue returnEnvironment = new EnvironmentValue(/* mutable, for the moment */ true);
       EnvironmentImporter importer = new EnvironmentImporter(returnEnvironment);
@@ -69,7 +69,7 @@ public class eval extends ReflectiveEnvironment
   };
 
   public static RuntimeValue environment =
-  new LambdaValue()
+  new VariadicLambda()
   { public RuntimeValue run(RuntimeValue arguments)
     { EnvironmentValue returnEnvironment = (EnvironmentValue) ((LambdaValue) mutable_environment).apply(arguments);
       returnEnvironment.setMutable(false);

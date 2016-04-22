@@ -24,10 +24,10 @@ public abstract class LambdaValue implements RuntimeValue, Function<RuntimeValue
   public boolean eqv(RuntimeValue other) { return this == other; }
   public boolean eq(RuntimeValue other) { return this == other; }
 
-  public final RuntimeValue apply(RuntimeValue argument)
-  { return clone().run(argument);
+  public RuntimeValue apply(RuntimeValue argument)
+  { return clone().run(argument, new UnspecifiedValue(), 0);
   }
-  public abstract RuntimeValue run(RuntimeValue argument);
+  public abstract RuntimeValue run(RuntimeValue argument, RuntimeValue continuation, int programme_counter);
 
   @Override
   public <T> T accept(ASTVisitor<T> visitor) throws SyntaxErrorException

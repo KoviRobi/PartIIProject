@@ -26,7 +26,6 @@ public class EnvironmentValue implements RuntimeValue
 { Map<String, Binding> bindings = new HashMap<>();
   boolean mutable = false;
   List<Statement> initializer = new ArrayList<>();
-  int localsCount = 1; // Local 0 is 'this' for inner or String[] arguments for main methods
 
   public EnvironmentValue() { }
   public EnvironmentValue(boolean mutable) { this.mutable = mutable; }

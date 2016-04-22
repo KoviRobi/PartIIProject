@@ -1,5 +1,7 @@
 package rmk35.partIIProject.runtime;
 
+import rmk35.partIIProject.InternalCompilerException;
+
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +45,7 @@ public class ObjectValue extends LambdaValue
   public boolean eqv(RuntimeValue other) { return this == other; }
   public boolean eq(RuntimeValue other) { return this == other; }
 
-  public RuntimeValue run(RuntimeValue argument)
+  public RuntimeValue apply(RuntimeValue argument)
   { ConsValue first = (ConsValue) argument;
     String message = ((IdentifierValue) first.getCar()).getValue();
     Object[] arguments = ((List) first.getCdr().toJavaValue()).toArray();
@@ -58,6 +60,8 @@ public class ObjectValue extends LambdaValue
     { throw new RuntimeException(e);
     }
   }
+
+  public RuntimeValue run(RuntimeValue argument, RuntimeValue continuation, int programme_counter) { throw new InternalCompilerException("Called run for a built in function"); }
 
   public static <T extends Executable> List<T> applicableMethods(String name, Object[] arguments, T[] methods)
   { List<T> returnValue = new ArrayList<>();

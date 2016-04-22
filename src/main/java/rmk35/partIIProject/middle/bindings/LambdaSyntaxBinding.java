@@ -31,7 +31,7 @@ public class LambdaSyntaxBinding extends SintacticBinding
 { @Override
   public Statement applicate(EnvironmentValue environment, OutputClass outputClass, MainClass mainClass, RuntimeValue operator, RuntimeValue operands)
   { ConsValue first = operands.accept(new ASTExpectConsVisitor());
-    EnvironmentValue bodyEnvironment = environment.subEnvironment(); // Next: increment subenvironment's number
+    EnvironmentValue bodyEnvironment = environment.subEnvironment();
 
     String innerClassName = mainClass.uniqueID() + "$Lambda"; // Using main class' unique ID as that way all files definitely have different names
     String comment = new ConsValue(operator, operands, operator.getSourceInfo()).toJavaValue().toString();
