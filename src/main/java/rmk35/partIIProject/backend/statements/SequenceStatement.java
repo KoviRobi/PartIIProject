@@ -35,13 +35,4 @@ public class SequenceStatement extends Statement
       }
     }
   }
-
-  @Override
-  public Collection<String> getFreeIdentifiers()
-  { Collection<String> returnValue = new TreeSet<>();
-    for (Statement statement : statements)
-    { returnValue.addAll(statement.getFreeIdentifiers());
-    }
-    return returnValue;
-  }
 }

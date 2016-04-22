@@ -14,6 +14,8 @@ import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectIdentifierVisitor;
 import rmk35.partIIProject.middle.ASTMatcher;
 import rmk35.partIIProject.middle.ASTConvertVisitor;
 
+import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.statements.BeginStatement;
 import rmk35.partIIProject.backend.statements.DefineStatement;
@@ -26,13 +28,12 @@ import lombok.ToString;
 @ToString
 public class BeginBinding extends SintacticBinding
 { @Override
-  public Statement applicate(EnvironmentValue environment, RuntimeValue operator, RuntimeValue operands)
+  public Statement applicate(EnvironmentValue environment, OutputClass outputClass, MainClass mainClass, RuntimeValue operator, RuntimeValue operands)
   { ASTMatcher beginSubstitution = new ASTMatcher("(body ...)", operands);
     if (beginSubstitution.matched())
-    { /* Case for simple let */
-      List<Statement> beginStatements = new ArrayList<>();
+    { List<Statement> beginStatements = new ArrayList<>();
       if (beginSubstitution.get("body") != null)
-      { beginSubstitution.get("body").forEach(value -> beginStatements.add(value.accept(new ASTConvertVisitor(environment))));
+      { beginSubstitution.get("body").forEach(value -> beginStatements.add(value.accept(new ASTConvertVisitor(environment, outputClass, mainClass))));
       }
       return new BeginStatement(beginStatements);
     }

@@ -47,13 +47,13 @@ public class base extends ReflectiveEnvironment
   public RuntimeValue raise =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue first) { throw new ThrowableValue(first); }
+    public RuntimeValue run1(RuntimeValue first) { throw new ThrowableValue(first); }
   };
 
   public RuntimeValue with_exception_handler =
   new BinaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue first, RuntimeValue second)
+    public RuntimeValue run2(RuntimeValue first, RuntimeValue second)
     { LambdaValue handler = (LambdaValue) first;
       LambdaValue body = (LambdaValue) second;
       try
@@ -68,72 +68,73 @@ public class base extends ReflectiveEnvironment
   public RuntimeValue pair$00003F =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue value) { return new BooleanValue(value instanceof ConsValue); }
+    public RuntimeValue run1(RuntimeValue value) { return new BooleanValue(value instanceof ConsValue); }
   };
 
-  public RuntimeValue cons = new BinaryLambda()
+  public RuntimeValue cons =
+  new BinaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue car, RuntimeValue cdr) { return new ConsValue(car, cdr); }
+    public RuntimeValue run2(RuntimeValue car, RuntimeValue cdr) { return new ConsValue(car, cdr); }
   };
 
   public RuntimeValue car =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue cell) { return ((ConsValue) cell).getCar(); }
+    public RuntimeValue run1(RuntimeValue cell) { return ((ConsValue) cell).getCar(); }
   };
 
   public RuntimeValue cdr =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue cell) { return ((ConsValue) cell).getCdr(); }
+    public RuntimeValue run1(RuntimeValue cell) { return ((ConsValue) cell).getCdr(); }
   };
 
   public RuntimeValue set_car$000021 =
   new BinaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue cell, RuntimeValue value) { ((ConsValue) cell).setCar(value); return new UnspecifiedValue(); }
+    public RuntimeValue run2(RuntimeValue cell, RuntimeValue value) { ((ConsValue) cell).setCar(value); return new UnspecifiedValue(); }
   };
 
   public RuntimeValue set_cdr$000021 =
   new BinaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue cell, RuntimeValue value) { ((ConsValue) cell).setCdr(value); return new UnspecifiedValue(); }
+    public RuntimeValue run2(RuntimeValue cell, RuntimeValue value) { ((ConsValue) cell).setCdr(value); return new UnspecifiedValue(); }
   };
 
   public RuntimeValue caar =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue cell) { return ((UnaryLambda) car).run(((UnaryLambda) car).run(cell)); } // FIXME: Tail calls
+    public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) car).run(((UnaryLambda) car).run(cell)); } // FIXME: Tail calls
   };
 
   public RuntimeValue cadr =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue cell) { return ((UnaryLambda) car).run(((UnaryLambda) cdr).run(cell)); }
+    public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) car).run(((UnaryLambda) cdr).run(cell)); }
   };
 
   public RuntimeValue cdar =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue cell) { return ((UnaryLambda) cdr).run(((UnaryLambda) car).run(cell)); }
+    public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) cdr).run(((UnaryLambda) car).run(cell)); }
   };
 
   public RuntimeValue cddr =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue cell) { return ((UnaryLambda) cdr).run(((UnaryLambda) cdr).run(cell)); }
+    public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) cdr).run(((UnaryLambda) cdr).run(cell)); }
   };
 
   public RuntimeValue null$00003F =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue value) { return new BooleanValue(value instanceof NullValue); }
+    public RuntimeValue run1(RuntimeValue value) { return new BooleanValue(value instanceof NullValue); }
   };
 
   public RuntimeValue list$00003F =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue value)
+    public RuntimeValue run1(RuntimeValue value)
     { while (value instanceof ConsValue)
       { value = ((ConsValue) value).getCdr();
       }
@@ -144,98 +145,98 @@ public class base extends ReflectiveEnvironment
   public RuntimeValue make_list =
   new LambdaValue()
   { @Override
-    public RuntimeValue apply(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
+    public RuntimeValue run(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
   public RuntimeValue list =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue value) { return value; }
+    public RuntimeValue run1(RuntimeValue value) { return value; }
   };
 
   public RuntimeValue length =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
+    public RuntimeValue run1(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
   public RuntimeValue append =
   new LambdaValue()
   { @Override
-    public RuntimeValue apply(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
+    public RuntimeValue run(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
   public RuntimeValue reverse =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
+    public RuntimeValue run1(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
   public RuntimeValue list_tail =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
+    public RuntimeValue run1(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
   public RuntimeValue list_ref =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
+    public RuntimeValue run1(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
   public RuntimeValue list_set$000021 =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
+    public RuntimeValue run1(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
   public RuntimeValue memq =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
+    public RuntimeValue run1(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
   public RuntimeValue memv =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
+    public RuntimeValue run1(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
   public RuntimeValue member =
   new LambdaValue()
   { @Override
-    public RuntimeValue apply(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
+    public RuntimeValue run(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
   public RuntimeValue assq =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
+    public RuntimeValue run1(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
   public RuntimeValue assv =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
+    public RuntimeValue run1(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
   public RuntimeValue assoc =
   new LambdaValue()
   { @Override
-    public RuntimeValue apply(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
+    public RuntimeValue run(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
   public RuntimeValue list_copy =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
+    public RuntimeValue run1(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
 
   // R7RS, Pairs and lists, section 6.8
   public RuntimeValue vector_ref =
   new BinaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue vector, RuntimeValue k)
+    public RuntimeValue run2(RuntimeValue vector, RuntimeValue k)
     { Object[] javaVector = ((VectorValue) vector).toJavaValue();
       return ValueHelper.toSchemeValue(javaVector[((NumberValue) k).toJavaValue()]);
     }

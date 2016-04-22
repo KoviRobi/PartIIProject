@@ -22,7 +22,7 @@ public class read extends ReflectiveEnvironment
   public RuntimeValue read =
   new LambdaValue()
   { @Override
-    public RuntimeValue apply(RuntimeValue optionalPort)
+    public RuntimeValue run(RuntimeValue optionalPort)
     { if (optionalPort instanceof NullValue)
       { RuntimeValue returnValue;
          try

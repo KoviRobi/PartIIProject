@@ -7,6 +7,7 @@ import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.instructions.Instruction;
 import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
 import rmk35.partIIProject.backend.instructions.DupInstruction;
+import rmk35.partIIProject.backend.instructions.NullConstantInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
 import rmk35.partIIProject.backend.instructions.StaticCallInstruction;
 import rmk35.partIIProject.backend.instructions.PopInstruction;
@@ -36,7 +37,7 @@ public class MainClass extends OutputClass
   { super(name);
     this.innerClasses = innerClasses;
     String mainInnerClassName = getName() + "$StartLambda";
-    mainInnerClass = new InnerClass(mainInnerClassName, new ArrayList<>(), 0, this, "Main inner class");
+    mainInnerClass = new InnerClass(mainInnerClassName, new ArrayList<>(), this, "Main inner class");
     addInnerClass(mainInnerClass);
 
     ByteCodeMethod mainMethod = new ByteCodeMethod(voidType, "public static", "main", stringArrayType);
@@ -44,7 +45,8 @@ public class MainClass extends OutputClass
     mainMethod.addInstruction(new DupInstruction());
     mainMethod.addInstruction(new NewObjectInstruction(mainInnerClass.getName()));
     mainMethod.addInstruction(new DupInstruction());
-    mainInnerClass.invokeConstructor(this, this, mainMethod);
+    mainMethod.addInstruction(new NullConstantInstruction());
+    mainMethod.addInstruction(new NonVirtualCallInstruction(voidType, mainInnerClass.getName() + "/<init>", lambdaValueType));
     mainMethod.addInstruction(new NewObjectInstruction(NullValue.class));
     mainMethod.addInstruction(new DupInstruction());
     mainMethod.addInstruction(new NonVirtualCallInstruction(voidType, NullValue.class.getName().replace('.', '/') + "/<init>"));

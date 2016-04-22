@@ -7,6 +7,8 @@ import rmk35.partIIProject.runtime.EnvironmentValue;
 
 import rmk35.partIIProject.frontend.SourceInfo;
 
+import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.statements.Statement;
 
 import lombok.ToString;
@@ -21,13 +23,8 @@ public class MarkerBinding implements Binding
   }
 
   @Override
-  public Statement applicate(EnvironmentValue useEnvironment, RuntimeValue operator, RuntimeValue operands)
+  public Statement applicate(EnvironmentValue useEnvironment, OutputClass outputClass, MainClass mainClass, RuntimeValue operator, RuntimeValue operands)
   { throw new SyntaxErrorException("Tried to use applicate on an ellipsis binding", operator.getSourceInfo());
-  }
-
-  @Override
-  public boolean shouldSaveToClosure()
-  { return false;
   }
 
   @Override

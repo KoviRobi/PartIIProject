@@ -1,13 +1,10 @@
 (import (scheme base)
-        (scheme java))
-
-(define system-out (static-field (class 'java.lang.System) 'out))
-(define println (lambda (value) (system-out 'println value)))
+        (scheme write))
 
 (define-syntax macro-alternation
   (syntax-rules ()
-    ((_ 0) (println "Zero"))
-    ((_ 1) (println "One")) ) )
+    ((_ 0) (displayln 'Zero))
+    ((_ 1) (displayln 'One)) ) )
 
 (macro-alternation 0)
 (macro-alternation 1)
@@ -16,9 +13,9 @@
   (syntax-rules ()
     ((multi-matches x y ...) '((... ...) (x end) (y ... end))) ) )
 
-(println (multi-matches 1 2 3))
-(println (multi-matches 4 5))
-(println (multi-matches 6))
+(displayln (multi-matches 1 2 3))
+(displayln (multi-matches 4 5))
+(displayln (multi-matches 6))
 
 ; More complicated ellipsis macro
 (define-syntax structural-match
@@ -26,7 +23,7 @@
     ((structural-match (x ...) ((y ...) ...))
      '((x (x y) ...) ...) ) ) )
 
-(println
+(displayln
   (structural-match	(a b c)
 					((1 2 3)
 					(4 5 6)
@@ -38,8 +35,8 @@
   (syntax-rules ()
     ((foo-hygiene M)
      (let ((y-hygiene 2))
-       (println x-hygiene)
+       (displayln x-hygiene)
        M) ) ) )
 (let ((x-hygiene 3)
       (y-hygiene 4) )
-  (foo-hygiene (println y-hygiene)) )
+  (foo-hygiene (displayln y-hygiene)) )

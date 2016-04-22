@@ -8,6 +8,8 @@ import rmk35.partIIProject.runtime.NullValue;
 import rmk35.partIIProject.runtime.SelfquotingValue;
 import rmk35.partIIProject.runtime.EnvironmentValue;
 
+import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.statements.RuntimeValueStatement;
 
@@ -18,19 +20,23 @@ import lombok.Data;
 @Data
 public class ASTConvertVisitor extends ASTVisitor<Statement>
 { EnvironmentValue environment; /* STATE */
+  OutputClass outputClass;
+  MainClass mainClass;
 
-  public ASTConvertVisitor(EnvironmentValue environment)
+  public ASTConvertVisitor(EnvironmentValue environment, OutputClass outputClass, MainClass mainClass)
   { this.environment =  environment;
+    this.outputClass = outputClass;
+    this.mainClass = mainClass;
   }
 
   @Override
   public Statement visit(ConsValue consCell)
-  { return consCell.getCar().accept(new ASTApplicationVisitor(environment, consCell.getCdr()));
+  { return consCell.getCar().accept(new ASTApplicationVisitor(environment, outputClass, mainClass, consCell.getCdr()));
   }
 
   @Override
   public Statement visit(IdentifierValue identifier)
-  { return environment.getOrGlobal(identifier.getValue()).toStatement(identifier.getSourceInfo());
+  { return environment.getOrGlobal(mainClass, identifier.getValue()).toStatement(identifier.getSourceInfo());
   }
 
   @Override

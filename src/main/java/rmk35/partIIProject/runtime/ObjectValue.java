@@ -43,7 +43,7 @@ public class ObjectValue extends LambdaValue
   public boolean eqv(RuntimeValue other) { return this == other; }
   public boolean eq(RuntimeValue other) { return this == other; }
 
-  public RuntimeValue apply(RuntimeValue argument)
+  public RuntimeValue run(RuntimeValue argument)
   { ConsValue first = (ConsValue) argument;
     String message = ((IdentifierValue) first.getCar()).getValue();
     Object[] arguments = ((List) first.getCdr().toJavaValue()).toArray();

@@ -4,8 +4,8 @@ import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
-import rmk35.partIIProject.backend.instructions.GetFieldInstruction;
-import rmk35.partIIProject.backend.instructions.PutFieldInstruction;
+import rmk35.partIIProject.backend.instructions.GetStaticInstruction;
+import rmk35.partIIProject.backend.instructions.PutStaticInstruction;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.runtimeValueType;
 
 import java.util.Collection;
@@ -17,12 +17,12 @@ import lombok.ToString;
  * Identifiers from elsewhere
  */
 @ToString
-public class FieldIdentifierStatement extends IdentifierStatement
+public class StaticFieldIdentifierStatement extends IdentifierStatement
 { String containingClass;
   String schemeName;
   String javaName;
 
-  public FieldIdentifierStatement(String containingClass, String schemeName, String javaName)
+  public StaticFieldIdentifierStatement(String containingClass, String schemeName, String javaName)
   { this.containingClass = containingClass;
     this.schemeName = schemeName;
     this.javaName = javaName;
@@ -30,14 +30,14 @@ public class FieldIdentifierStatement extends IdentifierStatement
 
   @Override
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
-  { method.addInstruction(new CommentPseudoInstruction("FieldIdentifierStatement Get"));
-    method.addInstruction(new GetFieldInstruction(runtimeValueType, getContainingClass() + "/" + getJavaName()));
+  { method.addInstruction(new CommentPseudoInstruction("StaticFieldIdentifierStatement Get"));
+    method.addInstruction(new GetStaticInstruction(runtimeValueType, getContainingClass() + "/" + getJavaName()));
   }
 
   @Override
   public void generateSetOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
-  { method.addInstruction(new CommentPseudoInstruction("FieldIdentifierStatement Set"));
-    method.addInstruction(new PutFieldInstruction(runtimeValueType, getContainingClass() + "/" + getJavaName()));
+  { method.addInstruction(new CommentPseudoInstruction("StaticFieldIdentifierStatement Set"));
+    method.addInstruction(new PutStaticInstruction(runtimeValueType, getContainingClass() + "/" + getJavaName()));
   }
 
   @Override
@@ -56,6 +56,6 @@ public class FieldIdentifierStatement extends IdentifierStatement
 
   @Override
   public void ensureExistence(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
-  { throw new UnsupportedOperationException("Field binding already exists, this method is called by 'define' with should not have happened for a field binding!");
+  {
   }
 }

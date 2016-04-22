@@ -14,38 +14,8 @@ import java.util.TreeSet;
 import lombok.ToString;
 
 @ToString
-public class GlobalIdentifierStatement extends IdentifierStatement
-{ String name;
-
-  public GlobalIdentifierStatement(String name)
-  { this.name = name;
-  }
-
-  @Override
-  public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
-  { method.addInstruction(new CommentPseudoInstruction("GlobalIdentifierStatement Get"));
-    // Note using mainClass, whereas for ClosureIdentifierStatement, we are using outputClass
-    method.addInstruction(new GetStaticInstruction(runtimeValueType, mainClass.getName() + "/" + getJavaName()));
-  }
-
-  @Override
-  public void generateSetOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
-  { method.addInstruction(new CommentPseudoInstruction("GlobalIdentifierStatement Set"));
-    // Note using mainClass, whereas for ClosureIdentifierStatement, we are using outputClass
-    method.addInstruction(new PutStaticInstruction(runtimeValueType, mainClass.getName() + "/" + getJavaName()));
-  }
-
-  @Override
-  public String getName()
-  { return name;
-  }
-
-  @Override
-  public Collection<String> getFreeIdentifiers()
-  { Collection<String> returnValue = new TreeSet<>();
-    returnValue.add(getName());
-    return returnValue;
-  }
+public class GlobalIdentifierStatement extends StaticFieldIdentifierStatement
+{ public GlobalIdentifierStatement(String containingClass, String schemeName, String javaName) { super(containingClass, schemeName, javaName); }
 
   @Override
   public void ensureExistence(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)

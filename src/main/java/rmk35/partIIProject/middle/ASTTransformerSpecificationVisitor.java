@@ -19,6 +19,8 @@ import rmk35.partIIProject.middle.astExpectVisitor.ASTPairMapVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectIdentifierVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectConsVisitor;
 
+import rmk35.partIIProject.backend.MainClass;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
@@ -30,15 +32,17 @@ import lombok.Value;
 @Value
 public class ASTTransformerSpecificationVisitor extends ASTUnexpectedVisitor<SyntaxBinding>
 { EnvironmentValue environment;
+  MainClass mainClass;
 
-  public ASTTransformerSpecificationVisitor(EnvironmentValue environment)
+  public ASTTransformerSpecificationVisitor(EnvironmentValue environment, MainClass mainClass)
   { this.environment = environment;
+     this.mainClass = mainClass;
   }
 
   @Override
   public SyntaxBinding visit(ConsValue consCell)
   { String syntaxRules = consCell.getCar().accept(new ASTExpectIdentifierVisitor()).getValue();
-    if (! (environment.getOrGlobal(syntaxRules) instanceof SyntaxRulesBinding))
+    if (! (environment.getOrGlobal(mainClass, syntaxRules) instanceof SyntaxRulesBinding))
     { throw new SyntaxErrorException("I was expecting \"syntax-rules\", maybe it has been rebound?", consCell.getSourceInfo());
     }
     String ellipsisString;

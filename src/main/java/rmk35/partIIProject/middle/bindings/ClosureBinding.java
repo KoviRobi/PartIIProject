@@ -21,11 +21,6 @@ public class ClosureBinding extends VariableBinding
   }
 
   @Override
-  public boolean shouldSaveToClosure()
-  { return true;
-  }
-
-  @Override
   public Binding subEnvironment()
   { return this;
   }

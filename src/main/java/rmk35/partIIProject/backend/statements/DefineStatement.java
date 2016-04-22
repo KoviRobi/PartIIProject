@@ -34,11 +34,4 @@ public class DefineStatement extends Statement
     variable.generateSetOutput(mainClass, outputClass, method);
     new RuntimeValueStatement(new UnspecifiedValue()).generateOutput(mainClass, outputClass, method);
   }
-
-  @Override
-  public Collection<String> getFreeIdentifiers()
-  { Collection<String> returnValue = new TreeSet<>();
-    returnValue.addAll(value.getFreeIdentifiers());
-    return returnValue;
-  }
 }

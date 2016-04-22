@@ -16,7 +16,7 @@ for test in $TESTS; do
   java $CLASSPATH rmk35.partIIProject.Compiler test.scm 2>compile-error || test -e expected-compile-failure || { echo Error, logged in ${test}compile-error; false; } &&
 
   test -f expected-compile-failure ||
-  { timeout 1s java $CLASSPATH test > result 2>run-error || test -e expected-run-failure || { echo Error, logged in ${test}run-error and output in ${test}/result; false; };
+  { timeout 1s java $CLASSPATH test > result 2>run-error || test -e expected-run-failure || { echo Error, logged in ${test}run-error and output in ${test}result; false; };
     diff result expected || { echo Error, logged in ${test}run-error and output in ${test}result; false; };
   }
   echo ' completed'

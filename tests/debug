@@ -1,12 +1,12 @@
 #!/bin/sh -e
 
 FILE=$(basename $1)
-DIR=$(basename -d $0)
+DIR=$(dirname $0)
 JAR=$DIR/../target/part-II-project-1.0-SNAPSHOT-jar-with-dependencies.jar
 CLASSPATH="-classpath .:$JAR:$DIR/../target/classes:$DIR/../src/main/java"
 
 rm -f *.j *.class || true
 
-term=win
+term=${term:-win}
 $term jdb -launch $CLASSPATH rmk35.partIIProject.Compiler ${FILE}
-$term jdb -launch $CLASSPATHR ${FILE%.scm}
+$term jdb -launch $CLASSPATH ${FILE%.scm}

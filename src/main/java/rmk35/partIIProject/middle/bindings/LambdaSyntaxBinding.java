@@ -13,6 +13,9 @@ import rmk35.partIIProject.middle.astExpectVisitor.ASTImproperListFoldVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTListFoldVisitor;
 import rmk35.partIIProject.middle.ASTConvertVisitor;
 
+import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.MainClass;
+import rmk35.partIIProject.backend.InnerClass;
 import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.statements.IdentifierStatement;
 import rmk35.partIIProject.backend.statements.LambdaStatement;
@@ -26,32 +29,32 @@ import lombok.ToString;
 @ToString
 public class LambdaSyntaxBinding extends SintacticBinding
 { @Override
-  public Statement applicate(EnvironmentValue environment, RuntimeValue operator, RuntimeValue operands)
+  public Statement applicate(EnvironmentValue environment, OutputClass outputClass, MainClass mainClass, RuntimeValue operator, RuntimeValue operands)
   { ConsValue first = operands.accept(new ASTExpectConsVisitor());
-    EnvironmentValue bodyEnvironment = environment.subEnvironment();
-    List<String> formals = first.getCar().accept(new ASTImproperListFoldVisitor<List<String>>(new ArrayList<String>(),
-      (List<String> list, RuntimeValue ast) -> { list.add(ast.accept(new ASTExpectIdentifierVisitor()).getValue()); return list; } ));
-    for (String formal : formals)
-    { bodyEnvironment.addLocalVariable(formal);
-    }
+    EnvironmentValue bodyEnvironment = environment.subEnvironment(); // Next: increment subenvironment's number
+
+    String innerClassName = mainClass.uniqueID() + "$Lambda"; // Using main class' unique ID as that way all files definitely have different names
+    String comment = new ConsValue(operator, operands, operator.getSourceInfo()).toJavaValue().toString();
+
+    List<Binding> formals = first.getCar().accept(new ASTImproperListFoldVisitor<List<Binding>>(new ArrayList<Binding>(),
+      (List<Binding> list, RuntimeValue ast) ->
+      { list.add
+          (bodyEnvironment.addLocalVariable
+            (innerClassName,
+            ast.accept(new ASTExpectIdentifierVisitor()).getValue()));
+        return list;
+      } ));
+
+    InnerClass innerClass = new InnerClass(innerClassName, formals, mainClass, comment);
 
     List<Statement> body = first.getCdr().accept
       (new ASTListFoldVisitor<List<Statement>>(new ArrayList<>(),
-        (list, ast) -> { list.add(ast.accept(new ASTConvertVisitor(bodyEnvironment))); return list; } ));
+        (list, ast) -> { list.add(ast.accept(new ASTConvertVisitor(bodyEnvironment, innerClass, mainClass))); return list; } ));
     if (body.isEmpty())
     { throw new SyntaxErrorException("Empty lambda body", operator.getSourceInfo());
     }
     BeginStatement bodyStatement = new BeginStatement(body);
 
-    List<IdentifierStatement> closureVariables = new ArrayList<>();
-    // Look up in the current environment, as these will be used to get the be variable value
-    // to save them in the created function's closure
-    for (String variable : bodyStatement.getFreeIdentifiers())
-    { if (bodyEnvironment.getOrGlobal(variable).shouldSaveToClosure()) // Note the use of bodyEnvironment here and environment below
-      { closureVariables.add((IdentifierStatement) environment.getOrGlobal(variable).toStatement(operator.getSourceInfo()));
-      }
-    }
-
-    return new LambdaStatement(formals, closureVariables, bodyStatement, new ConsValue(operator, operands, operator.getSourceInfo()).toJavaValue().toString());
+    return new LambdaStatement(innerClass, bodyStatement, comment);
   }
 }

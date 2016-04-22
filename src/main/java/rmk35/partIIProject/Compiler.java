@@ -40,7 +40,7 @@ public class Compiler
   { MainClass mainClass = new MainClass(outputName);
     List<RuntimeValue> parsedFile = SchemeParser.parseFile(fileName);
     EnvironmentValue environment = new EnvironmentValue(/* mutable */ true);
-    Statement programme = new LibraryOrProgramme(environment).compile(parsedFile);
+    Statement programme = new LibraryOrProgramme(environment, mainClass).compile(parsedFile);
     // Mutates mainClass
     programme.generateOutput(mainClass, mainClass.getMainInnerClass(), mainClass.getPrimaryMethod());
     mainClass.saveToDisk(); // For debugging purposes

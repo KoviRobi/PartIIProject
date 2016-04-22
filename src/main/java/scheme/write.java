@@ -14,8 +14,35 @@ public class write extends ReflectiveEnvironment
   public RuntimeValue write = // FIXME:
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue object)
+    public RuntimeValue run1(RuntimeValue object)
+    { System.out.print(object.writeString());
+      return new UnspecifiedValue();
+    }
+  };
+
+  public RuntimeValue display = // FIXME:
+  new UnaryLambda()
+  { @Override
+    public RuntimeValue run1(RuntimeValue object)
+    { System.out.print(object.displayString());
+      return new UnspecifiedValue();
+    }
+  };
+
+  public RuntimeValue writeln = // FIXME:
+  new UnaryLambda()
+  { @Override
+    public RuntimeValue run1(RuntimeValue object)
     { System.out.println(object.writeString());
+      return new UnspecifiedValue();
+    }
+  };
+
+  public RuntimeValue displayln = // FIXME:
+  new UnaryLambda()
+  { @Override
+    public RuntimeValue run1(RuntimeValue object)
+    { System.out.println(object.displayString());
       return new UnspecifiedValue();
     }
   };

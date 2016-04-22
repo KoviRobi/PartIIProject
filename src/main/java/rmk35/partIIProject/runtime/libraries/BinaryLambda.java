@@ -10,7 +10,7 @@ import java.util.List;
 
 public abstract class BinaryLambda extends LambdaValue
 { @Override
-  public final RuntimeValue apply(RuntimeValue arguments)
+  public final RuntimeValue run(RuntimeValue arguments)
   { int length = 0;
     RuntimeValue lengthList = arguments;
     while (! (lengthList instanceof NullValue))
@@ -18,11 +18,11 @@ public abstract class BinaryLambda extends LambdaValue
       length++;
     }
     if (length == 2)
-    { return run(((ConsValue) arguments).getCar(), ((ConsValue) ((ConsValue) arguments).getCdr()).getCar());
+    { return run2(((ConsValue) arguments).getCar(), ((ConsValue) ((ConsValue) arguments).getCdr()).getCar());
     } else
     { throw new IllegalArgumentException("Expecting two RuntimeValue arguments, got " + arguments);
     }
   }
 
-  public abstract RuntimeValue run(RuntimeValue first, RuntimeValue second);
+  public abstract RuntimeValue run2(RuntimeValue first, RuntimeValue second);
 }

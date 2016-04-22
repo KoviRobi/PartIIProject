@@ -12,6 +12,8 @@ import rmk35.partIIProject.runtime.EnvironmentValue;
 
 import rmk35.partIIProject.middle.astExpectVisitor.ASTListFoldVisitor;
 
+import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.statements.ApplicationStatement;
 
@@ -23,23 +25,27 @@ import lombok.Value;
 @Value
 public class ASTApplicationVisitor extends ASTVisitor<Statement>
 { EnvironmentValue environment;
+  OutputClass outputClass;
+  MainClass mainClass;
   RuntimeValue arguments;
 
-  public ASTApplicationVisitor(EnvironmentValue environment, RuntimeValue arguments)
+  public ASTApplicationVisitor(EnvironmentValue environment, OutputClass outputClass, MainClass mainClass, RuntimeValue arguments)
   { this.environment = environment;
+    this.outputClass = outputClass;
+    this.mainClass = mainClass;
     this.arguments = arguments;
   }
 
   @Override
   public Statement visit(ConsValue consCell) throws SyntaxErrorException
-  { return new ApplicationStatement(consCell.accept(new ASTConvertVisitor(environment)),
+  { return new ApplicationStatement(consCell.accept(new ASTConvertVisitor(environment, outputClass, mainClass)),
       arguments.accept(new ASTListFoldVisitor<List<Statement>>(new ArrayList<>(),
-        (list, ast) -> { list.add(ast.accept(new ASTConvertVisitor(environment))); return list; } )));
+        (list, ast) -> { list.add(ast.accept(new ASTConvertVisitor(environment, outputClass, mainClass))); return list; } )));
   }
 
   @Override
   public Statement visit(IdentifierValue identifier) throws SyntaxErrorException
-  { return environment.getOrGlobal(identifier.getValue()).applicate(environment, identifier, arguments);
+  { return environment.getOrGlobal(mainClass, identifier.getValue()).applicate(environment, outputClass, mainClass, identifier, arguments);
   }
 
   @Override

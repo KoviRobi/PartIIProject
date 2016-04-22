@@ -9,6 +9,10 @@ public class CheckCastInstruction implements Instruction
   { this.targetClass = targetClass.getName().replace('.', '/');
   }
 
+  public CheckCastInstruction(String targetClass)
+  { this.targetClass = targetClass;
+  }
+
   // Called when adding to primary method
   public void simulateLimits(ByteCodeMethod outputClass)
   {

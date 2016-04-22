@@ -20,7 +20,7 @@ Also see README.md
        the lambda use environment as closure variables (then formals are the new local variables)
   - bindings: These fall into one of the three categories:
     - SyntacticBinding: An abstract class for all the syntactic bindings
-    - VariableBinding: Variable (global, local, closure)
+    - VariableBinding: Variable (global, local)
     - MarkerBinding: Just to use for instanceof, should only be used for the macro engine, then use ASTMatcher instead
 
 * rmk35.partIIProject.backend

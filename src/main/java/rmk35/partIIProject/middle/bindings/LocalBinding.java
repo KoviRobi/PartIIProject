@@ -5,35 +5,28 @@ import rmk35.partIIProject.frontend.SourceInfo;
 import rmk35.partIIProject.backend.statements.IdentifierStatement;
 import rmk35.partIIProject.backend.statements.LocalIdentifierStatement;
 
-import lombok.Value;
+import java.util.List;
+import java.util.ArrayList;
 
-@Value
-public class LocalBinding extends VariableBinding
-{ String identifier;
-  int localIndex;
+import lombok.ToString;
 
-  public LocalBinding(String identifier, int localIndex)
-  { this.identifier = identifier;
-    this.localIndex = localIndex;
+@ToString
+public class LocalBinding extends FieldBinding
+{ int inParentNo;
+
+  public LocalBinding(String containingClass, String schemeName, String javaName) { this(containingClass, schemeName, javaName, 0); }
+  public LocalBinding(String containingClass, String schemeName, String javaName, int inParentNo)
+  { super(containingClass, schemeName, javaName);
+    this.inParentNo = inParentNo;
   }
 
   @Override
   public LocalIdentifierStatement toStatement(SourceInfo sourceInfo)
-  { return new LocalIdentifierStatement(identifier, localIndex);
-  }
-
-  @Override
-  public boolean shouldSaveToClosure()
-  { return false;
+  { return new LocalIdentifierStatement(containingClass, schemeName, javaName, inParentNo);
   }
 
   @Override
   public Binding subEnvironment()
-  { return new ClosureBinding(identifier);
-  }
-
-  @Override
-  public boolean runtime()
-  { return false;
+  { return new LocalBinding(containingClass, schemeName, javaName, inParentNo+1);
   }
 }

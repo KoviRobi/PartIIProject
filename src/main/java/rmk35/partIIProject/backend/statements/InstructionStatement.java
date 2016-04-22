@@ -21,9 +21,4 @@ public class InstructionStatement extends Statement
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(instruction);
   }
-
-  @Override
-  public Collection<String> getFreeIdentifiers()
-  { return new TreeSet<String>();
-  }
 }

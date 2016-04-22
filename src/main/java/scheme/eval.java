@@ -30,12 +30,12 @@ public class eval extends ReflectiveEnvironment
   public RuntimeValue eval =
   new BinaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue expression, RuntimeValue environment)
+    public RuntimeValue run2(RuntimeValue expression, RuntimeValue environment)
     { try
       { MainClass mainClass = new MainClass("eval" + replCounter++);
         List<RuntimeValue> expressionList = new ArrayList<>(1);
         expressionList.add(expression);
-        Statement programme = new LibraryOrProgramme((EnvironmentValue) environment).compile(expressionList);
+        Statement programme = new LibraryOrProgramme((EnvironmentValue) environment, mainClass).compile(expressionList);
         programme.generateOutput(mainClass, mainClass.getMainInnerClass(), mainClass.getPrimaryMethod());
         for (InnerClass innerClass : mainClass.getInnerClasses())
         { if ( innerClass != mainClass.getMainInnerClass())
@@ -57,9 +57,9 @@ public class eval extends ReflectiveEnvironment
 
   public RuntimeValue mutable_environment =
   new LambdaValue()
-  { public RuntimeValue apply(RuntimeValue arguments)
+  { public RuntimeValue run(RuntimeValue arguments)
     { EnvironmentValue returnEnvironment = new EnvironmentValue(/* mutable, for the moment */ true);
-      EnvironmentImporter importer = new EnvironmentImporter(returnEnvironment);
+      EnvironmentImporter importer = new EnvironmentImporter(returnEnvironment, null); // FIXME:
       List<RuntimeValue> importSets = new ArrayList<>();
       ASTMatcher importDeclaration = new ASTMatcher("(import-set ...)", arguments);
       importDeclaration.get("import-set").forEach(value -> importSets.add(value));
@@ -70,7 +70,7 @@ public class eval extends ReflectiveEnvironment
 
   public RuntimeValue environment =
   new LambdaValue()
-  { public RuntimeValue apply(RuntimeValue arguments)
+  { public RuntimeValue run(RuntimeValue arguments)
     { EnvironmentValue returnEnvironment = (EnvironmentValue) ((LambdaValue) mutable_environment).apply(arguments);
       returnEnvironment.setMutable(false);
       return returnEnvironment;

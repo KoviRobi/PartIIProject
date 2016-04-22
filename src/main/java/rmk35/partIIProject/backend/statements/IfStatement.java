@@ -52,13 +52,4 @@ public class IfStatement extends Statement
 
     method.addInstruction(new LabelPseudoInstruction(endLabel));
   }
-
-  @Override
-  public Collection<String> getFreeIdentifiers()
-  { Collection<String> returnValue = new TreeSet<>();
-    returnValue.addAll(predicate.getFreeIdentifiers());
-    returnValue.addAll(trueCase.getFreeIdentifiers());
-    returnValue.addAll(falseCase.getFreeIdentifiers());
-    return returnValue;
-  }
 }

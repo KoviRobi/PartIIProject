@@ -16,6 +16,7 @@ import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectIdentifierVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTListFoldVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTPairMapVisitor;
 
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.statements.RuntimeValueStatement;
 import rmk35.partIIProject.backend.statements.InstructionStatement;
@@ -33,9 +34,11 @@ import java.util.ArrayList;
 
 public class EnvironmentImporter
 { EnvironmentValue environment;
+  MainClass mainClass;
 
-  public EnvironmentImporter(EnvironmentValue environment)
+  public EnvironmentImporter(EnvironmentValue environment, MainClass mainClass)
   { this.environment = environment;
+    this.mainClass = mainClass;
   }
 
   public void importEnvironment(List<RuntimeValue> importSets)
@@ -46,7 +49,7 @@ public class EnvironmentImporter
       { if (binding.getValue().runtime())
         { environment.addToInitializer(new InstructionStatement(new DupInstruction())); // Invariant, Environment (to clone from) on stack
           environment.addToInitializer(new DefineStatement
-            (environment.addGlobalVariable(binding.getKey()).toStatement(importSet.getSourceInfo()),
+            (environment.addGlobalVariable(mainClass, binding.getKey()).toStatement(importSet.getSourceInfo()),
             binding.getValue().toStatement(importSet.getSourceInfo())));
           environment.addToInitializer(new InstructionStatement(new PopInstruction())); // Pop result of define
         } else

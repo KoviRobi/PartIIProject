@@ -17,6 +17,8 @@ import rmk35.partIIProject.middle.ASTMacroRewriteVisitor;
 
 import rmk35.partIIProject.middle.astMacroMatchVisitor.astMatchVisitorReturn.Substitution;
 
+import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.statements.Statement;
 
 import java.util.Collection;
@@ -46,7 +48,7 @@ public class SyntaxBinding extends SintacticBinding
   }
 
   @Override
-  public Statement applicate(EnvironmentValue useEnvironmentValue, RuntimeValue operator, RuntimeValue operands)
+  public Statement applicate(EnvironmentValue useEnvironmentValue, OutputClass outputClass, MainClass mainClass, RuntimeValue operator, RuntimeValue operands)
   { // See Macros That Work, figure 3
     for (Pair<ASTMatchVisitor, Pair<Collection<String>, RuntimeValue>> pair : patternsAndTemplates)
     { pair.getFirst().setUseEnvironment(useEnvironmentValue);
@@ -60,7 +62,7 @@ public class SyntaxBinding extends SintacticBinding
         } else
         { definitionEnvironment.addBinding(ellipsisString, oldEllipsisBinding);
         }
-        return rewritten.getFirst().accept(new ASTConvertVisitor(rewritten.getSecond()));
+        return rewritten.getFirst().accept(new ASTConvertVisitor(rewritten.getSecond(), outputClass, mainClass));
       }
     }
     throw new SyntaxErrorException("Incorrect macro use", operator.getSourceInfo());

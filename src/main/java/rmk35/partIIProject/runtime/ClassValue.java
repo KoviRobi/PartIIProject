@@ -20,7 +20,7 @@ public class ClassValue extends ObjectValue
   }
 
   @Override
-  public RuntimeValue apply(RuntimeValue argument)
+  public RuntimeValue run(RuntimeValue argument)
   { ConsValue first = (ConsValue) argument;
     String message = ((IdentifierValue) first.getCar()).getValue();
     Object[] arguments = ((List) first.getCdr().toJavaValue()).toArray();
@@ -39,14 +39,14 @@ public class ClassValue extends ObjectValue
       }
     } else // Try to find a static method on the Object
             // that this class represents, before
-            // finding a method on the Class itself (super.apply(...) call)
+            // finding a method on the Class itself (super.run(...) call)
     { try
       { List<Method> staticMethods = new ArrayList<>();
         for (Method method : innerClass.getMethods())
         { if (Modifier.isStatic(method.getModifiers())) staticMethods.add(method);
         }
         List<Method> methods = applicableMethods(message, arguments, staticMethods.toArray(new Method[0]));
-        if (methods.isEmpty()) return super.apply(argument);
+        if (methods.isEmpty()) return super.run(argument);
         Method method = getMostSpecificMethod(methods);
         return ValueHelper.toSchemeValue(method.invoke(null, ValueHelper.castEach(arguments, method.getParameterTypes())));
       } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e)

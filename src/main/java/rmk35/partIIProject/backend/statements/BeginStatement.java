@@ -36,13 +36,4 @@ public class BeginStatement extends Statement
       statement.generateOutput(mainClass, outputClass, method);
     }
   }
-
-  @Override
-  public Collection<String> getFreeIdentifiers()
-  { Collection<String> returnValue = new TreeSet<>();
-    for (Statement statement : statements)
-    { returnValue.addAll(statement.getFreeIdentifiers());
-    }
-    return returnValue;
-  }
 }

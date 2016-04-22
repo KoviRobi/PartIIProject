@@ -9,6 +9,8 @@ import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectConsVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectNilVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectIdentifierVisitor;
 
+import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.statements.IdentifierStatement;
 import rmk35.partIIProject.backend.statements.GlobalIdentifierStatement;
@@ -21,19 +23,19 @@ import lombok.ToString;
 @ToString
 public class DefineBinding extends SintacticBinding
 { @Override
-  public Statement applicate(EnvironmentValue environment, RuntimeValue operator, RuntimeValue operands)
+  public Statement applicate(EnvironmentValue environment, OutputClass outputClass, MainClass mainClass, RuntimeValue operator, RuntimeValue operands)
   { ConsValue first = operands.accept(new ASTExpectConsVisitor());
     String variable = first.getCar().accept(new ASTExpectIdentifierVisitor()).getValue();
     Binding variableBinding = environment.getOrNull(variable);
     ConsValue second = first.getCdr().accept(new ASTExpectConsVisitor());
-    Statement expression = second.getCar().accept(new ASTConvertVisitor(environment));
+    Statement expression = second.getCar().accept(new ASTConvertVisitor(environment, outputClass, mainClass));
     second.getCdr().accept(new ASTExpectNilVisitor());
 
     if (variableBinding == null || ! (variableBinding instanceof VariableBinding))
-    { environment.addGlobalVariable(variable);
+    { environment.addGlobalVariable(mainClass, variable);
     }
 
-    IdentifierStatement variableStatement = (IdentifierStatement) environment.getOrGlobal(variable).toStatement(operator.getSourceInfo());
+    IdentifierStatement variableStatement = (IdentifierStatement) environment.getOrGlobal(mainClass, variable).toStatement(operator.getSourceInfo());
     return new DefineStatement(variableStatement, expression);
   }
 }

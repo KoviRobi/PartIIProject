@@ -10,7 +10,7 @@ import java.util.List;
 
 public abstract class UnaryLambda extends LambdaValue
 { @Override
-  public final RuntimeValue apply(RuntimeValue arguments)
+  public final RuntimeValue run(RuntimeValue arguments)
   { int length = 0;
     RuntimeValue lengthList = arguments;
     while (! (lengthList instanceof NullValue))
@@ -18,11 +18,11 @@ public abstract class UnaryLambda extends LambdaValue
       length++;
     }
     if (length == 1)
-    { return run(((ConsValue) arguments).getCar());
+    { return run1(((ConsValue) arguments).getCar());
     } else
     { throw new IllegalArgumentException("Expecting one RuntimeValue arguments, got " + arguments);
     }
   }
 
-  public abstract RuntimeValue run(RuntimeValue first);
+  public abstract RuntimeValue run1(RuntimeValue first);
 }

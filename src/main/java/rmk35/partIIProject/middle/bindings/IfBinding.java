@@ -10,6 +10,8 @@ import rmk35.partIIProject.middle.ASTConvertVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectConsVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectNilVisitor;
 
+import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.statements.IfStatement;
 import rmk35.partIIProject.backend.statements.RuntimeValueStatement;
@@ -19,18 +21,18 @@ import lombok.ToString;
 @ToString
 public class IfBinding extends SintacticBinding
 { @Override
-  public Statement applicate(EnvironmentValue environment, RuntimeValue operator, RuntimeValue operands)
+  public Statement applicate(EnvironmentValue environment, OutputClass outputClass, MainClass mainClass, RuntimeValue operator, RuntimeValue operands)
   { ConsValue first = operands.accept(new ASTExpectConsVisitor());
-    Statement predicate = first.getCar().accept(new ASTConvertVisitor(environment));
+    Statement predicate = first.getCar().accept(new ASTConvertVisitor(environment, outputClass, mainClass));
     ConsValue second = first.getCdr().accept(new ASTExpectConsVisitor());
-    Statement trueCase = second.getCar().accept(new ASTConvertVisitor(environment));
+    Statement trueCase = second.getCar().accept(new ASTConvertVisitor(environment, outputClass, mainClass));
 
     Statement falseCase;
     if (second.getCdr() instanceof NullValue)
     { falseCase = new RuntimeValueStatement(new UnspecifiedValue());
     } else
     { ConsValue third = second.getCdr().accept(new ASTExpectConsVisitor());
-      falseCase = third.getCar().accept(new ASTConvertVisitor(environment));
+      falseCase = third.getCar().accept(new ASTConvertVisitor(environment, outputClass, mainClass));
       third.getCdr().accept(new ASTExpectNilVisitor());
     }
     return new IfStatement(predicate, trueCase, falseCase);

@@ -11,8 +11,4 @@ import lombok.ToString;
 @ToString
 public abstract class Statement
 { public abstract void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method);
-  // Gets the free variables that need to be copied to the closure
-  // Note, this excludes the globals, as they are not copied into the closure
-  // And also the locals, as they are already copied at application time
-  public abstract Collection<String> getFreeIdentifiers();
 }

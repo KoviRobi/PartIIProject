@@ -17,7 +17,7 @@ public class java extends ReflectiveEnvironment
   public RuntimeValue clas$000073 =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue name)
+    public RuntimeValue run1(RuntimeValue name)
     { try
       { return ValueHelper.toSchemeValue(Class.forName(((IdentifierValue) name).getValue()));
       } catch (ClassNotFoundException exception)
@@ -29,7 +29,7 @@ public class java extends ReflectiveEnvironment
   public RuntimeValue field =
   new BinaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue objectValue, RuntimeValue fieldName)
+    public RuntimeValue run2(RuntimeValue objectValue, RuntimeValue fieldName)
     { try
       { Object object = ((ObjectValue) objectValue).toJavaValue();
         String fieldNameString = ((IdentifierValue) fieldName).getValue();
@@ -43,7 +43,7 @@ public class java extends ReflectiveEnvironment
   public RuntimeValue static_field =
   new BinaryLambda()
   { @Override
-    public RuntimeValue run(RuntimeValue classValue, RuntimeValue fieldName)
+    public RuntimeValue run2(RuntimeValue classValue, RuntimeValue fieldName)
     { try
       { Class<?> javaClass = ((ClassValue) classValue).toJavaValue();
         String fieldNameString = ((IdentifierValue) fieldName).getValue();

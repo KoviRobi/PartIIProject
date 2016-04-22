@@ -5,33 +5,17 @@ import rmk35.partIIProject.frontend.SourceInfo;
 import rmk35.partIIProject.backend.statements.IdentifierStatement;
 import rmk35.partIIProject.backend.statements.GlobalIdentifierStatement;
 
-import lombok.Value;
+import java.util.List;
+import java.util.ArrayList;
 
-@Value
-public class GlobalBinding extends VariableBinding
-{ String identifier;
+import lombok.ToString;
 
-  public GlobalBinding(String identifier)
-  { this.identifier = identifier;
-  }
+@ToString
+public class GlobalBinding extends StaticFieldBinding
+{ public GlobalBinding(String containingClass, String schemeName, String javaName) { super(containingClass, schemeName, javaName); }
 
   @Override
   public GlobalIdentifierStatement toStatement(SourceInfo sourceInfo)
-  { return new GlobalIdentifierStatement(identifier);
-  }
-
-  @Override
-  public boolean shouldSaveToClosure()
-  { return false;
-  }
-
-  @Override
-  public Binding subEnvironment()
-  { return this;
-  }
-
-  @Override
-  public boolean runtime()
-  { return false;
+  { return new GlobalIdentifierStatement(containingClass, schemeName, javaName);
   }
 }

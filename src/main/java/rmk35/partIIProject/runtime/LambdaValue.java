@@ -14,15 +14,20 @@ import rmk35.partIIProject.backend.ByteCodeMethod;
 import java.util.List;
 import java.util.function.Function;
 
-public abstract class LambdaValue implements RuntimeValue, Function<RuntimeValue, RuntimeValue>
-{ @Override
+public abstract class LambdaValue implements RuntimeValue, Function<RuntimeValue, RuntimeValue>, Cloneable
+{ public LambdaValue parent = null;
+
+  @Override
   public SourceInfo getSourceInfo() { return null; }
 
   public boolean equal(RuntimeValue other) { return false; }
   public boolean eqv(RuntimeValue other) { return this == other; }
   public boolean eq(RuntimeValue other) { return this == other; }
 
-  public abstract RuntimeValue apply(RuntimeValue argument);
+  public final RuntimeValue apply(RuntimeValue argument)
+  { return clone().run(argument);
+  }
+  public abstract RuntimeValue run(RuntimeValue argument);
 
   @Override
   public <T> T accept(ASTVisitor<T> visitor) throws SyntaxErrorException
@@ -42,5 +47,17 @@ public abstract class LambdaValue implements RuntimeValue, Function<RuntimeValue
   @Override
   public boolean mutable()
   { return false;
+  }
+
+  @Override
+  public LambdaValue clone()
+  { LambdaValue returnValue;
+    try
+    { returnValue = (LambdaValue) super.clone();
+    } catch (CloneNotSupportedException e)
+    { throw new RuntimeException(e);
+    }
+    returnValue.parent = parent;
+    return returnValue;
   }
 }

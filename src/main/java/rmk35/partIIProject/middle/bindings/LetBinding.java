@@ -14,6 +14,8 @@ import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectIdentifierVisitor;
 import rmk35.partIIProject.middle.ASTMatcher;
 import rmk35.partIIProject.middle.ASTConvertVisitor;
 
+import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.statements.BeginStatement;
 import rmk35.partIIProject.backend.statements.DefineStatement;
@@ -26,7 +28,7 @@ import lombok.ToString;
 @ToString
 public class LetBinding extends SintacticBinding
 { @Override
-  public Statement applicate(EnvironmentValue environment, RuntimeValue operator, RuntimeValue operands)
+  public Statement applicate(EnvironmentValue environment, OutputClass outputClass, MainClass mainClass, RuntimeValue operator, RuntimeValue operands)
   { //  Copy environment for lexical effect
     EnvironmentValue letEnvironment = new EnvironmentValue(environment, /* mutable */ true);
     ASTMatcher simpleLetSubstitution = new ASTMatcher("(((name value) ...) body ...)", operands);
@@ -40,8 +42,8 @@ public class LetBinding extends SintacticBinding
           ,(nameAST, valueAST) ->
             { String name = nameAST.accept(new ASTExpectIdentifierVisitor()).getValue();
               letStatements.add(new DefineStatement
-                  (letEnvironment.addLocalVariable(name).toStatement(operator.getSourceInfo())
-                  ,valueAST.accept(new ASTConvertVisitor(environment)))); /* Note the use of environment, not letEnvironment, as this is not let* */
+                  (letEnvironment.addLocalVariable(outputClass.getName(), name).toStatement(operator.getSourceInfo())
+                  ,valueAST.accept(new ASTConvertVisitor(environment, outputClass, mainClass)))); /* Note the use of environment, not letEnvironment, as this is not let* */
               return null;
             }
           );
@@ -49,7 +51,7 @@ public class LetBinding extends SintacticBinding
       if (simpleLetSubstitution.get("body") == null)
       { throw new SyntaxErrorException("Empty lambda body", operator.getSourceInfo());
       }
-      simpleLetSubstitution.get("body").forEach(value -> letStatements.add(value.accept(new ASTConvertVisitor(letEnvironment))));
+      simpleLetSubstitution.get("body").forEach(value -> letStatements.add(value.accept(new ASTConvertVisitor(letEnvironment, outputClass, mainClass))));
       return new BeginStatement(letStatements);
     }
 
@@ -61,7 +63,7 @@ public class LetBinding extends SintacticBinding
         "  (define loop-name (begin))\n" +
         "  (set! loop-name (lambda (name ...) body ...))\n" +
         "  (loop-name value ...))");
-      return functionalForm.accept(new ASTConvertVisitor(letEnvironment));
+      return functionalForm.accept(new ASTConvertVisitor(letEnvironment, outputClass, mainClass));
     }
     throw new SyntaxErrorException("Malformed let", operator.getSourceInfo());
   }

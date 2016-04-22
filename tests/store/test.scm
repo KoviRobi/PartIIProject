@@ -1,9 +1,11 @@
 (import (scheme base) (scheme write))
 
+; Arguments copied
 (define x 4)
 ((lambda (x) (set! x 1)) x)
-(write x)
+(displayln x)
 
+; Closures not
 (define set-get
 	((lambda ()
 		(let ((x 10))
@@ -13,6 +15,6 @@
 				(lambda ()
 					x))))))
 
-(write ((cdr set-get)))
-(write ((car set-get) 1))
-(write ((cdr set-get)))
+(displayln ((cdr set-get)))
+(displayln ((car set-get) 1))
+(displayln ((cdr set-get)))

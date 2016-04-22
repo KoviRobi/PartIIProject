@@ -51,12 +51,12 @@ public class EnvironmentValue implements RuntimeValue
   public boolean contains(String identifier) { return bindings.containsKey(identifier); }
   public Binding getOrNull(String identifier) { return bindings.get(identifier); }
 
-  public Binding getOrGlobal(String identifier)
+  public Binding getOrGlobal(MainClass mainClass, String identifier)
   { if (contains(identifier))
     { return bindings.get(identifier);
     } else
     { System.err.println("Warning: unbound variable \"" + identifier + "\" found, assuming it is a global that has not been bound yet.");
-      return addGlobalVariable(identifier);
+      return addGlobalVariable(mainClass, identifier);
     }
   }
 
@@ -66,14 +66,12 @@ public class EnvironmentValue implements RuntimeValue
     return binding;
   }
 
-  public LocalBinding addLocalVariable(String identifier)
-  { LocalBinding returnValue = addBinding(identifier, new LocalBinding(identifier, localsCount));
-    localsCount++;
-    return returnValue;
+  public GlobalBinding addGlobalVariable(MainClass mainClass, String identifier)
+  { return addBinding(identifier, new GlobalBinding(mainClass.getName(), identifier, IdentifierValue.javaifyName(identifier)));
   }
 
-  public GlobalBinding addGlobalVariable(String identifier)
-  { return addBinding(identifier, new GlobalBinding(identifier));
+  public LocalBinding addLocalVariable(String className, String identifier)
+  { return addBinding(identifier, new LocalBinding(className, identifier, IdentifierValue.javaifyName(identifier)));
   }
 
   public Binding removeBinding(String identifier)

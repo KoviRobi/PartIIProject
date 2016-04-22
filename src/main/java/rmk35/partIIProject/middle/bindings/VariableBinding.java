@@ -6,6 +6,8 @@ import rmk35.partIIProject.runtime.EnvironmentValue;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTListFoldVisitor;
 import rmk35.partIIProject.middle.ASTConvertVisitor;
 
+import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.statements.ApplicationStatement;
 
@@ -13,11 +15,11 @@ import java.util.List;
 import java.util.ArrayList;
 
 public abstract class VariableBinding implements Binding
-{ public Statement applicate(EnvironmentValue environment, RuntimeValue operator, RuntimeValue operands)
+{ public Statement applicate(EnvironmentValue environment, OutputClass outputClass, MainClass mainClass, RuntimeValue operator, RuntimeValue operands)
   { List<Statement> applicationList = new ArrayList<>();
     return new ApplicationStatement(this.toStatement(operator.getSourceInfo()),
       operands.accept
         (new ASTListFoldVisitor<List<Statement>>(new ArrayList<>(),
-          (list, ast) -> { list.add(ast.accept(new ASTConvertVisitor(environment))); return list; } )));
+          (list, ast) -> { list.add(ast.accept(new ASTConvertVisitor(environment, outputClass, mainClass))); return list; } )));
   }
 }

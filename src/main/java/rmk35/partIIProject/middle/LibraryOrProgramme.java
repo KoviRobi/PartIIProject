@@ -5,6 +5,7 @@ import rmk35.partIIProject.SyntaxErrorException;
 import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.EnvironmentValue;
 
+import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.statements.BeginStatement;
 
@@ -13,15 +14,17 @@ import java.util.ArrayList;
 
 public class LibraryOrProgramme
 { EnvironmentValue environment;
+  MainClass mainClass;
 
-  public LibraryOrProgramme(EnvironmentValue environment)
+  public LibraryOrProgramme(EnvironmentValue environment, MainClass mainClass)
   { this.environment = environment;
+    this.mainClass = mainClass;
   }
 
   public Statement compile(List<RuntimeValue> data)
   { List<Statement> returnValue = new ArrayList<>(data.size());
-    EnvironmentImporter importer = new EnvironmentImporter(environment);
-    ASTConvertVisitor convertVisitor = new ASTConvertVisitor(environment);
+    EnvironmentImporter importer = new EnvironmentImporter(environment, mainClass);
+    ASTConvertVisitor convertVisitor = new ASTConvertVisitor(environment, mainClass.getMainInnerClass(), mainClass);
     boolean finishedImporting = false;
 
     for (RuntimeValue datum : data)

@@ -24,9 +24,4 @@ public class RuntimeValueStatement extends Statement
   { method.addInstruction(new CommentPseudoInstruction("RuntimeValue: " + value));
     value.generateByteCode(mainClass, outputClass, method);
   }
-
-  @Override
-  public Collection<String> getFreeIdentifiers()
-  { return new TreeSet<String>();
-  }
 }

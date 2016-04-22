@@ -5,10 +5,11 @@
 
 (define system-out (static-field (class 'java.lang.System) 'out))
 (define println (lambda (value) (system-out 'println value)))
+
 ; Message passing tests
 (define test-class (class 'test.JavaCallTest))
 (println test-class)
-(write (test-class 'getConstructors))
+(writeln (test-class 'getConstructors))
 (define test-object (test-class 'new "Hello, world!"))
 (test-object 'printMessage)
 (println (field test-object 'message))

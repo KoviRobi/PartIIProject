@@ -15,11 +15,6 @@ public abstract class SintacticBinding implements Binding
   }
 
   @Override
-  public boolean shouldSaveToClosure()
-  { return false;
-  }
-
-  @Override
   public Binding subEnvironment()
   { return this;
   }

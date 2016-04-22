@@ -15,6 +15,7 @@ import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
 import rmk35.partIIProject.backend.instructions.DupInstruction;
 import rmk35.partIIProject.backend.instructions.DupX1Instruction;
 import rmk35.partIIProject.backend.instructions.SwapInstruction;
+import rmk35.partIIProject.backend.instructions.VirtualCallInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
 import rmk35.partIIProject.backend.instructions.StaticCallInstruction;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.voidType;
@@ -69,15 +70,5 @@ public class ApplicationStatement extends Statement
 
     // Wrap call in a TrampolineVisitor
     method.addInstruction(new NonVirtualCallInstruction(voidType, TrampolineValue.class.getName().replace('.', '/') + "/<init>", lambdaValueType, runtimeValueType));
-  }
-
-  @Override
-  public Collection<String> getFreeIdentifiers()
-  { Collection<String> returnValue = new TreeSet<>();
-    returnValue.addAll(operator.getFreeIdentifiers());
-    operands.parallelStream()
-               .map(statement -> statement.getFreeIdentifiers())
-               .forEach(collection -> returnValue.addAll(collection));
-    return returnValue;
   }
 }

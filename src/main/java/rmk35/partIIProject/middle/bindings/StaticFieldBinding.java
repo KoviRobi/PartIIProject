@@ -2,25 +2,26 @@ package rmk35.partIIProject.middle.bindings;
 
 import rmk35.partIIProject.frontend.SourceInfo;
 
-import rmk35.partIIProject.backend.statements.FieldIdentifierStatement;
+import rmk35.partIIProject.backend.statements.IdentifierStatement;
+import rmk35.partIIProject.backend.statements.StaticFieldIdentifierStatement;
 
 import lombok.ToString;
 
 @ToString
-public class FieldBinding extends VariableBinding
+public class StaticFieldBinding extends VariableBinding
 { String containingClass;
   String schemeName;
   String javaName;
 
-  public FieldBinding(String containingClass, String schemeName, String javaName)
+  public StaticFieldBinding(String containingClass, String schemeName, String javaName)
   { this.containingClass = containingClass;
     this.schemeName = schemeName;
     this.javaName = javaName;
   }
 
   @Override
-  public FieldIdentifierStatement toStatement(SourceInfo sourceInfo)
-  { return new FieldIdentifierStatement(containingClass, schemeName, javaName);
+  public StaticFieldIdentifierStatement toStatement(SourceInfo sourceInfo)
+  { return new StaticFieldIdentifierStatement(containingClass, schemeName, javaName);
   }
 
   @Override
