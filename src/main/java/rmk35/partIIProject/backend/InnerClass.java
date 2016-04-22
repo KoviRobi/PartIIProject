@@ -20,6 +20,7 @@ import rmk35.partIIProject.backend.instructions.VirtualCallInstruction;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.voidType;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.lambdaValueType;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.runtimeValueType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.integerType;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -48,7 +49,7 @@ public class InnerClass extends OutputClass
     // Overwrite initializer
     methods.put("<init>", initializerMethod);
 
-    ByteCodeMethod runMethod = new ByteCodeMethod(runtimeValueType, "public", "run", runtimeValueType);
+    ByteCodeMethod runMethod = new ByteCodeMethod(runtimeValueType, "public", "run", runtimeValueType, runtimeValueType, integerType);
     // Store values into local variables
     runMethod.addInstruction(new LocalLoadInstruction(runtimeValueType, 1));
     for (Binding  formal : formals)
