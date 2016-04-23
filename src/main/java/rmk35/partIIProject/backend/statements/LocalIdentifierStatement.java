@@ -34,7 +34,7 @@ public class LocalIdentifierStatement extends FieldIdentifierStatement
     method.addInstruction(new LocalLoadInstruction(lambdaValueType, 0));
     // Load parents, if necessary (e.g. a closure)
     for (int i = 0; i < inParentNo; i++)
-    { method.addInstruction(new GetFieldInstruction(lambdaValueType, LambdaValue.class.getName().replace('.', '/') + "/parent"));
+    { method.addInstruction(new GetFieldInstruction(lambdaValueType, LambdaValue.class, "parent"));
     }
     if (inParentNo > 0)
     { method.addInstruction(new CheckCastInstruction(containingClass));

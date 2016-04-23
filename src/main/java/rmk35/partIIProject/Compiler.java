@@ -52,7 +52,7 @@ public class Compiler
     Statement programme = new LibraryOrProgramme(environment, mainClass).compile(parsedFile);
     // Mutates mainClass
     programme.generateOutput(mainClass, mainClass.getMainInnerClass(), mainClass.getPrimaryMethod());
-    mainClass.saveToDisk(); // For debugging purposes
+    if (intermediateCode) mainClass.saveToDisk();
     mainClass.assembleToDisk();
   }
 }

@@ -45,7 +45,7 @@ public class InnerClass extends OutputClass
     // Store parent into LambdaValue.parent
     initializerMethod.addInstruction(new LocalLoadInstruction(runtimeValueType, 0));
     initializerMethod.addInstruction(new LocalLoadInstruction(runtimeValueType, 1));
-    initializerMethod.addInstruction(new PutFieldInstruction(lambdaValueType, LambdaValue.class.getName().replace('.', '/') + "/parent"));
+    initializerMethod.addInstruction(new PutFieldInstruction(lambdaValueType, LambdaValue.class, "parent"));
     // Overwrite initializer
     methods.put("<init>", initializerMethod);
 
@@ -55,7 +55,7 @@ public class InnerClass extends OutputClass
     for (Binding  formal : formals)
     { runMethod.addInstruction(new CheckCastInstruction(ConsValue.class));
       runMethod.addInstruction(new DupInstruction()); // Current head
-      runMethod.addInstruction(new VirtualCallInstruction(runtimeValueType, ConsValue.class.getName().replace('.', '/') + "/getCar"));
+      runMethod.addInstruction(new VirtualCallInstruction(runtimeValueType, ConsValue.class, "getCar"));
       IdentifierStatement formalStatement = (IdentifierStatement) formal.toStatement(null);
       formalStatement.ensureExistence(mainClass, this, runMethod);
       formalStatement.generateSetOutput(mainClass, this, runMethod);

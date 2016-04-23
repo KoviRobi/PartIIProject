@@ -80,7 +80,7 @@ public class ByteCodeMethod
 
   public void decrementStackCount(int i)
   { stackCount -= i;
-    if (stackCount < 0) throw new InternalCompilerException("Simulated stack underflown with instructions" + instructions);
+    if (stackCount < 0) throw new InternalCompilerException("Simulated stack underflown for \"" + toString() + "\" with instructions " + instructions);
   }
 
   private void checkReturnStackCount()

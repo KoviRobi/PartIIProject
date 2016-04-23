@@ -24,6 +24,7 @@ import static rmk35.partIIProject.backend.instructions.types.StaticConstants.run
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.lambdaValueType;
 
 import java.util.List;
+import java.util.Arrays;
 import java.util.ListIterator;
 import java.util.Collection;
 import java.util.TreeSet;
@@ -38,6 +39,11 @@ public class ApplicationStatement extends Statement
   public ApplicationStatement(Statement operator, List<Statement> operands)
   { this.operator = operator;
     this.operands = operands;
+  }
+
+  public ApplicationStatement(Statement operator, Statement... operands)
+  { this.operator = operator;
+    this.operands = Arrays.asList(operands);
   }
 
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)

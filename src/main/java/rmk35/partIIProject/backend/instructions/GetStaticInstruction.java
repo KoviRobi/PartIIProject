@@ -12,6 +12,11 @@ public class GetStaticInstruction implements Instruction
     this.name = name;
   }
 
+  public GetStaticInstruction(JVMType type, Class<?> containingClass, String name)
+  { this.type = type;
+    this.name = containingClass.getName().replace('.', '/') + "/" + name;
+  }
+
   // Called when adding to primary method
   public void simulateLimits(ByteCodeMethod method)
   { method.incrementStackCount(1);

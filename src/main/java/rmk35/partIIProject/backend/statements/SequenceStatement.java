@@ -6,6 +6,7 @@ import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 
 import java.util.List;
+import java.util.Arrays;
 
 import lombok.ToString;
 
@@ -15,6 +16,10 @@ public class SequenceStatement extends Statement
 
   public SequenceStatement(List<Statement> statements)
   { this.statements = statements;
+  }
+
+  public SequenceStatement(Statement... statements)
+  { this.statements = Arrays.asList(statements);
   }
 
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)

@@ -1,5 +1,6 @@
 package rmk35.partIIProject.backend;
 
+import rmk35.partIIProject.Compiler;
 import rmk35.partIIProject.InternalCompilerException;
 
 import rmk35.partIIProject.runtime.IdentifierValue;
@@ -99,7 +100,11 @@ public abstract class OutputClass
     Reader byteCodeReader = new StringReader(byteCode());
     ByteArrayOutputStream returnValue = new ByteArrayOutputStream();
     // Throws Exception....
-    compiledClass.readJasmin(byteCodeReader, getName() + ".class", /* numberLines */ true);
+    if (Compiler.intermediateCode)
+    { compiledClass.readJasmin(byteCodeReader, getName() + ".j", /* numberLines */ true);
+    } else
+    { compiledClass.readJasmin(byteCodeReader, getName() + ".class", /* numberLines */ true);
+    }
     if (compiledClass.errorCount() != 0) throw new InternalCompilerException("Something went wrong, but no idea what");
     byteCodeReader.close();
     compiledClass.write(returnValue);
