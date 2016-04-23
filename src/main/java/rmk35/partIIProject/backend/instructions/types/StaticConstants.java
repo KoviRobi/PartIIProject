@@ -17,6 +17,7 @@ public class StaticConstants
   public static final JVMType objectValueType = new ObjectType(ObjectValue.class);
   public static final JVMType objectType = new ObjectType(Object.class);
   public static final JVMType objectArrayType = new ArrayType(new ObjectType(Object.class));
+  public static final JVMType stringBuilderType = new ObjectType(StringBuilder.class);
   public static final JVMType stringType = new ObjectType(String.class);
   public static final JVMType stringArrayType = new ArrayType(new ObjectType(String.class));
 }

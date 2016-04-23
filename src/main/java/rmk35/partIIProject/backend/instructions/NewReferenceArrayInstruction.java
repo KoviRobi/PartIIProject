@@ -18,7 +18,7 @@ public class NewReferenceArrayInstruction implements Instruction
   }
 
   // Called when adding to primary method
-  public void simulateLimits(ByteCodeMethod outputClass)
+  public void simulateLimits(ByteCodeMethod method)
   {
   }
 

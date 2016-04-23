@@ -40,12 +40,12 @@ public abstract class OutputClass
     fields = new HashSet<>();
     methods = new Hashtable<>();
 
-    ByteCodeMethod init = new ByteCodeMethod(voidType, "public", "<init>");
+    ByteCodeMethod init = new ByteCodeMethod(/* jumps */ false, voidType, "public", "<init>");
     init.addInstruction(new LocalLoadInstruction(objectType, 0));
     init.addInstruction(new NonVirtualCallInstruction(voidType, getSuperClassName() + "/<init>"));
 
     methods.put("<init>", init);
-    methods.put("<clinit>", new ByteCodeMethod(voidType, "public static", "<clinit>"));
+    methods.put("<clinit>", new ByteCodeMethod(/* jumps */ false, voidType, "public static", "<clinit>"));
  }
 
   public String getName()

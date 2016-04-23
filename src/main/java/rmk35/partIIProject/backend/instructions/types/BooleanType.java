@@ -1,5 +1,8 @@
 package rmk35.partIIProject.backend.instructions.types;
 
+import lombok.Value;
+
+@Value
 public class BooleanType implements JVMType
 { @Override
   public String prefix()

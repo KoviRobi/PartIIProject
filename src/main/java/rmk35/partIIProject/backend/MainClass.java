@@ -42,7 +42,7 @@ public class MainClass extends OutputClass
     mainInnerClass = new InnerClass(mainInnerClassName, new ArrayList<>(), this, "Main inner class");
     addInnerClass(mainInnerClass);
 
-    ByteCodeMethod mainMethod = new ByteCodeMethod(voidType, "public static", "main", stringArrayType);
+    ByteCodeMethod mainMethod = new ByteCodeMethod(/* jumps */ false, voidType, "public static", "main", stringArrayType);
     Compiler.tailCallSettings.generateCallStart(mainMethod);
     mainMethod.addInstruction(new NewObjectInstruction(mainInnerClass.getName()));
     mainMethod.addInstruction(new DupInstruction());

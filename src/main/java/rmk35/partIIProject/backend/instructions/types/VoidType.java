@@ -2,6 +2,9 @@ package rmk35.partIIProject.backend.instructions.types;
 
 import rmk35.partIIProject.InternalCompilerException;
 
+import lombok.Value;
+
+@Value
 public class VoidType implements JVMType
 { @Override
   public String prefix()

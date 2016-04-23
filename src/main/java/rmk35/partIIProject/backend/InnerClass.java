@@ -38,7 +38,7 @@ public class InnerClass extends OutputClass
     this.comment = comment;
 
     // Ensure closure variables exist and also that they are set on construction
-    ByteCodeMethod initializerMethod = new ByteCodeMethod(voidType, "public", "<init>", lambdaValueType);
+    ByteCodeMethod initializerMethod = new ByteCodeMethod(/* jumps */ false, voidType, "public", "<init>", lambdaValueType);
     initializerMethod.addInstruction(new CommentPseudoInstruction("Inner class, comment: " + comment));
     initializerMethod.addInstruction(new LocalLoadInstruction(runtimeValueType, 0));
     initializerMethod.addInstruction(new NonVirtualCallInstruction(voidType, getSuperClassName() + "/<init>"));
@@ -49,7 +49,7 @@ public class InnerClass extends OutputClass
     // Overwrite initializer
     methods.put("<init>", initializerMethod);
 
-    ByteCodeMethod runMethod = new ByteCodeMethod(runtimeValueType, "public", "run", runtimeValueType, runtimeValueType, integerType);
+    ByteCodeMethod runMethod = new ByteCodeMethod(/* jumps */ true, runtimeValueType, "public", "run", runtimeValueType, runtimeValueType, integerType);
     // Store values into local variables
     runMethod.addInstruction(new LocalLoadInstruction(runtimeValueType, 1));
     for (Binding  formal : formals)
