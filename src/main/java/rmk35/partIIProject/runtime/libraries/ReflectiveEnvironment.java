@@ -51,6 +51,6 @@ public abstract class ReflectiveEnvironment extends EnvironmentValue
   public void generateByteCode(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new NewObjectInstruction(this.getClass()));
     method.addInstruction(new DupInstruction());
-    method.addInstruction(new NonVirtualCallInstruction(voidType, this.getClass().getName().replace('.', '/') + "/<init>"));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, this.getClass(), "<init>"));
   }
 }

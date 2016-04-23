@@ -13,7 +13,7 @@ import static rmk35.partIIProject.backend.instructions.types.StaticConstants.run
 
 public class Trampolining implements TailCallSettings
 { public void generateContinuation(ByteCodeMethod method)
-  { method.addInstruction(new StaticCallInstruction(runtimeValueType, TrampolineValue.class.getName().replace('.', '/') + "/bounceHelper", runtimeValueType));
+  { method.addInstruction(new StaticCallInstruction(runtimeValueType, TrampolineValue.class, "bounceHelper", runtimeValueType));
   }
 
   public void generateCallStart(ByteCodeMethod method)

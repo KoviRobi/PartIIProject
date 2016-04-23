@@ -61,7 +61,7 @@ public class BooleanValue extends SelfquotingValue
     method.addInstruction(new NewObjectInstruction(BooleanValue.class));
     method.addInstruction(new DupInstruction());
     method.addInstruction(new IntegerConstantInstruction(value? 1 : 0));
-    method.addInstruction(new NonVirtualCallInstruction(voidType, BooleanValue.class.getName().replace('.', '/') + "/<init>", booleanType));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, BooleanValue.class, "<init>", booleanType));
   }
 
   @Override

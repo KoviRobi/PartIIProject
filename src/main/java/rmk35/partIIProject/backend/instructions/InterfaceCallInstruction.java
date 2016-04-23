@@ -16,6 +16,13 @@ public class InterfaceCallInstruction implements Instruction
     this.arguments = arguments;
   }
 
+  public InterfaceCallInstruction(boolean staticCall, JVMType returnType, Class<?> className, String functionName, JVMType... arguments)
+  { this.returnType = returnType;
+    this.staticCall = staticCall;
+    this.functionName = className.getName().replace('.', '/') + "/" +functionName;
+    this.arguments = arguments;
+  }
+
   private int inputArgumentCount()
   { return arguments.length + (staticCall? 0 : 1);
   }

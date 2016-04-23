@@ -59,7 +59,7 @@ public class InnerClass extends OutputClass
       IdentifierStatement formalStatement = (IdentifierStatement) formal.toStatement(null);
       formalStatement.ensureExistence(mainClass, this, runMethod);
       formalStatement.generateSetOutput(mainClass, this, runMethod);
-      runMethod.addInstruction(new VirtualCallInstruction(runtimeValueType, ConsValue.class.getName().replace('.', '/') + "/getCdr"));
+      runMethod.addInstruction(new VirtualCallInstruction(runtimeValueType, ConsValue.class, "getCdr"));
     }
     // ToDo improper lists
     runMethod.addInstruction(new CheckCastInstruction(NullValue.class));

@@ -52,7 +52,7 @@ public class NullValue implements PrimitiveValue
   { method.addInstruction(new CommentPseudoInstruction("ByteCode for " + NullValue.class.getName()));
     method.addInstruction(new NewObjectInstruction(NullValue.class));
     method.addInstruction(new DupInstruction());
-    method.addInstruction(new NonVirtualCallInstruction(voidType, NullValue.class.getName().replace('.', '/') + "/<init>"));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, NullValue.class, "<init>"));
   }
 
   @Override

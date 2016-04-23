@@ -51,7 +51,7 @@ public class ApplicationStatement extends Statement
     // Create a new list of operands
     method.addInstruction(new NewObjectInstruction(NullValue.class));
     method.addInstruction(new DupInstruction());
-    method.addInstruction(new NonVirtualCallInstruction(voidType, NullValue.class.getName().replace('.', '/') + "/<init>"));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, NullValue.class, "<init>"));
     ListIterator<Statement> iterator = operands.listIterator(operands.size());
     while (iterator.hasPrevious())
     { Statement operand = iterator.previous();
@@ -65,7 +65,7 @@ public class ApplicationStatement extends Statement
       Compiler.tailCallSettings.generateContinuation(method);
       /* Swap with generated output so now Cons, Cons, Car, Runtime */
       method.addInstruction(new SwapInstruction());
-      method.addInstruction(new NonVirtualCallInstruction(voidType, ConsValue.class.getName().replace('.', '/') + "/<init>", runtimeValueType, runtimeValueType));
+      method.addInstruction(new NonVirtualCallInstruction(voidType, ConsValue.class, "<init>", runtimeValueType, runtimeValueType));
     }
 
     Compiler.tailCallSettings.generateCallEnd(method);

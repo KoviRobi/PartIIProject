@@ -57,7 +57,11 @@ public class ByteCodeMethod
   }
 
   private void checkReturnStackCount()
-  { if (stackCount != returnType.stackCount()) throw new InternalCompilerException("Return stack wrong for \"" + returnType + " " + methodName + "(" + Arrays.toString(arguments) + ")\", got " + stackCount + " instead of " + returnType.stackCount() + " with instructions: " + instructions);
+  { if (stackCount != returnType.stackCount()) throw new InternalCompilerException("Return stack wrong for \"" + toString() + "\", got " + stackCount + " instead of " + returnType.stackCount() + " with instructions: " + instructions);
+  }
+
+  public String toString()
+  { return returnType + " " + methodName + "(" + Arrays.toString(arguments) + ")";
   }
 
   public void ensureLocal(int i)

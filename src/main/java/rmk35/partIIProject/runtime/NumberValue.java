@@ -71,7 +71,7 @@ public class NumberValue extends SelfquotingValue
     method.addInstruction(new NewObjectInstruction(NumberValue.class));
     method.addInstruction(new DupInstruction());
     method.addInstruction(new IntegerConstantInstruction(value));
-    method.addInstruction(new NonVirtualCallInstruction(voidType, NumberValue.class.getName().replace('.', '/') + "/<init>", integerType));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, NumberValue.class, "<init>", integerType));
   }
 
   @Override

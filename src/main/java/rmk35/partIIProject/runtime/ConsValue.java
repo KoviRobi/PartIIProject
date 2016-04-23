@@ -69,7 +69,7 @@ public class ConsValue implements PrimitiveValue
     method.addInstruction(new DupInstruction());
     car.generateByteCode(mainClass, outputClass, method);
     cdr.generateByteCode(mainClass, outputClass, method);
-    method.addInstruction(new NonVirtualCallInstruction(voidType, ConsValue.class.getName().replace('.', '/') + "/<init>", runtimeValueType, runtimeValueType));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, ConsValue.class, "<init>", runtimeValueType, runtimeValueType));
   }
 
   @Override

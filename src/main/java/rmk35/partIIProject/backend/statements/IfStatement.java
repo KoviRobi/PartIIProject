@@ -37,7 +37,7 @@ public class IfStatement extends Statement
     // Top of stack is now predicate's value
     // XXX Speed: if we make booleans unique, we could use "if_acmpeq" to compare false
     (new BooleanValue(false)).generateByteCode(mainClass, outputClass, method);
-    method.addInstruction(new InterfaceCallInstruction(/* static */ false, booleanType, RuntimeValue.class.getName().replace('.', '/') + "/eq", runtimeValueType));
+    method.addInstruction(new InterfaceCallInstruction(/* static */ false, booleanType, RuntimeValue.class, "eq", runtimeValueType));
 
     // Stack now contains 1 if predicate is false, otherwise 0.
     String uniqueID = outputClass.uniqueID();

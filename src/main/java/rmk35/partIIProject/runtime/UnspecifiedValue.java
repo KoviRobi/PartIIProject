@@ -50,7 +50,7 @@ public class UnspecifiedValue implements RuntimeValue
   { method.addInstruction(new CommentPseudoInstruction("ByteCode for " + UnspecifiedValue.class.getName()));
     method.addInstruction(new NewObjectInstruction(UnspecifiedValue.class));
     method.addInstruction(new DupInstruction());
-    method.addInstruction(new NonVirtualCallInstruction(voidType, UnspecifiedValue.class.getName().replace('.', '/') + "/<init>"));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, UnspecifiedValue.class, "<init>"));
   }
 
   @Override

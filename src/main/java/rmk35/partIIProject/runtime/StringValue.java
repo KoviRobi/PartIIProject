@@ -68,7 +68,7 @@ public class StringValue extends SelfquotingValue
     method.addInstruction(new NewObjectInstruction(StringValue.class));
     method.addInstruction(new DupInstruction());
     method.addInstruction(new StringConstantInstruction(value));
-    method.addInstruction(new NonVirtualCallInstruction(voidType, StringValue.class.getName().replace('.', '/') + "/<init>", stringType));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, StringValue.class, "<init>", stringType));
   }
 
   @Override

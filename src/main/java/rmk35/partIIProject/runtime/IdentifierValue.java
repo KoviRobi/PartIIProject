@@ -64,7 +64,7 @@ public class IdentifierValue implements PrimitiveValue
     method.addInstruction(new NewObjectInstruction(IdentifierValue.class));
     method.addInstruction(new DupInstruction());
     method.addInstruction(new StringConstantInstruction(value));
-    method.addInstruction(new NonVirtualCallInstruction(voidType, IdentifierValue.class.getName().replace('.', '/') + "/<init>", stringType));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, IdentifierValue.class, "<init>", stringType));
   }
 
   @Override

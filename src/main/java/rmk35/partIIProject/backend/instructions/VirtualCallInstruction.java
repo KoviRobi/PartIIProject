@@ -14,6 +14,12 @@ public class VirtualCallInstruction implements Instruction
     this.arguments = arguments;
   }
 
+  public VirtualCallInstruction(JVMType returnType, Class<?> className, String functionName, JVMType... arguments)
+  { this.returnType = returnType;
+    this.functionName = className.getName().replace('.', '/') + "/" +functionName;
+    this.arguments = arguments;
+  }
+
   // Called when adding to primary method
   public void simulateLimits(ByteCodeMethod method)
   { method.decrementStackCount(arguments.length + 1 - returnType.stackCount());

@@ -85,7 +85,7 @@ public class CharacterValue extends SelfquotingValue
     method.addInstruction(new NewObjectInstruction(CharacterValue.class));
     method.addInstruction(new DupInstruction());
     method.addInstruction(new IntegerConstantInstruction(value));
-    method.addInstruction(new NonVirtualCallInstruction(voidType, CharacterValue.class.getName().replace('.', '/') + "/<init>", characterType));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, CharacterValue.class, "<init>", characterType));
   }
 
   @Override

@@ -50,7 +50,7 @@ public class MainClass extends OutputClass
     mainMethod.addInstruction(new NonVirtualCallInstruction(voidType, mainInnerClass.getName() + "/<init>", lambdaValueType));
     mainMethod.addInstruction(new NewObjectInstruction(NullValue.class));
     mainMethod.addInstruction(new DupInstruction());
-    mainMethod.addInstruction(new NonVirtualCallInstruction(voidType, NullValue.class.getName().replace('.', '/') + "/<init>"));
+    mainMethod.addInstruction(new NonVirtualCallInstruction(voidType, NullValue.class, "<init>"));
     Compiler.tailCallSettings.generateCallEnd(mainMethod);
     Compiler.tailCallSettings.generateContinuation(mainMethod);
     mainMethod.addInstruction(new PopInstruction());

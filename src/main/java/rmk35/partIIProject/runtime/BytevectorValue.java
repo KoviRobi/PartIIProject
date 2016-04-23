@@ -79,7 +79,7 @@ public class BytevectorValue extends SelfquotingValue
       method.addInstruction(new IntegerConstantInstruction(value[i]));
       method.addInstruction(new ByteArrayStoreInstruction());
     }
-    method.addInstruction(new NonVirtualCallInstruction(voidType, BytevectorValue.class.getName().replace('.', '/') + "/<init>", byteArrayType));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, BytevectorValue.class, "<init>", byteArrayType));
   }
 
   @Override

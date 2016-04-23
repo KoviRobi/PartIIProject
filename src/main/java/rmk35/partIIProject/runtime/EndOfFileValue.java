@@ -50,7 +50,7 @@ public class EndOfFileValue implements RuntimeValue
   { method.addInstruction(new CommentPseudoInstruction("ByteCode for " + EndOfFileValue.class.getName()));
     method.addInstruction(new NewObjectInstruction(EndOfFileValue.class));
     method.addInstruction(new DupInstruction());
-    method.addInstruction(new NonVirtualCallInstruction(voidType, EndOfFileValue.class.getName().replace('.', '/') + "/<init>"));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, EndOfFileValue.class, "<init>"));
   }
 
   @Override

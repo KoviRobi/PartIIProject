@@ -82,7 +82,7 @@ public class VectorValue extends SelfquotingValue
       value[i].generateByteCode(mainClass, outputClass, method);
       method.addInstruction(new ReferenceArrayStoreInstruction());
     }
-    method.addInstruction(new NonVirtualCallInstruction(voidType, VectorValue.class.getName().replace('.', '/') + "/<init>", runtimeValueArrayType));
+    method.addInstruction(new NonVirtualCallInstruction(voidType, VectorValue.class, "<init>", runtimeValueArrayType));
   }
 
   @Override
