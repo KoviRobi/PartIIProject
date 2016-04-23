@@ -7,7 +7,11 @@ import rmk35.partIIProject.backend.instructions.VirtualCallInstruction;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.runtimeValueType;
 
 public class NonTailCalls implements TailCallSettings
-{ public void generateContinuation(ByteCodeMethod method)
+{ public void generateStart(ByteCodeMethod method)
+  {
+  }
+
+  public void generateContinuation(ByteCodeMethod method)
   {
   }
 

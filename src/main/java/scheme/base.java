@@ -7,7 +7,7 @@ import rmk35.partIIProject.runtime.NullValue;
 import rmk35.partIIProject.runtime.NumberValue;
 import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.ThrowableValue;
-import rmk35.partIIProject.runtime.TrampolineValue;
+import rmk35.partIIProject.runtime.Trampoline;
 import rmk35.partIIProject.runtime.UnspecifiedValue;
 import rmk35.partIIProject.runtime.VectorValue;
 import rmk35.partIIProject.runtime.ValueHelper;
@@ -58,7 +58,7 @@ public class base extends ReflectiveEnvironment
     { LambdaValue handler = (LambdaValue) first;
       LambdaValue body = (LambdaValue) second;
       try
-      { return TrampolineValue.bounceHelper(body.apply(new NullValue()));
+      { return Trampoline.bounce(body.apply(new NullValue()));
       } catch (ThrowableValue exception)
       { return handler.apply(new ConsValue(exception.getValue(), new NullValue()));
       }

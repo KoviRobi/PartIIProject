@@ -17,7 +17,7 @@ import rmk35.partIIProject.runtime.StringValue;
 import rmk35.partIIProject.runtime.VectorValue;
 // RuntimeValues
 import rmk35.partIIProject.runtime.LambdaValue;
-import rmk35.partIIProject.runtime.TrampolineValue;
+import rmk35.partIIProject.runtime.CallValue;
 import rmk35.partIIProject.runtime.EndOfFileValue;
 import rmk35.partIIProject.runtime.ThrowableValue;
 import rmk35.partIIProject.runtime.ObjectValue;
@@ -47,7 +47,7 @@ public abstract class ASTVisitor<T>
 
   // Other RuntimeValue subtypes (these are not PrimitiveValue subtypes), usually an error
   public T visit(LambdaValue lambda) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Don't know what to do with a function!"); }
-  public T visit(TrampolineValue trampoline) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Got a trampoline, this should not be visible!"); }
+  public T visit(CallValue trampoline) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Got a CallValue, this should not be visible!"); }
   public T visit(EndOfFileValue eof) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Got an end-of-file value too soon!"); }
   public T visit(ThrowableValue throwable) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Don't know what to do with a thrown value!"); }
   public T visit(ObjectValue object) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Don't know what to do with an encapsulated Java object!"); }

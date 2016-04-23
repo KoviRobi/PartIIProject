@@ -1,10 +1,9 @@
 package rmk35.partIIProject.backend.statements;
 
 import rmk35.partIIProject.runtime.CallValue;
-import rmk35.partIIProject.runtime.Trampoline;
+import rmk35.partIIProject.runtime.CallStack;
 
 import rmk35.partIIProject.backend.ByteCodeMethod;
-import rmk35.partIIProject.backend.instructions.StaticCallInstruction;
 import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
 import rmk35.partIIProject.backend.instructions.DupInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
@@ -12,13 +11,13 @@ import static rmk35.partIIProject.backend.instructions.types.StaticConstants.voi
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.lambdaValueType;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.runtimeValueType;
 
-public class Trampolining implements TailCallSettings
+public class SchemeCallStack implements TailCallSettings
 { public void generateStart(ByteCodeMethod method)
-  { method.addInstruction(new StaticCallInstruction(runtimeValueType, Trampoline.class, "bounce", runtimeValueType));
+  { // invoke CallStack.start
   }
 
   public void generateContinuation(ByteCodeMethod method)
-  { method.addInstruction(new StaticCallInstruction(runtimeValueType, Trampoline.class, "bounce", runtimeValueType));
+  { // add jump
   }
 
   public void generateCallStart(ByteCodeMethod method)

@@ -14,6 +14,7 @@ import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.statements.TailCallSettings;
 import rmk35.partIIProject.backend.statements.NonTailCalls;
 import rmk35.partIIProject.backend.statements.Trampolining;
+import rmk35.partIIProject.backend.statements.SchemeCallStack;
 
 import java.util.List;
 import java.io.IOException;
@@ -41,9 +42,19 @@ public class Compiler
 
   // Settings
   public static TailCallSettings tailCallSettings =
-    (System.getenv("tailcall") == null ||
-    System.getenv("tailcall").equals("trampoline")) ? new Trampolining()
-    : new NonTailCalls();
+      (System.getenv("tailcall") == null)
+    ? new Trampolining()
+    : (System.getenv("tailcall").equals("none")) ? new NonTailCalls()
+    : (System.getenv("tailcall").equals("no")) ? new NonTailCalls()
+    : (System.getenv("tailcall").equals("off")) ? new NonTailCalls()
+    : (System.getenv("tailcall").equals("0")) ? new NonTailCalls()
+    : (System.getenv("tailcall").equals("fullcont")) ? new SchemeCallStack()
+    : (System.getenv("tailcall").equals("full")) ? new SchemeCallStack()
+    : (System.getenv("tailcall").equals("callcc")) ? new SchemeCallStack()
+    : (System.getenv("tailcall").equals("2")) ? new SchemeCallStack()
+    : new Trampolining()
+    ;
+  public static boolean intermediateCode = System.getenv("intermediate") != null || System.getenv("intermediateCode") != null;
 
   public Compiler(String fileName, String outputName) throws Exception, IOException
   { MainClass mainClass = new MainClass(outputName);
