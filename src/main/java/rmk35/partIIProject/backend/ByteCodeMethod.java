@@ -25,6 +25,8 @@ import rmk35.partIIProject.backend.instructions.types.JVMType;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.voidType;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.integerType;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.runtimeValueType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.lambdaValueType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.callValueType;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.stringType;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.stringBuilderType;
 
@@ -66,8 +68,8 @@ public class ByteCodeMethod
   }
 
   private void addInstruction(Instruction instruction, List<String> instructionList)
-  { instruction.simulateLimits(this);
-    instructionList.add(instruction.byteCode());
+  { instructionList.add(instruction.byteCode());
+    instruction.simulateLimits(this);
   }
   public void addInstruction(Instruction instruction)
   { addInstruction(instruction, instructions);
@@ -111,20 +113,15 @@ public class ByteCodeMethod
       new EndMethodDirective().byteCode();
   }
 
-  public void checkArgumentsForJump()
+  public void checkCanJump()
   { if (! jump) throw new InternalCompilerException("Tried to add a jump to \"" + toString() + "\" without enabling jumps");
-    if (! (arguments.length == 3 &&
-          (! modifier.contains("static")) &&
-          arguments[1].equals(runtimeValueType) &&
-          arguments[2].equals(integerType)))
-      throw new InternalCompilerException("Jump used with wrong method types for \"" + toString() + "\"");
   }
 
   public String jumpPreamble()
   { if (! jump) return "";
-    checkArgumentsForJump();
+    checkCanJump();
     return
-      new LocalLoadInstruction(integerType, 3).byteCode() + "\n" +
+      new StaticCallInstruction(integerType, CallStack.class, "getProgrammeCounter").byteCode() + "\n" +
       new TableSwitchInstruction("InvalidJump", 0, "Jump", jumpCounter).byteCode() + "\n" +
       invalidJump() + "\n" +
       "Jump0:";
@@ -134,33 +131,36 @@ public class ByteCodeMethod
   public String invalidJump()
   { return
       "InvalidJump:\n" +
-      new NewObjectInstruction(RuntimeException.class).byteCode() + "\n" +
-      new DupInstruction().byteCode() + "\n" +
-      new NewObjectInstruction(StringBuilder.class).byteCode() + "\n" +
-      new DupInstruction().byteCode() + "\n" +
-      new NonVirtualCallInstruction(voidType, StringBuilder.class, "<init>").byteCode() + "\n" +
-      new StringConstantInstruction("Invalid jump to: ").byteCode() + "\n" +
-      new VirtualCallInstruction(stringBuilderType, StringBuilder.class, "append", stringType).byteCode() + "\n" +
-      new LocalLoadInstruction(integerType, 3).byteCode() + "\n" +
-      new VirtualCallInstruction(stringBuilderType, StringBuilder.class, "append", integerType).byteCode() + "\n" +
-      new StringConstantInstruction(" with continuation value: ").byteCode() + "\n" +
-      new VirtualCallInstruction(stringBuilderType, StringBuilder.class, "append", stringType).byteCode() + "\n" +
-      new LocalLoadInstruction(runtimeValueType, 2).byteCode() + "\n" +
-      new VirtualCallInstruction(stringType, RuntimeValue.class, "toString").byteCode() + "\n" +
-      new VirtualCallInstruction(stringBuilderType, StringBuilder.class, "append", stringType).byteCode() + "\n" +
-      new VirtualCallInstruction(stringType, StringBuilder.class, "toString").byteCode() + "\n" +
-      new NonVirtualCallInstruction(voidType, RuntimeException.class, "<init>", stringType).byteCode() + "\n" +
-      new ThrowInstruction().byteCode();
+      new LocalLoadInstruction(runtimeValueType, 1).byteCode() + "\n" +
+      new StaticCallInstruction(voidType, CallStack.class, "invalidJump", runtimeValueType).byteCode();
   }
 
   // One value on stack before, one value on stack after
   public void addJump()
-  { checkArgumentsForJump();
-    addInstruction(new StaticCallInstruction(voidType, CallStack.class, "incrementProgrammeCounter")); // Increment programme counter
-    addInstruction(new LocalStoreInstruction(runtimeValueType, 2)); // Store value (if we didn't jump to the label below, so that load restores value on top of stack)
+  { checkCanJump();
+    addInstruction(new LocalStoreInstruction(runtimeValueType, 1));
+    int valueCount = storeValues();
+    addInstruction(new LocalLoadInstruction(lambdaValueType, 0));
+    addInstruction(new StaticCallInstruction(voidType, CallStack.class, "addFrame", lambdaValueType));
+    addInstruction(new LocalLoadInstruction(runtimeValueType, 1));
+    addInstruction(new ReturnInstruction(callValueType));
     jumpCounter++;
-    addInstruction(new LabelPseudoInstruction("Jump" + jumpCounter)); // Add label
-    // Load continuation value
-    addInstruction(new LocalLoadInstruction(runtimeValueType, 2));
+    addInstruction(new LabelPseudoInstruction("Jump" + jumpCounter));
+    restoreValues(valueCount);
+    addInstruction(new LocalLoadInstruction(runtimeValueType, 1));
+  }
+
+  public int storeValues()
+  { int storedStackCount = stackCount;
+    for (int i = 0; i < storedStackCount; i++)
+    { addInstruction(new StaticCallInstruction(voidType, CallStack.class, "pushValue", runtimeValueType));
+    }
+    return storedStackCount;
+  }
+
+  public void restoreValues(int storedStackCount)
+  { for (int i = 0; i < storedStackCount; i++)
+    { addInstruction(new StaticCallInstruction(runtimeValueType, CallStack.class, "popValue"));
+    }
   }
 }

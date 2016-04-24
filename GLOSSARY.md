@@ -24,6 +24,7 @@ Also see README.md
     - MarkerBinding: Just to use for instanceof, should only be used for the macro engine, then use ASTMatcher instead
 
 * rmk35.partIIProject.backend
+  - ByteCodeMethod: Method, jumps are points of continuation (e.g. they would be different methods in continuation passing style)
   - Statement: Input data from middle
 
 * rmk35.partIIProject.runtime

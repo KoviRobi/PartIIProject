@@ -12,7 +12,8 @@ Make middle neater by using macro matching
 More efficient macro matching (regular expression simple and fast) --- Measure performance to see if we need this
 Sort out nil vs null discrepancy
 Have the bind() call of the reflective environment be something that is called after the environment is initialised, this way when main classes become environments for libraries, we have regularity
-eval tail call
+eval tail call---can we test this?
 Java call order, e.g. CLOS is left to right for specialisation
+make CallStack not static, for multithreading
 
 current implementation of store is broken for macros defining macros

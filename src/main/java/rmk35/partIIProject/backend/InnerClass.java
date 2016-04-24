@@ -49,7 +49,7 @@ public class InnerClass extends OutputClass
     // Overwrite initializer
     methods.put("<init>", initializerMethod);
 
-    ByteCodeMethod runMethod = new ByteCodeMethod(/* jumps */ true, runtimeValueType, "public", "run", runtimeValueType, runtimeValueType, integerType);
+    ByteCodeMethod runMethod = new ByteCodeMethod(/* jumps */ true, runtimeValueType, "public", "run", runtimeValueType);
     // Store values into local variables
     runMethod.addInstruction(new LocalLoadInstruction(runtimeValueType, 1));
     for (Binding  formal : formals)

@@ -11,10 +11,17 @@ import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.ByteCodeMethod;
 
+import lombok.Value;
+
+@Value
 public class CallValue implements RuntimeValue
 { // Encapsulate a call to a LambdaValue
   LambdaValue function;
   RuntimeValue arguments;
+
+  public static CallValue create(RuntimeValue function, RuntimeValue arguments)
+  { return new CallValue((LambdaValue) function, arguments);
+  }
 
   public CallValue(LambdaValue function, RuntimeValue arguments)
   { this.function = function;

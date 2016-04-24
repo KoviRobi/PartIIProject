@@ -26,7 +26,7 @@ public abstract class UnaryLambda extends LambdaValue
     }
   }
 
-  public RuntimeValue run(RuntimeValue argument, RuntimeValue continuation, int programme_counter) { throw new InternalCompilerException("Called run for a built in function"); }
+  public RuntimeValue run(RuntimeValue argument) { throw new InternalCompilerException("Called run for a built in function"); }
 
   public abstract RuntimeValue run1(RuntimeValue first);
 }

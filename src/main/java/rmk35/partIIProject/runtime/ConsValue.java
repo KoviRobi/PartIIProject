@@ -28,6 +28,10 @@ public class ConsValue implements PrimitiveValue
   RuntimeValue cdr;
   SourceInfo sourceInfo;
 
+  public static RuntimeValue create(RuntimeValue car, RuntimeValue cdr)
+  { return new ConsValue(car, cdr);
+  }
+
   public ConsValue(RuntimeValue car, RuntimeValue cdr)
   { this(car, cdr, null);
   }

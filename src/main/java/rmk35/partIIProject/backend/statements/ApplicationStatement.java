@@ -14,20 +14,15 @@ import rmk35.partIIProject.backend.instructions.CommentPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.CheckCastInstruction;
 import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
 import rmk35.partIIProject.backend.instructions.DupInstruction;
-import rmk35.partIIProject.backend.instructions.DupX1Instruction;
 import rmk35.partIIProject.backend.instructions.SwapInstruction;
-import rmk35.partIIProject.backend.instructions.VirtualCallInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
 import rmk35.partIIProject.backend.instructions.StaticCallInstruction;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.voidType;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.runtimeValueType;
-import static rmk35.partIIProject.backend.instructions.types.StaticConstants.lambdaValueType;
 
 import java.util.List;
 import java.util.Arrays;
 import java.util.ListIterator;
-import java.util.Collection;
-import java.util.TreeSet;
 
 import lombok.ToString;
 
@@ -61,17 +56,11 @@ public class ApplicationStatement extends Statement
     ListIterator<Statement> iterator = operands.listIterator(operands.size());
     while (iterator.hasPrevious())
     { Statement operand = iterator.previous();
-      method.addInstruction(new NewObjectInstruction(ConsValue.class));
-      /* Duplicate to below null (or currently built list) so now Cons, Runtime, Cons */
-      method.addInstruction(new DupX1Instruction());
-      /* Swap with null (or currently built list) so now Cons, Cons, Runtime */
-      method.addInstruction(new SwapInstruction());
-      /* Generate output so now Cons, Cons, Runtime, Car */
       operand.generateOutput(mainClass, outputClass, method);
       Compiler.tailCallSettings.generateContinuation(method);
-      /* Swap with generated output so now Cons, Cons, Car, Runtime */
+      /* Swap car (currently top, from generateOutput) and cdr (below top, from invariant) */
       method.addInstruction(new SwapInstruction());
-      method.addInstruction(new NonVirtualCallInstruction(voidType, ConsValue.class, "<init>", runtimeValueType, runtimeValueType));
+      method.addInstruction(new StaticCallInstruction(runtimeValueType, ConsValue.class, "create", runtimeValueType, runtimeValueType));
     }
 
     Compiler.tailCallSettings.generateCallEnd(method);

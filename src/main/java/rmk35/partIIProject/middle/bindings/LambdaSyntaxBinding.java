@@ -34,7 +34,7 @@ public class LambdaSyntaxBinding extends SintacticBinding
     EnvironmentValue bodyEnvironment = environment.subEnvironment();
 
     String innerClassName = mainClass.uniqueID() + "$Lambda"; // Using main class' unique ID as that way all files definitely have different names
-    String comment = new ConsValue(operator, operands, operator.getSourceInfo()).toJavaValue().toString();
+    String comment = new ConsValue(operator, operands, operator.getSourceInfo()).toString();
 
     List<Binding> formals = first.getCar().accept(new ASTImproperListFoldVisitor<List<Binding>>(new ArrayList<Binding>(),
       (List<Binding> list, RuntimeValue ast) ->

@@ -2,6 +2,7 @@ package rmk35.partIIProject.backend.instructions.types;
 
 import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.LambdaValue;
+import rmk35.partIIProject.runtime.CallValue;
 import rmk35.partIIProject.runtime.ObjectValue;
 
 public class StaticConstants
@@ -14,6 +15,7 @@ public class StaticConstants
   public static final JVMType runtimeValueType = new ObjectType(RuntimeValue.class);
   public static final JVMType runtimeValueArrayType = new ArrayType(new ObjectType(RuntimeValue.class));
   public static final JVMType lambdaValueType = new ObjectType(LambdaValue.class);
+  public static final JVMType callValueType = new ObjectType(CallValue.class);
   public static final JVMType objectValueType = new ObjectType(ObjectValue.class);
   public static final JVMType objectType = new ObjectType(Object.class);
   public static final JVMType objectArrayType = new ArrayType(new ObjectType(Object.class));

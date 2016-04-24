@@ -13,8 +13,14 @@ import static rmk35.partIIProject.backend.instructions.types.StaticConstants.lam
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.runtimeValueType;
 
 public class Trampolining implements TailCallSettings
-{ public void generateStart(ByteCodeMethod method)
-  { method.addInstruction(new StaticCallInstruction(runtimeValueType, Trampoline.class, "bounce", runtimeValueType));
+{ public void generateStartStart(ByteCodeMethod method)
+  { method.addInstruction(new NewObjectInstruction(CallValue.class));
+    method.addInstruction(new DupInstruction());
+  }
+
+  public void generateStartEnd(ByteCodeMethod method)
+  { method.addInstruction(new NonVirtualCallInstruction(voidType, CallValue.class, "<init>", lambdaValueType, runtimeValueType));
+    method.addInstruction(new StaticCallInstruction(runtimeValueType, Trampoline.class, "bounce", runtimeValueType));
   }
 
   public void generateContinuation(ByteCodeMethod method)

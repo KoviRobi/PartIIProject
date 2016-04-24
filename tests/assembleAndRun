@@ -1,0 +1,3 @@
+#!/bin/sh
+java -jar ../jasmin.jar -g *.j
+java -cp .:../target/part-II-project-1.0-SNAPSHOT-jar-with-dependencies.jar "$1"

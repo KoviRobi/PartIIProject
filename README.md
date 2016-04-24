@@ -14,10 +14,18 @@ in Scheme to the runtime
 ## Back-end
 This is organised into OutputClasses (subclasses: inner and main
 class), which contain ByteCodeMethods which contain a list of
-instructions (in string form). The ByteCodeMethod is populated by the
-Statements, with contain Instructions, by sending a 'generateOutput'
-message (method call) to the Statement class (one begin statement that
-encapsulates the whole programme)
+instructions. The ByteCodeMethod is populated by the Statements, with
+contain Instructions, by sending a 'generateOutput' message (method
+call) to the Statement class (one begin statement that encapsulates
+the whole programme). There are three ways of doing tail calls, not
+doing them, using trampolines or maintaining our own stack. These are
+each subclasses of src/**/backend/statements/TailCallSettings. Briefly  these work by
+
+(tabstop of 8)
+			no tail calls		trampolines			own stack
+			------------------------------------------------------------------------------------------
+method call:	java method call	return a call value		return a call value
+continuation:	do nothing		spawn a trampoline	create a new frame
 
 ##  Middle
 This connects the front and the back end by converting the data
@@ -32,15 +40,6 @@ the front-end
 ## Runtime
 The AST/runtime objects (mainly the *Value objects). ValueHelper
 contains code to convert Java values to Scheme values
-
-### Trampoline
-This is backwards, but what happens is application returns a
-TrampolineValue, which is bounce()d [applied until it returns a
-non-TrampolineValue] by either a fencepost of sequencing (the last
-TrampolineValue in a sequence gets passed up, only values that would
-be popped due to sequencing throwing values away are bounced()) or the
-top level value guard. Trampolines are also responsible for exception
-handling.
 
 ## Experiments
 This folder contains things that I found unsufficiently documented so
