@@ -2,10 +2,9 @@ package rmk35.partIIProject.backend;
 
 import rmk35.partIIProject.Compiler;
 
+import rmk35.partIIProject.runtime.NullValue;
+
 import rmk35.partIIProject.backend.statements.Statement;
-import rmk35.partIIProject.backend.statements.ApplicationStatement;
-import rmk35.partIIProject.backend.statements.SequenceStatement;
-import rmk35.partIIProject.backend.statements.InstructionStatement;
 import rmk35.partIIProject.backend.instructions.Instruction;
 import rmk35.partIIProject.backend.instructions.NewObjectInstruction;
 import rmk35.partIIProject.backend.instructions.DupInstruction;
@@ -42,14 +41,15 @@ public class MainClass extends OutputClass
     addInnerClass(mainInnerClass);
 
     ByteCodeMethod mainMethod = new ByteCodeMethod(/* jumps */ false, voidType, "public static", "main", stringArrayType);
-    new ApplicationStatement
-      (new SequenceStatement
-        (new InstructionStatement(new NewObjectInstruction(mainInnerClass.getName())),
-        new InstructionStatement(new DupInstruction()),
-        new InstructionStatement(new NullConstantInstruction()),
-        new InstructionStatement(new NonVirtualCallInstruction(voidType, mainInnerClass.getName() + "/<init>", lambdaValueType))))
-      .generateOutput(this, this, mainMethod);
-    Compiler.tailCallSettings.generateStart(mainMethod);
+    Compiler.tailCallSettings.generateStartStart(mainMethod);
+    mainMethod.addInstruction(new NewObjectInstruction(mainInnerClass.getName()));
+    mainMethod.addInstruction(new DupInstruction());
+    mainMethod.addInstruction(new NullConstantInstruction());
+    mainMethod.addInstruction(new NonVirtualCallInstruction(voidType, mainInnerClass.getName() + "/<init>", lambdaValueType));
+    mainMethod.addInstruction(new NewObjectInstruction(NullValue.class));
+    mainMethod.addInstruction(new DupInstruction());
+    mainMethod.addInstruction(new NonVirtualCallInstruction(voidType, NullValue.class, "<init>"));
+    Compiler.tailCallSettings.generateStartEnd(mainMethod);
     mainMethod.addInstruction(new PopInstruction());
     methods.put("main", mainMethod);
   }
