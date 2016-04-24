@@ -42,18 +42,12 @@ public class Compiler
 
   // Settings
   public static TailCallSettings tailCallSettings =
-      (System.getenv("tailcall") == null)
-    ? new Trampolining()
-    : (System.getenv("tailcall").equals("none")) ? new NonTailCalls()
-    : (System.getenv("tailcall").equals("no")) ? new NonTailCalls()
-    : (System.getenv("tailcall").equals("off")) ? new NonTailCalls()
-    : (System.getenv("tailcall").equals("0")) ? new NonTailCalls()
-    : (System.getenv("tailcall").equals("fullcont")) ? new SchemeCallStack()
-    : (System.getenv("tailcall").equals("full")) ? new SchemeCallStack()
-    : (System.getenv("tailcall").equals("callcc")) ? new SchemeCallStack()
-    : (System.getenv("tailcall").equals("2")) ? new SchemeCallStack()
-    : new Trampolining()
-    ;
+    new SettingsMatcher<TailCallSettings>("tailcall", "tailcalls")
+      .addDefault(new SchemeCallStack())
+      .tryMatch(new SchemeCallStack(), "fullcont", "full", "callcc", "on", "2")
+      .tryMatch(new Trampolining(), "trampoline", "trampolining", "1")
+      .tryMatch(new NonTailCalls(), "none", "no", "off", "0")
+      .get();
   public static boolean intermediateCode = System.getenv("intermediate") != null || System.getenv("intermediateCode") != null;
 
   public Compiler(String fileName, String outputName) throws Exception, IOException
@@ -65,5 +59,36 @@ public class Compiler
     programme.generateOutput(mainClass, mainClass.getMainInnerClass(), mainClass.getPrimaryMethod());
     if (intermediateCode) mainClass.saveToDisk();
     mainClass.assembleToDisk();
+  }
+}
+
+class SettingsMatcher<T>
+{ T match = null;
+  String optionValue = null;
+
+  public SettingsMatcher(String... options)
+  { for (int i = 0; i < options.length; i++)
+    { optionValue = System.getenv(options[i]);
+      if (optionValue != null) return;
+    }
+  }
+
+  public SettingsMatcher<T> tryMatch(T matchValue, String... matchKeys)
+  { for (int i = 0; i < matchKeys.length; i++)
+    { if (matchKeys[i].equals(optionValue))
+      { match = matchValue;
+        break;
+      }
+    }
+    return this;
+  }
+
+  public SettingsMatcher<T> addDefault(T defaultMatch)
+  { match = defaultMatch;
+    return this;
+  }
+
+  public T get()
+  { return match;
   }
 }
