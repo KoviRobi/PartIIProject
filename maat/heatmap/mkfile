@@ -1,0 +1,39 @@
+MKSHELL=9 rc
+
+all: WP3-abs-churn.log \
+    WP4-abs-churn.log \
+    WP5-abs-churn.log \
+    WP6-abs-churn.log \
+    WP7-abs-churn.log \
+    WP8-abs-churn.log \
+    WP9-abs-churn.log \
+    WP10-abs-churn.log \
+    combined.log \
+    heatmap.tex
+	#Done
+
+%-abs-churn.log:
+	cd ../../; \
+	git log --all --numstat \
+	    '--date=short' '--pretty=format:--%h--%ad--%aN' \
+	    '--grep='$stem \
+	    --no-renames | \
+	java -jar maat/code-maat.jar -l /dev/stdin -c git2 -a abs-churn > maat/heatmap/$stem-abs-churn.log
+
+dates.log:
+	#@{for (f in *-abs-churn.log) \
+	#{ sed 1d < $f  \
+	#}} | awk 'BEGIN{ FS="," } { print $1 }' - | sort | uniq > dates.log
+	ruby -e 'require ''date''' -e 'Date.new(2015, 11, 23).upto(Date.new(2016, 04, 25)).each { |x| puts x }' > dates.log
+
+combined.log: dates.log
+	echo 'workpackage,date,added,deleted,commits' > combined.log
+	@{for (f in *-abs-churn.log) \
+	{ wp=`{echo $f|sed 's/WP([0-9]+)-.*/\1/' | sed 's/^[0-9]$/0&/g'} \
+	  for (l in `{cat dates.log}) \
+	  { grep $l $f | sed 's/^/'$wp',/' || echo $wp,$l,0,0,0 \
+	  } \
+	}} | sort >> combined.log
+
+heatmap.tex: combined.log heatmap.gnuplot
+	gnuplot heatmap.gnuplot

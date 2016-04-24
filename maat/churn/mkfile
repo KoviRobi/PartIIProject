@@ -1,0 +1,17 @@
+MKSHELL=9 rc
+
+all: all-abs-churn-graph.tex \
+     frontend-abs-churn-graph.tex \
+     middle-abs-churn-graph.tex \
+     backend-abs-churn-graph.tex
+	#Done
+
+%-abs-churn.log:
+	cd ../../; \
+	git log --all --numstat \
+	    '--date=short' '--pretty=format:--%h--%ad--%aN' \
+	    --no-renames -- `{cat maat/churn/files-$stem} | \
+	java -jar maat/code-maat.jar -l /dev/stdin -c git2 -a abs-churn > maat/churn/$stem-abs-churn.log
+
+%-abs-churn-graph.tex: %-abs-churn.log include-% graph.gnuplot
+	gnuplot -c 'graph.gnuplot' $stem-abs-churn.log $stem-abs-churn-graph.tex include-$stem

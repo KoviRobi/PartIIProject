@@ -41,3 +41,8 @@ buildNumber.properties
 compile-error
 run-error
 result
+
+# maat
+*.log
+*.eps
+*.tex
