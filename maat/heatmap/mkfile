@@ -9,6 +9,7 @@ all: WP3-abs-churn.log \
     WP9-abs-churn.log \
     WP10-abs-churn.log \
     combined.log \
+    combined2.log \
     heatmap.tex
 	#Done
 
@@ -24,9 +25,14 @@ dates.log:
 	#@{for (f in *-abs-churn.log) \
 	#{ sed 1d < $f  \
 	#}} | awk 'BEGIN{ FS="," } { print $1 }' - | sort | uniq > dates.log
-	ruby -e 'require ''date''' -e 'Date.new(2015, 11, 23).upto(Date.new(2016, 04, 25)).each { |x| puts x }' > dates.log
+	ruby -e 'require ''date''' -e 'Date.new(2015, 11, 23).upto(Date.new(2016, 05, 13)).each { |x| puts x }' > dates.log
 
-combined.log: dates.log
+combined2.log combined.log: dates.log
+	echo 'workpackage,date,added,deleted,commits' > combined2.log
+	@{for (f in *-abs-churn.log) \
+	{ wp=`{echo $f|sed 's/WP([0-9]+)-.*/\1/' | sed 's/^[0-9]$/0&/g'} \
+	  sed '1d' < $f | sed 's/^/'$wp',/' \
+	}} | gawk 'BEGIN{FS=","; OFS=","} { "/run/current-system/sw/bin/date -d " $2 " +%s" | getline date; print $1 "," date "," $3 "," $4 "," $5 }' | sort  >> combined2.log
 	echo 'workpackage,date,added,deleted,commits' > combined.log
 	@{for (f in *-abs-churn.log) \
 	{ wp=`{echo $f|sed 's/WP([0-9]+)-.*/\1/' | sed 's/^[0-9]$/0&/g'} \

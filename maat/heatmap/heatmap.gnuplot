@@ -25,17 +25,13 @@ set xrange ["2015-11-23":"2016-05-08"]
 $id << EOD
 wp, start
 3, 2015-11-23
-4, 2015-12-07
-5, 2015-12-21
-6, 2016-01-04
-7, 2016-01-18
-8, 2016-02-01
-9, 2016-02-15
-10, 2016-02-29
-11, 2016-03-14
-12, 2016-03-28
-13, 2016-04-11
 14, 2016-04-25
+EOD
+
+$actual << EOD
+wp, start
+2.5, 2015-11-30
+12, 2016-06-05
 EOD
 
 set ylabel "References"
@@ -58,4 +54,5 @@ set title "Net Lines Added (From Commit Messages)"
 unset key
 
 plot 'combined.log' using "date":"workpackage":(column("added")-column("deleted")) with image, \
-      $id using (column("start")):(column("wp")-0.5) with lines linecolor "black"
+      $id using (column("start")):(column("wp")-0.5) with lines linecolor "black", \
+      $actual using (column("start")):(column("wp")) with lines linetype "dashed"
