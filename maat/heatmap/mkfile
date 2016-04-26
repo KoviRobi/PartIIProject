@@ -42,4 +42,7 @@ combined2.log combined.log: dates.log
 	}} | sort >> combined.log
 
 heatmap.tex: combined.log heatmap.gnuplot
-	gnuplot heatmap.gnuplot
+	gnuplot -c 'heatmap.gnuplot' 'set terminal epslatex 12 size 6.25, 3in; set output "heatmap.tex"'
+
+preview:
+	gnuplot -p -c 'heatmap.gnuplot'

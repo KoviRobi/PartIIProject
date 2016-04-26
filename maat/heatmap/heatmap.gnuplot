@@ -2,7 +2,7 @@ set datafile separator comma
 
 set timefmt "%Y-%m-%d"
 
-set tic scale 0
+set tics front
 
 set xdata time
 set xlabel 'Work Package Number'
@@ -44,14 +44,13 @@ set cbrange [400:-400]
 set cbtics -200,200,200
 set cbtics add ("$>400$" 400, "$>-400$" -400)
 
-set view map
-
-set terminal epslatex 12 size 6.25, 3in
-set output "heatmap.tex"
+#set view map
 
 set title "Net Lines Added (From Commit Messages)"
 
 unset key
+
+@ARG1
 
 plot 'combined.log' using "date":"workpackage":(column("added")-column("deleted")) with image, \
       $id using (column("start")):(column("wp")-0.5) with lines linecolor "black", \

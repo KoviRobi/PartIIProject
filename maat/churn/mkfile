@@ -1,9 +1,6 @@
 MKSHELL=9 rc
 
-all: all-abs-churn-graph.tex \
-     frontend-abs-churn-graph.tex \
-     middle-abs-churn-graph.tex \
-     backend-abs-churn-graph.tex
+all: all-abs-churn-graph.tex
 	#Done
 
 %-abs-churn.log: ../../.git
@@ -14,4 +11,8 @@ all: all-abs-churn-graph.tex \
 	java -jar maat/code-maat.jar -l /dev/stdin -c git2 -a abs-churn > maat/churn/$stem-abs-churn.log
 
 %-abs-churn-graph.tex: %-abs-churn.log include-% graph.gnuplot
-	gnuplot -c 'graph.gnuplot' $stem-abs-churn.log $stem-abs-churn-graph.tex include-$stem
+	gnuplot -c 'graph.gnuplot' $stem-abs-churn.log \
+	  'set terminal epslatex 12 size 6.25, 5in; set output "'$stem-abs-churn-graph.tex'"' include-$stem
+
+preview:
+	gnuplot -p -c 'graph.gnuplot' all-abs-churn.log '' include-all

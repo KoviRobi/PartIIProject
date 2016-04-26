@@ -30,12 +30,12 @@ set mytics 2
 
 set style fill pattern 2
 
-set terminal epslatex 12 size 6.25, 5in
-set output ARG2
+@ARG2
 
 $refactor<<EOD
 date,added,deleted,commits
 2015-12-24,1442,1138,118
+2015-12-31,3846,3786,254
 2016-01-08,0,70,28
 2016-01-17,5282,5328,318
 2016-01-18,14,14,12
@@ -72,11 +72,13 @@ EOD
 
 load ARG3
 
+set palette defined ( 0 '#D73027', 1 "white", 2 '#1A9850' )
+
 max(x,y) = x<y?y:x
 
-plot ARG1 using "date":"added" with lines title "Gross additions",\
-	'' using "date":"deleted" with lines title "Gross deletions", \
-	'' using "date":"added":"deleted" with filledcurves above title "Net additions", \
-	'' using "date":"added":"deleted" with filledcurves below title "Net deletions", \
-	$refactor using "date":(max(column("added"),column("deleted"))) with points pointtype 4 pointsize 2 linecolor rgb '#D73027' title "Refactors", \
-	$eval using "date":(max(column("added"),column("deleted"))) with points pointsize 2 linecolor rgb '#1A9850' title "Evaluation", \
+plot ARG1 using "date":"added" with lines linecolor rgb '#000000' title "Gross additions",\
+	'' using "date":"deleted" with lines linecolor rgb '#000000' title "Gross deletions", \
+	'' using "date":"added":"deleted" with filledcurves above linecolor rgb '#1A9850' title "Net additions", \
+	'' using "date":"added":"deleted" with filledcurves below linecolor rgb '#D73027' title "Net deletions", \
+	$refactor using "date":(max(column("added"),column("deleted"))) with points pointtype 4 pointsize 2 linecolor rgb '#000000' title "Refactors", \
+	$eval using "date":(max(column("added"),column("deleted"))) with points pointtype 3 pointsize 2 linecolor rgb '#000000' title "Evaluation", \
