@@ -39,7 +39,7 @@ set yrange [2.5:10.5]
 
 set palette defined ( 0 '#D73027', 1 "white", 2 '#1A9850' )
 
-set cblabel "Net Lines Changed"
+set cblabel "Net Lines Added"
 set cbrange [400:-400]
 set cbtics -200,200,200
 set cbtics add ("$>400$" 400, "$>-400$" -400)

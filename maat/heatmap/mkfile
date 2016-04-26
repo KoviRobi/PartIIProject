@@ -13,7 +13,7 @@ all: WP3-abs-churn.log \
     heatmap.tex
 	#Done
 
-%-abs-churn.log:
+%-abs-churn.log: ../../.git
 	cd ../../; \
 	git log --all --numstat \
 	    '--date=short' '--pretty=format:--%h--%ad--%aN' \

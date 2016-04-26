@@ -6,7 +6,7 @@ all: all-abs-churn-graph.tex \
      backend-abs-churn-graph.tex
 	#Done
 
-%-abs-churn.log:
+%-abs-churn.log: ../../.git
 	cd ../../; \
 	git log --all --numstat \
 	    '--date=short' '--pretty=format:--%h--%ad--%aN' \
