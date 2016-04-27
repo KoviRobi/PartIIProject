@@ -10,7 +10,8 @@ all: WP3-abs-churn.log \
     WP10-abs-churn.log \
     combined.log \
     combined2.log \
-    heatmap.tex
+    heatmap.tex \
+    est_error_gradient.log
 	#Done
 
 %-abs-churn.log: ../../.git
@@ -41,8 +42,9 @@ combined2.log combined.log: dates.log
 	  } \
 	}} | sort >> combined.log
 
-heatmap.tex: combined.log heatmap.gnuplot
+heatmap.tex est_error_gradient.log: combined.log heatmap.gnuplot
 	gnuplot -c 'heatmap.gnuplot' 'set terminal epslatex 12 size 6.25, 3in; set output "heatmap.tex"'
+	awk '/^m /{ printf "%0.1f", (1/$3/60/60/24) }' est_error.log > est_error_gradient.log
 
 preview:
 	gnuplot -p -c 'heatmap.gnuplot'

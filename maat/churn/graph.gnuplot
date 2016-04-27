@@ -26,9 +26,7 @@ set xrange ["2015-11-23":"2016-05-08"]
 
 set ylabel 'Lines Changed'
 set ytics rotate 1000
-set mytics 2
-
-set style fill pattern 2
+set mytics 4
 
 @ARG2
 
@@ -76,9 +74,9 @@ set palette defined ( 0 '#D73027', 1 "white", 2 '#1A9850' )
 
 max(x,y) = x<y?y:x
 
-plot ARG1 using "date":"added" with lines linecolor rgb '#000000' title "Gross additions",\
-	'' using "date":"deleted" with lines linecolor rgb '#000000' title "Gross deletions", \
-	'' using "date":"added":"deleted" with filledcurves above linecolor rgb '#1A9850' title "Net additions", \
-	'' using "date":"added":"deleted" with filledcurves below linecolor rgb '#D73027' title "Net deletions", \
+plot ARG1 using "date":"added" with lines linecolor rgb '#000000' notitle "Gross additions",\
+	'' using "date":"deleted" with lines linecolor rgb '#000000' notitle "Gross deletions", \
+	'' using "date":"added":"deleted" with filledcurves above fill pattern 3 linecolor rgb '#1A9850' title "Net additions", \
+	'' using "date":"added":"deleted" with filledcurves below fill pattern 3 linecolor rgb '#D73027' title "Net deletions", \
 	$refactor using "date":(max(column("added"),column("deleted"))) with points pointtype 4 pointsize 2 linecolor rgb '#000000' title "Refactors", \
 	$eval using "date":(max(column("added"),column("deleted"))) with points pointtype 3 pointsize 2 linecolor rgb '#000000' title "Evaluation", \

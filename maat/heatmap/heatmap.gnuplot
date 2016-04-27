@@ -28,12 +28,6 @@ wp, start
 14, 2016-04-25
 EOD
 
-$actual << EOD
-wp, start
-2.5, 2015-11-30
-12, 2016-06-05
-EOD
-
 set ylabel "References"
 set yrange [2.5:10.5]
 
@@ -52,6 +46,13 @@ unset key
 
 @ARG1
 
+m=1
+c=-840
+f(x)=m*x+c
+set fit errorvariables
+fit f(x) 'combined2.log' using "date":"workpackage":(abs(400/((column("added")-column("deleted"))**2))) via m,c
+update "est_error.log"
+
 plot 'combined.log' using "date":"workpackage":(column("added")-column("deleted")) with image, \
       $id using (column("start")):(column("wp")-0.5) with lines linecolor "black", \
-      $actual using (column("start")):(column("wp")) with lines linetype "dashed"
+      f(x) with lines linetype "dashed"
