@@ -22,15 +22,11 @@ import java.util.Collection;
 import lombok.Data;
 
 @Data
-public class Substitution implements ASTMatchVisitorReturn
+public class Substitution
 { Map<String, PerfectBinaryTree<RuntimeValue>> substitutions;
 
   public Substitution()
   { this.substitutions = new Hashtable<>();
-  }
-
-  public <T> T accept(ASTMatchVisitorReturnVisitor<T> visitor)
-  { return visitor.visit(this);
   }
 
   public void put(String key, SourceInfo sourceInfo, RuntimeValue value)
