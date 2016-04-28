@@ -1,5 +1,6 @@
 package rmk35.partIIProject.middle;
 
+import rmk35.partIIProject.Compiler;
 import rmk35.partIIProject.SyntaxErrorException;
 
 import rmk35.partIIProject.runtime.RuntimeValue;
@@ -28,7 +29,7 @@ public class LibraryOrProgramme
     boolean finishedImporting = false;
 
     for (RuntimeValue datum : data)
-    { ASTMatcher library = new ASTMatcher("(define-library library-name library-declaration ...)", datum, "define-library");
+    { ASTMatcher library = new ASTMatcher(Compiler.baseEnvironment, environment, "(define-library library-name library-declaration ...)", datum, "define-library");
       if (library.matched())
       { if (! returnValue.isEmpty())
         { throw new SyntaxErrorException("Was not expecting library definition in a programme", datum.getSourceInfo());
@@ -39,7 +40,7 @@ public class LibraryOrProgramme
         throw new UnsupportedOperationException("We don't support library definitions yet");
       }
 
-      ASTMatcher importDeclaration = new ASTMatcher("(import import-set ...)", datum, "import");
+      ASTMatcher importDeclaration = new ASTMatcher(Compiler.baseEnvironment, environment, "(import import-set ...)", datum, "import");
       if (! finishedImporting && importDeclaration.matched())
       { List<RuntimeValue> imports = new ArrayList<>();
         importDeclaration.get("import-set").forEach(value -> imports.add(value));

@@ -1,5 +1,6 @@
 package rmk35.partIIProject.middle.bindings;
 
+import rmk35.partIIProject.Compiler;
 import rmk35.partIIProject.SyntaxErrorException;
 
 import rmk35.partIIProject.utility.Pair;
@@ -31,7 +32,7 @@ public class LetBinding extends SintacticBinding
   public Statement applicate(EnvironmentValue environment, OutputClass outputClass, MainClass mainClass, RuntimeValue operator, RuntimeValue operands)
   { //  Copy environment for lexical effect
     EnvironmentValue letEnvironment = new EnvironmentValue(environment, /* mutable */ true);
-    ASTMatcher simpleLetSubstitution = new ASTMatcher("(((name value) ...) body ...)", operands);
+    ASTMatcher simpleLetSubstitution = new ASTMatcher(Compiler.baseEnvironment, environment, "(((name value) ...) body ...)", operands);
     if (simpleLetSubstitution.matched())
     { /* Case for simple let */
       List<Statement> letStatements = new ArrayList<>();
@@ -55,15 +56,14 @@ public class LetBinding extends SintacticBinding
       return new BeginStatement(letStatements);
     }
 
-    ASTMatcher namedLetSubstitution = new ASTMatcher("(loop-name ((name value) ...) body ...)", operands);
+    ASTMatcher namedLetSubstitution = new ASTMatcher(Compiler.baseEnvironment, letEnvironment, "(loop-name ((name value) ...) body ...)", operands);
     if (namedLetSubstitution.matched())
     { /* Case for named let */
-      RuntimeValue functionalForm = namedLetSubstitution.transform(
+      return namedLetSubstitution.convert(outputClass, mainClass,
         "(begin\n" +
         "  (define loop-name (begin))\n" +
         "  (set! loop-name (lambda (name ...) body ...))\n" +
         "  (loop-name value ...))");
-      return functionalForm.accept(new ASTConvertVisitor(letEnvironment, outputClass, mainClass));
     }
     throw new SyntaxErrorException("Malformed let", operator.getSourceInfo());
   }

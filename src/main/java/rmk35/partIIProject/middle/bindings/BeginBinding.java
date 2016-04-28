@@ -1,5 +1,6 @@
 package rmk35.partIIProject.middle.bindings;
 
+import rmk35.partIIProject.Compiler;
 import rmk35.partIIProject.SyntaxErrorException;
 
 import rmk35.partIIProject.utility.Pair;
@@ -29,7 +30,7 @@ import lombok.ToString;
 public class BeginBinding extends SintacticBinding
 { @Override
   public Statement applicate(EnvironmentValue environment, OutputClass outputClass, MainClass mainClass, RuntimeValue operator, RuntimeValue operands)
-  { ASTMatcher beginSubstitution = new ASTMatcher("(body ...)", operands);
+  { ASTMatcher beginSubstitution = new ASTMatcher(Compiler.baseEnvironment, environment, "(body ...)", operands);
     if (beginSubstitution.matched())
     { List<Statement> beginStatements = new ArrayList<>();
       if (beginSubstitution.get("body") != null)

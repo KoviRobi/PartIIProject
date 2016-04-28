@@ -1,5 +1,6 @@
 package rmk35.partIIProject.middle;
 
+import rmk35.partIIProject.Compiler;
 import rmk35.partIIProject.InternalCompilerException;
 import rmk35.partIIProject.SyntaxErrorException;
 
@@ -10,6 +11,8 @@ import rmk35.partIIProject.runtime.EnvironmentValue;
 import rmk35.partIIProject.runtime.IdentifierValue;
 import rmk35.partIIProject.runtime.UnspecifiedValue;
 import rmk35.partIIProject.runtime.libraries.GhostReflectiveEnvironment;
+
+import rmk35.partIIProject.frontend.SchemeParser;
 
 import rmk35.partIIProject.middle.bindings.Binding;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectIdentifierVisitor;
@@ -35,6 +38,17 @@ import java.util.ArrayList;
 public class EnvironmentImporter
 { EnvironmentValue environment;
 
+  public static EnvironmentValue getEnvironment(String... importSets)
+  { EnvironmentValue returnEnvironment = new EnvironmentValue();
+    EnvironmentImporter importer = new EnvironmentImporter(returnEnvironment);
+    List<RuntimeValue> importSetValues = new ArrayList<>();
+    for (String importSet : importSets)
+    { importSetValues.add(SchemeParser.read(importSet));
+    }
+    importer.importEnvironment(importSetValues);
+    return returnEnvironment;
+  }
+
   public EnvironmentImporter(EnvironmentValue environment)
   { this.environment = environment;
   }
@@ -48,23 +62,23 @@ public class EnvironmentImporter
     }
   }
 
-  public EnvironmentValue getEnvironment(RuntimeValue importSet)
+  EnvironmentValue getEnvironment(RuntimeValue importSet)
   { // ToDo: This way only, except and so on are reserved
     // ToDo: At the moment this is not a problem as they appear before
     // ToDo: definitions
-    ASTMatcher only = new ASTMatcher("(only import-set identifier ...)", importSet, "only");
+    ASTMatcher only = new ASTMatcher(Compiler.baseEnvironment, environment, "(only import-set identifier ...)", importSet, "only");
     if (only.matched()) return handleOnly(only);
 
-    ASTMatcher except = new ASTMatcher("(except import-set identifier ...)", importSet, "except");
+    ASTMatcher except = new ASTMatcher(Compiler.baseEnvironment, environment, "(except import-set identifier ...)", importSet, "except");
     if (except.matched()) return handleExcept(except);
 
-    ASTMatcher prefix = new ASTMatcher("(prefix import-set identifier)", importSet, "prefix");
+    ASTMatcher prefix = new ASTMatcher(Compiler.baseEnvironment, environment, "(prefix import-set identifier)", importSet, "prefix");
     if (prefix.matched()) return handlePrefix(prefix);
 
-    ASTMatcher rename = new ASTMatcher("(rename import-set (from to) ...)", importSet, "rename");
+    ASTMatcher rename = new ASTMatcher(Compiler.baseEnvironment, environment, "(rename import-set (from to) ...)", importSet, "rename");
     if (rename.matched()) return handleRename(rename);
 
-    ASTMatcher libraryName = new ASTMatcher("(library-name-part ...)", importSet);
+    ASTMatcher libraryName = new ASTMatcher(Compiler.baseEnvironment, environment, "(library-name-part ...)", importSet);
     if (libraryName.matched())
     { List<String> nameParts = new ArrayList<>();
       if (libraryName.get("library-name-part") == null) throw new SyntaxErrorException("Empty library name", importSet.getSourceInfo());

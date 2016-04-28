@@ -1,5 +1,7 @@
 package scheme;
 
+import rmk35.partIIProject.Compiler;
+
 import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.IdentifierValue;
 import rmk35.partIIProject.runtime.NullValue;
@@ -57,10 +59,10 @@ public class eval extends ReflectiveEnvironment
   public static RuntimeValue mutable_environment =
   new VariadicLambda()
   { public RuntimeValue run(RuntimeValue arguments)
-    { EnvironmentValue returnEnvironment = new EnvironmentValue(/* mutable, for the moment */ true);
+    { EnvironmentValue returnEnvironment = new EnvironmentValue(true);
       EnvironmentImporter importer = new EnvironmentImporter(returnEnvironment);
       List<RuntimeValue> importSets = new ArrayList<>();
-      ASTMatcher importDeclaration = new ASTMatcher("(import-set ...)", arguments);
+      ASTMatcher importDeclaration = new ASTMatcher(Compiler.baseEnvironment, returnEnvironment, "(import-set ...)", arguments);
       importDeclaration.get("import-set").forEach(value -> importSets.add(value));
       importer.importEnvironment(importSets);
       return returnEnvironment;

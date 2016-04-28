@@ -7,6 +7,7 @@ import rmk35.partIIProject.frontend.SchemeParser;
 
 import rmk35.partIIProject.middle.AST;
 import rmk35.partIIProject.middle.LibraryOrProgramme;
+import rmk35.partIIProject.middle.EnvironmentImporter;
 
 import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
@@ -20,7 +21,9 @@ import java.util.List;
 import java.io.IOException;
 
 public class Compiler
-{ public static void main(String[] arguments) throws Exception, IOException
+{ public static final EnvironmentValue baseEnvironment = new scheme.base();
+
+  public static void main(String[] arguments) throws Exception, IOException
   { if (arguments.length != 1)
     { System.out.println("Expecting only one argument, the file name to parse.");
       System.exit(1);
