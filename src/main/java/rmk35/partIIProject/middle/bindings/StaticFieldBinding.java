@@ -33,4 +33,16 @@ public class StaticFieldBinding extends VariableBinding
   public boolean runtime()
   { return true;
   }
+
+  @Override
+  public boolean equals(Object other)
+  { return other instanceof StaticFieldBinding &&
+      equals((StaticFieldBinding) other);
+  }
+
+  public boolean equals(StaticFieldBinding other)
+  { return containingClass.equals(other.containingClass) &&
+      schemeName.equals(other.schemeName) &&
+      javaName.equals(other.javaName);
+  }
 }

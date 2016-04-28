@@ -7,6 +7,7 @@ import rmk35.partIIProject.utility.Pair;
 import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.ConsValue;
 import rmk35.partIIProject.runtime.EnvironmentValue;
+import rmk35.partIIProject.runtime.libraries.CarbonCopyEnvironment;
 
 import rmk35.partIIProject.frontend.SourceInfo;
 
@@ -48,21 +49,25 @@ public class SyntaxBinding extends SintacticBinding
   }
 
   @Override
-  public Statement applicate(EnvironmentValue useEnvironmentValue, OutputClass outputClass, MainClass mainClass, RuntimeValue operator, RuntimeValue operands)
+  public Statement applicate(EnvironmentValue useEnvironment, OutputClass outputClass, MainClass mainClass, RuntimeValue operator, RuntimeValue operands)
   { // See Macros That Work, figure 3
     for (Pair<ASTMatchVisitor, Pair<Collection<String>, RuntimeValue>> pair : patternsAndTemplates)
-    { pair.getFirst().setUseEnvironment(useEnvironmentValue);
-      Substitution substitution = (new ConsValue(operator, operands, operator.getSourceInfo())).accept(pair.getFirst());
-      if (substitution != null)
-      { Binding oldEllipsisBinding = definitionEnvironment.getOrNull(ellipsisString);
-        definitionEnvironment.addBinding(ellipsisString, new EllipsisBinding());
-        Pair<RuntimeValue, EnvironmentValue> rewritten = pair.getSecond().getSecond().accept(new ASTMacroRewriteVisitor(substitution, definitionEnvironment, useEnvironmentValue, pair.getSecond().getFirst()));
-        if (oldEllipsisBinding == null)
-        { definitionEnvironment.removeBinding(ellipsisString);
-        } else
-        { definitionEnvironment.addBinding(ellipsisString, oldEllipsisBinding);
+    { pair.getFirst().setUseEnvironment(useEnvironment);
+      try
+      { Substitution substitution = (new ConsValue(operator, operands, operator.getSourceInfo())).accept(pair.getFirst());
+        if (substitution != null)
+        { Binding oldEllipsisBinding = definitionEnvironment.getOrNull(ellipsisString);
+          definitionEnvironment.addBinding(ellipsisString, new EllipsisBinding());
+          Pair<RuntimeValue, EnvironmentValue> rewritten = pair.getSecond().getSecond().accept(new ASTMacroRewriteVisitor(substitution, definitionEnvironment, useEnvironment, pair.getSecond().getFirst()));
+          if (oldEllipsisBinding == null)
+          { definitionEnvironment.removeBinding(ellipsisString);
+          } else
+          { definitionEnvironment.addBinding(ellipsisString, oldEllipsisBinding);
+          }
+          return rewritten.getFirst().accept(new ASTConvertVisitor(new CarbonCopyEnvironment(rewritten.getSecond(), useEnvironment), outputClass, mainClass));
         }
-        return rewritten.getFirst().accept(new ASTConvertVisitor(rewritten.getSecond(), outputClass, mainClass));
+      } finally
+      { pair.getFirst().setUseEnvironment(null);
       }
     }
     throw new SyntaxErrorException("Incorrect macro use", operator.getSourceInfo());

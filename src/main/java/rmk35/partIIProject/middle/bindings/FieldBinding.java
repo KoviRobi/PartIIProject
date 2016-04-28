@@ -32,4 +32,16 @@ public class FieldBinding extends VariableBinding
   public boolean runtime()
   { return true;
   }
+
+  @Override
+  public boolean equals(Object other)
+  { return other instanceof FieldBinding &&
+      equals((FieldBinding) other);
+  }
+
+  public boolean equals(FieldBinding other)
+  { return containingClass.equals(other.containingClass) &&
+      schemeName.equals(other.schemeName) &&
+      javaName.equals(other.javaName);
+  }
 }

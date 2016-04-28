@@ -18,4 +18,5 @@ public interface Binding
   public Binding subEnvironment();
   // When we import from a different environment, if it is a runtime binding we want to copy it
   public boolean runtime();
+  public boolean equals(Object other);
 }

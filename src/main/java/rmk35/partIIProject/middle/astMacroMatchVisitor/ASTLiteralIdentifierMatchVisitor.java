@@ -18,13 +18,20 @@ public class ASTLiteralIdentifierMatchVisitor extends ASTNoMatchVisitor
   @Override
   public Substitution visit(IdentifierValue argument)
   { // Using lookUpSilent as we may be matching against unbound identifiers, e.g. "=>" in cond
-    if (definitionEnvironment.getOrNull(parameter) ==
-        getUseEnvironment().getOrNull(argument.getValue()) &&
-        parameter.equals(argument.getValue()))
+    if (sameBinding(parameter, argument.getValue()) && parameter.equals(argument.getValue()))
     { return  new Substitution();
     } else
     { return null;
     }
+  }
+
+  boolean sameBinding(String inDefinitionEnvironment, String inUseEnvironment)
+  { return
+      (definitionEnvironment.getOrNull(inDefinitionEnvironment) == null &&
+       getUseEnvironment().getOrNull(inUseEnvironment) == null) ||
+      (definitionEnvironment.getOrNull(inDefinitionEnvironment) != null &&
+       definitionEnvironment.getOrNull(inDefinitionEnvironment).equals(getUseEnvironment().getOrNull(inUseEnvironment)))
+      ;
   }
 
   @Override

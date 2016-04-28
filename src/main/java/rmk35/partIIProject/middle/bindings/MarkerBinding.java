@@ -36,4 +36,9 @@ public class MarkerBinding implements Binding
   public boolean runtime()
   { return false;
   }
+
+  @Override
+  public boolean equals(Object other)
+  { return this.getClass().isInstance(other);
+  }
 }
