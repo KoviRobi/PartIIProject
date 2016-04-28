@@ -15,3 +15,6 @@
 
 ((static-field (class 'java.lang.System) 'out)
   'println "Hello, world!")
+
+(multi-despatch (static-field (class 'java.lang.System) 'out)
+    ('print "Hello"))

@@ -1,5 +1,7 @@
 package scheme;
 
+import rmk35.partIIProject.Compiler;
+
 import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.IdentifierValue;
 import rmk35.partIIProject.runtime.ObjectValue;
@@ -55,6 +57,7 @@ public class java extends ReflectiveEnvironment
   };
 
   public static Binding multi_despatch = SyntaxBindingCreator.create
-  ("(_ object (message arguments ...) ...)"
+  (Compiler.baseEnvironment
+  , "(_ object (message arguments ...) ...)"
   , "(let ((evaluated-object object)) (begin (evaluated-object message arguments ...) ...))");
 }

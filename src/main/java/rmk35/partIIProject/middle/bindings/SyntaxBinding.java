@@ -38,14 +38,21 @@ public class SyntaxBinding extends SintacticBinding
   String ellipsisString;
 
   public SyntaxBinding(EnvironmentValue definitionEnvironment, Collection<String> literals, List<Pair<RuntimeValue, RuntimeValue>> patternsAndTemplates, String ellipsisString)
-  { this.definitionEnvironment = definitionEnvironment;
+  { this.ellipsisString = ellipsisString;
+    this.definitionEnvironment = definitionEnvironment;
     this.literals = literals;
     this.patternsAndTemplates = new ArrayList<>(patternsAndTemplates.size());
+    Binding oldEllipsisBinding = definitionEnvironment.getOrNull(ellipsisString);
+    definitionEnvironment.addBinding(ellipsisString, new EllipsisBinding());
     for (Pair<RuntimeValue, RuntimeValue> pair : patternsAndTemplates)
     { Pair<ASTMatchVisitor, Collection<String>> compiledPattern = pair.getFirst().accept(new ASTCompilePatternVisitor(literals, definitionEnvironment));
       this.patternsAndTemplates.add(new Pair<>(compiledPattern.getFirst(), new Pair<>(compiledPattern.getSecond(), pair.getSecond())));
     }
-    this.ellipsisString = ellipsisString;
+    if (oldEllipsisBinding == null)
+    { definitionEnvironment.removeBinding(ellipsisString);
+    } else
+    { definitionEnvironment.addBinding(ellipsisString, oldEllipsisBinding);
+    }
   }
 
   @Override

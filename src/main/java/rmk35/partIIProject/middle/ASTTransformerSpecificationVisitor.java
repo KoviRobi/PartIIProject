@@ -55,19 +55,12 @@ public class ASTTransformerSpecificationVisitor extends ASTUnexpectedVisitor<Syn
     { ellipsisString = "...";
       literalsAST = second;
     }
-    Binding oldEllipsisBinding = environment.getOrNull(ellipsisString);
-    environment.addBinding(ellipsisString, new EllipsisBinding());
     ConsValue literalsCell = literalsAST.accept(new ASTExpectConsVisitor());
     List<String> literals = literalsCell.getCar().accept(new ASTListFoldVisitor<>(new ArrayList<>(),
       (list, ast) -> { list.add(ast.accept(new ASTExpectIdentifierVisitor()).getValue()); return list; } ));
     List<Pair<RuntimeValue, RuntimeValue>> patternAndTemplate = literalsCell.getCdr().accept(new ASTListFoldVisitor<>(new ArrayList<>(),
       (list, current) -> { list.add(current.accept(new ASTPairMapVisitor<>(x -> x, y -> y))); return list; } ));
     SyntaxBinding returnValue = new SyntaxBinding(environment, literals, patternAndTemplate, ellipsisString);
-    if (oldEllipsisBinding == null)
-    { environment.removeBinding(ellipsisString);
-    } else
-    { environment.addBinding(ellipsisString, oldEllipsisBinding);
-    }
     return returnValue;
   }
 }

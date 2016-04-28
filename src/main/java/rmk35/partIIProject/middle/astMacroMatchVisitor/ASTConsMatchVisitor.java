@@ -27,11 +27,16 @@ public class ASTConsMatchVisitor extends ASTNoMatchVisitor
   @Override
   public Substitution visit(ConsValue consCell)
   { RuntimeValue car = consCell.getCar();
-    RuntimeValue cdr = consCell.getCdr();
     Substitution carSubstitution = car.accept(carVisitor);
+
+    if (carSubstitution == null)
+    { return null;
+    }
+
+    RuntimeValue cdr = consCell.getCdr();
     Substitution cdrSubstitution = cdr.accept(cdrVisitor);
 
-    if (carSubstitution == null || cdrSubstitution == null)
+    if (cdrSubstitution == null)
     { return null;
     } else
     { carSubstitution.merge(cdrSubstitution, consCell.getSourceInfo());
