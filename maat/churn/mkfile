@@ -11,6 +11,8 @@ all: all-abs-churn-graph.tex
 	java -jar maat/code-maat.jar -l /dev/stdin -c git2 -a abs-churn > maat/churn/$stem-abs-churn.log
 
 %-abs-churn-graph.tex: %-abs-churn.log include-% graph.gnuplot
+	grep `{git log --grep 'REFACTOR' '--date=format:%Y-%m-%d' '--pretty=format:%ad' | awk 'BEGIN{ORS="|"} {print $0}' | sed 's/$/date/'} $stem-abs-churn.log > refactors-$stem-abs-churn.log
+	grep `{git log --grep 'EVAL' '--date=format:%Y-%m-%d' '--pretty=format:%ad' | awk 'BEGIN{ORS="|"} {print $0}' | sed 's/$/date/'} $stem-abs-churn.log > evals-$stem-abs-churn.log
 	gnuplot -c 'graph.gnuplot' $stem-abs-churn.log \
 	  'set terminal epslatex 12 size 6.25, 5in; set output "'$stem-abs-churn-graph.tex'"' include-$stem
 

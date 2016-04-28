@@ -46,3 +46,4 @@ result
 *.log
 *.eps
 *.tex
+*.old

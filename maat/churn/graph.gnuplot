@@ -30,46 +30,6 @@ set mytics 4
 
 @ARG2
 
-$refactor<<EOD
-date,added,deleted,commits
-2015-12-24,1442,1138,118
-2015-12-31,3846,3786,254
-2016-01-08,0,70,28
-2016-01-17,5282,5328,318
-2016-01-18,14,14,12
-2016-01-21,4078,858,190
-2016-01-22,664,224,52
-2016-02-07,944,98,70
-2016-02-08,534,538,88
-2016-02-09,2758,3262,194
-2016-02-21,794,196,48
-2016-02-26,222,66,24
-2016-03-21,1202,266,94
-2016-03-24,18,20,16
-2016-03-29,874,244,74
-2016-04-01,770,1640,88
-2016-04-02,1138,788,104
-2016-04-03,1488,588,106
-2016-04-04,536,48,10
-2016-04-21,204,116,58
-2016-04-22,1436,1642,218
-2016-04-23,850,322,150
-EOD
-
-$eval<<EOD
-date,added,deleted,commits
-2016-02-20,100,14,12
-2016-03-25,620,178,52
-2016-03-29,874,244,74
-2016-03-31,2146,1132,194
-2016-04-02,1138,788,104
-2016-04-03,1488,588,106
-2016-04-21,204,116,58
-2016-04-24,508,202,50
-EOD
-
-load ARG3
-
 set palette defined ( 0 '#D73027', 1 "white", 2 '#1A9850' )
 
 max(x,y) = x<y?y:x
@@ -78,5 +38,5 @@ plot ARG1 using "date":"added" with lines linecolor rgb '#000000' notitle "Gross
 	'' using "date":"deleted" with lines linecolor rgb '#000000' notitle "Gross deletions", \
 	'' using "date":"added":"deleted" with filledcurves above fill pattern 3 linecolor rgb '#1A9850' title "Net additions", \
 	'' using "date":"added":"deleted" with filledcurves below fill pattern 3 linecolor rgb '#D73027' title "Net deletions", \
-	$refactor using "date":(max(column("added"),column("deleted"))) with points pointtype 4 pointsize 2 linecolor rgb '#000000' title "Refactors", \
-	$eval using "date":(max(column("added"),column("deleted"))) with points pointtype 3 pointsize 2 linecolor rgb '#000000' title "Evaluation", \
+	("refactors-".ARG1) using "date":(max(column("added"),column("deleted"))) with points pointtype 4 pointsize 2 linecolor rgb '#000000' title "Refactors", \
+	("evals-".ARG1) using "date":(max(column("added"),column("deleted"))) with points pointtype 3 pointsize 2 linecolor rgb '#000000' title "Evaluation", \
