@@ -5,7 +5,10 @@ DIR=$(dirname $0)
 JAR=$DIR/../target/part-II-project-1.0-SNAPSHOT-jar-with-dependencies.jar
 CLASSPATH="-classpath .:$JAR:$DIR/../target/classes:$DIR/../src/main/java"
 
-rm -f *.j *.class || true
+{
+cd $DIR;
+rm -f *.j *.class || true;
 
-java -classpath ../src/main/java:$JAR:../target/classes rmk35.partIIProject.Compiler ${FILE}
-java -classpath .:$JAR ${FILE%.scm}
+java -classpath ../src/main/java:$JAR:../target/classes rmk35.partIIProject.Compiler ${FILE};
+java -classpath .:$JAR ${FILE%.scm};
+}

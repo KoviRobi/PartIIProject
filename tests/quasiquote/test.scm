@@ -1,9 +1,6 @@
 (import (scheme base)
-        (scheme java))
-
-(define system-out (static-field (class 'java.lang.System) 'out))
-(define println (lambda (value) (system-out 'println value)))
+        (scheme write))
 
 (define x 4)
 
-(println `(1 ,@(cons 2 3) x ,x))
+(writeln `(1 ,@(cons 2 3) x ,x))

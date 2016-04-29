@@ -1,10 +1,7 @@
 (import (scheme base)
-        (scheme java))
+        (scheme write))
 
-(define system-out (static-field (class 'java.lang.System) 'out))
-(define println (lambda (value) (system-out 'println value)))
-
-(println "Begin")
+(displayln "Begin")
 (define omega (lambda (x) (x x)))
 (omega omega) ; tail call
-(println "End")
+(displayln "End") ; Never printed

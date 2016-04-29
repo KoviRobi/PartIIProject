@@ -5,8 +5,11 @@ DIR=$(dirname $0)
 JAR=$DIR/../target/part-II-project-1.0-SNAPSHOT-jar-with-dependencies.jar
 CLASSPATH="-classpath .:$JAR:$DIR/../target/classes:$DIR/../src/main/java"
 
-rm -f *.j *.class || true
+{
+cd $DIR;
+rm -f *.j *.class || true;
 
-term=${term:-win}
-$term jdb -launch $CLASSPATH rmk35.partIIProject.Compiler ${FILE}
-$term jdb -launch $CLASSPATH ${FILE%.scm}
+term=${term:-win};
+$term jdb -launch $CLASSPATH rmk35.partIIProject.Compiler ${FILE};
+$term jdb -launch $CLASSPATH ${FILE%.scm};
+}

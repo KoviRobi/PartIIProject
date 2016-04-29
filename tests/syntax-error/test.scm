@@ -1,11 +1,9 @@
-(import (scheme base))
-
-(define system-out (static-field (class 'java.lang.System) 'out))
-(define println (lambda (value) (system-out 'println value)))
+(import (scheme base)
+        (scheme write))
 
 (define-syntax dont-call
   (syntax-rules ()
     ((dont-call)
-     (syntax-error "I told you to not call me!" 'tired 'want 'to 'sleep) ) ) )
+     (syntax-error "I told you to not call me!" 'stuff) ) ) )
 (dont-call)
-(println "End")
+(writeln "End")
