@@ -1,12 +1,13 @@
 #!/bin/sh -e
 
 FILE=$(basename $1)
+ARGDIR=$(dirname $1)
 DIR=$(dirname $0)
 JAR=$DIR/../target/part-II-project-1.0-SNAPSHOT-jar-with-dependencies.jar
 CLASSPATH="-classpath .:$JAR:$DIR/../target/classes:$DIR/../src/main/java"
 
 {
-cd $DIR;
+cd $ARGDIR;
 rm -f *.j *.class || true;
 
 term=${term:-win};

@@ -8,4 +8,5 @@ public interface TailCallSettings
   public void generateContinuation(ByteCodeMethod method);
   public void generateCallStart(ByteCodeMethod method);
   public void generateCallEnd(ByteCodeMethod method);
+  public void postJumpCleanUp(ByteCodeMethod method);
 }

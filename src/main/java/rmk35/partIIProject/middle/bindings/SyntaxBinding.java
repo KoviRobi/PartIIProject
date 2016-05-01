@@ -77,6 +77,6 @@ public class SyntaxBinding extends SintacticBinding
       { pair.getFirst().setUseEnvironment(null);
       }
     }
-    throw new SyntaxErrorException("Incorrect macro use", operator.getSourceInfo());
+    throw new SyntaxErrorException("Incorrect macro use for\n\n" + operands + "\n\n", operator.getSourceInfo());
   }
 }

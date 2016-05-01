@@ -35,4 +35,8 @@ public class Trampolining implements TailCallSettings
   public void generateCallEnd(ByteCodeMethod method)
   { method.addInstruction(new NonVirtualCallInstruction(voidType, CallValue.class, "<init>", lambdaValueType, runtimeValueType));
   }
+
+  public void postJumpCleanUp(ByteCodeMethod method)
+  {
+  }
 }

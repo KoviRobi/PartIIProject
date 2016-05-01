@@ -1,5 +1,7 @@
 package rmk35.partIIProject.backend.statements;
 
+import rmk35.partIIProject.Compiler;
+
 import rmk35.partIIProject.runtime.BooleanValue;
 
 import rmk35.partIIProject.backend.MainClass;
@@ -46,10 +48,14 @@ public class IfStatement extends Statement
     method.addInstruction(new IfNotEqualsInstruction(falseLabel)); // ifne branches if non 0, but 0 is boolean false (hence predicate true by above)
     trueCase.generateOutput(mainClass, outputClass, method);
     method.addInstruction(new GotoInstruction(endLabel));
+    // To keep the stack count happy, as either branch produces values independently.
+    method.decrementStackCount(1);
 
     method.addInstruction(new LabelPseudoInstruction(falseLabel));
+    Compiler.tailCallSettings.postJumpCleanUp(method);
     falseCase.generateOutput(mainClass, outputClass, method);
 
     method.addInstruction(new LabelPseudoInstruction(endLabel));
+    Compiler.tailCallSettings.postJumpCleanUp(method);
   }
 }

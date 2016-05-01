@@ -30,6 +30,10 @@ public class CallStack
   { return programmeCounter;
   }
 
+  public static void setProgrammeCounter(int newProgrammeCounter)
+  { programmeCounter = newProgrammeCounter;
+  }
+
   public static void invalidJump(RuntimeValue value)
   { throw new RuntimeException("Invalid jump to " + programmeCounter + " with value \"" + value.toString() + "\" and stack \"" + valueStack.toString() + "\"");
   }

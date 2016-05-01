@@ -26,4 +26,8 @@ public class NonTailCalls implements TailCallSettings
   public void generateCallEnd(ByteCodeMethod method)
   { method.addInstruction(new VirtualCallInstruction(runtimeValueType, LambdaValue.class, "apply", runtimeValueType));
   }
+
+  public void postJumpCleanUp(ByteCodeMethod method)
+  {
+  }
 }

@@ -41,4 +41,8 @@ public class SchemeCallStack implements TailCallSettings
   public void generateCallEnd(ByteCodeMethod method)
   { method.addInstruction(new StaticCallInstruction(callValueType, CallValue.class, "create", runtimeValueType, runtimeValueType));
   }
+
+  public void postJumpCleanUp(ByteCodeMethod method)
+  { method.setProgrammeCounter();
+  }
 }

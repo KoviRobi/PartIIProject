@@ -21,6 +21,7 @@ import rmk35.partIIProject.backend.instructions.StaticCallInstruction;
 import rmk35.partIIProject.backend.instructions.LocalStoreInstruction;
 import rmk35.partIIProject.backend.instructions.LabelPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.LocalLoadInstruction;
+import rmk35.partIIProject.backend.instructions.IntegerConstantInstruction;
 import rmk35.partIIProject.backend.instructions.types.JVMType;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.voidType;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.integerType;
@@ -162,5 +163,10 @@ public class ByteCodeMethod
   { for (int i = 0; i < storedStackCount; i++)
     { addInstruction(new StaticCallInstruction(runtimeValueType, CallStack.class, "popValue"));
     }
+  }
+
+  public void setProgrammeCounter()
+  { addInstruction(new IntegerConstantInstruction(jumpCounter));
+    addInstruction(new StaticCallInstruction(voidType, CallStack.class, "setProgrammeCounter", integerType));
   }
 }
