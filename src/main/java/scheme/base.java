@@ -1,5 +1,7 @@
 package scheme;
 
+import rmk35.partIIProject.Compiler;
+
 import rmk35.partIIProject.runtime.BooleanValue;
 import rmk35.partIIProject.runtime.ConsValue;
 import rmk35.partIIProject.runtime.LambdaValue;
@@ -7,6 +9,7 @@ import rmk35.partIIProject.runtime.NullValue;
 import rmk35.partIIProject.runtime.NumberValue;
 import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.ThrowableValue;
+import rmk35.partIIProject.runtime.ContinuableThrowableValue;
 import rmk35.partIIProject.runtime.Trampoline;
 import rmk35.partIIProject.runtime.UnspecifiedValue;
 import rmk35.partIIProject.runtime.VectorValue;
@@ -14,6 +17,7 @@ import rmk35.partIIProject.runtime.ValueHelper;
 import rmk35.partIIProject.runtime.libraries.ReflectiveEnvironment;
 import rmk35.partIIProject.runtime.libraries.UnaryLambda;
 import rmk35.partIIProject.runtime.libraries.BinaryLambda;
+import rmk35.partIIProject.runtime.libraries.TernaryLambda;
 import rmk35.partIIProject.runtime.libraries.VariadicLambda;
 
 import rmk35.partIIProject.middle.bindings.Binding;
@@ -29,7 +33,7 @@ import rmk35.partIIProject.middle.bindings.LetSyntaxBinding;
 import rmk35.partIIProject.middle.bindings.SyntaxRulesBinding;
 import rmk35.partIIProject.middle.bindings.SyntaxErrorBinding;
 
-public class base extends ReflectiveEnvironment
+public abstract class base extends ReflectiveEnvironment
 { public base() { bind(); }
 
   // R7RS, Primitive Expressions, section 4.1.
@@ -44,26 +48,6 @@ public class base extends ReflectiveEnvironment
   public static Binding syntax_rules = new SyntaxRulesBinding();
   public static Binding syntax_error = new SyntaxErrorBinding();
   public static Binding quote = new QuoteBinding();
-
-  public static RuntimeValue raise =
-  new UnaryLambda()
-  { @Override
-    public RuntimeValue run1(RuntimeValue first) { throw new ThrowableValue(first); }
-  };
-
-  public static RuntimeValue with_exception_handler =
-  new BinaryLambda()
-  { @Override
-    public RuntimeValue run2(RuntimeValue first, RuntimeValue second)
-    { LambdaValue handler = (LambdaValue) first;
-      LambdaValue body = (LambdaValue) second;
-      try
-      { return Trampoline.bounce(body.apply(new NullValue()));
-      } catch (ThrowableValue exception)
-      { return handler.apply(new ConsValue(exception.getValue(), new NullValue()));
-      }
-    }
-  };
 
   // R7RS, Pairs and lists, section 6.4
   public static RuntimeValue pair$00003F =

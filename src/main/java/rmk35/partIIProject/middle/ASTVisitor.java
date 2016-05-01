@@ -24,6 +24,7 @@ import rmk35.partIIProject.runtime.ObjectValue;
 import rmk35.partIIProject.runtime.ErrorValue;
 import rmk35.partIIProject.runtime.UnspecifiedValue;
 import rmk35.partIIProject.runtime.EnvironmentValue;
+import rmk35.partIIProject.runtime.ContinuationValue;
 
 public abstract class ASTVisitor<T>
 { // This is subclass only access modifier, as below explicitly lists all values,
@@ -53,5 +54,6 @@ public abstract class ASTVisitor<T>
   public T visit(ObjectValue object) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Don't know what to do with an encapsulated Java object!"); }
   public T visit(ErrorValue error) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Don't know what to do with an error value!"); }
   public T visit(UnspecifiedValue unspecified) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Don't know what to do with an unspecified value!"); }
-  public T visit(EnvironmentValue unspecified) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Don't know what to do with an environment!"); }
+  public T visit(EnvironmentValue environment) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Don't know what to do with an environment!"); }
+  public T visit(ContinuationValue continuation) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Don't know what to do with a continuation!"); }
 }

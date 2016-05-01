@@ -47,3 +47,5 @@ result
 *.eps
 *.tex
 *.old
+
+tmp/

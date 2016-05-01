@@ -21,9 +21,7 @@ import java.util.List;
 import java.io.IOException;
 
 public class Compiler
-{ public static final EnvironmentValue baseEnvironment = new scheme.base();
-
-  public static void main(String[] arguments) throws Exception, IOException
+{ public static void main(String[] arguments) throws Exception, IOException
   { if (arguments.length != 1)
     { System.out.println("Expecting only one argument, the file name to parse.");
       System.exit(1);
@@ -51,6 +49,10 @@ public class Compiler
       .tryMatch(new Trampolining(), "trampoline", "trampolining", "1")
       .tryMatch(new NonTailCalls(), "none", "no", "off", "0")
       .get();
+  public static final EnvironmentValue baseEnvironment =
+    tailCallSettings instanceof NonTailCalls ? new scheme.base_notail()
+    : tailCallSettings instanceof Trampolining ? new scheme.base_trampolining()
+    : new scheme.base_stack();
   public static boolean intermediateCode = System.getenv("intermediate") != null || System.getenv("intermediateCode") != null;
 
   public Compiler(String fileName, String outputName) throws Exception, IOException

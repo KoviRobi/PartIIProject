@@ -34,6 +34,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class EnvironmentImporter
 { EnvironmentValue environment;
@@ -85,6 +86,9 @@ public class EnvironmentImporter
       libraryName.get("library-name-part").forEach(name ->
         nameParts.add(name.accept(new ASTExpectIdentifierVisitor()).getValue()));
       String className = String.join(".", nameParts);
+      if (nameParts.equals(Arrays.asList("scheme", "base")))
+      { return Compiler.baseEnvironment;
+      }
       try
       { return (EnvironmentValue) Class.forName(className).newInstance();
       } catch (ClassNotFoundException e)

@@ -40,7 +40,8 @@ public class ObjectValue extends LambdaValue
   }
 
   public boolean equal(RuntimeValue other)
-  { return this.equals(other); // Java Object equals
+  { return other instanceof ObjectValue &&
+      innerObject.equals(((ObjectValue) other).innerObject); // Java Object equals
   }
   public boolean eqv(RuntimeValue other) { return this == other; }
   public boolean eq(RuntimeValue other) { return this == other; }
