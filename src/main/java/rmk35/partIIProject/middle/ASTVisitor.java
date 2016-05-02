@@ -12,7 +12,11 @@ import rmk35.partIIProject.runtime.SelfquotingValue;
 import rmk35.partIIProject.runtime.BooleanValue;
 import rmk35.partIIProject.runtime.BytevectorValue;
 import rmk35.partIIProject.runtime.CharacterValue;
-import rmk35.partIIProject.runtime.NumberValue;
+import rmk35.partIIProject.runtime.numbers.NumberValue;
+import rmk35.partIIProject.runtime.numbers.ComplexValue;
+import rmk35.partIIProject.runtime.numbers.RealValue;
+import rmk35.partIIProject.runtime.numbers.RationalValue;
+import rmk35.partIIProject.runtime.numbers.IntegerValue;
 import rmk35.partIIProject.runtime.StringValue;
 import rmk35.partIIProject.runtime.VectorValue;
 // RuntimeValues
@@ -45,6 +49,12 @@ public abstract class ASTVisitor<T>
   public T visit(NumberValue number) throws SyntaxErrorException { return visit((SelfquotingValue)number); }
   public T visit(StringValue string) throws SyntaxErrorException { return visit((SelfquotingValue)string); }
   public T visit(VectorValue vector) throws SyntaxErrorException { return visit((SelfquotingValue)vector); }
+
+ // NumberValue subtypes, in case we want to specialise
+  public T visit(ComplexValue number) throws SyntaxErrorException { return visit((NumberValue)number); }
+  public T visit(RealValue number) throws SyntaxErrorException { return visit((NumberValue)number); }
+  public T visit(RationalValue number) throws SyntaxErrorException { return visit((NumberValue)number); }
+  public T visit(IntegerValue number) throws SyntaxErrorException { return visit((NumberValue)number); }
 
   // Other RuntimeValue subtypes (these are not PrimitiveValue subtypes), usually an error
   public T visit(LambdaValue lambda) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Don't know what to do with a function!"); }

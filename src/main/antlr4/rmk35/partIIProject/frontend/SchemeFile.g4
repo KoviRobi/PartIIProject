@@ -10,7 +10,7 @@ import rmk35.partIIProject.SyntaxErrorException;
 import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.PrimitiveValue;
 import rmk35.partIIProject.runtime.BooleanValue;
-import rmk35.partIIProject.runtime.NumberValue;
+import rmk35.partIIProject.runtime.numbers.NumberValue;
 import rmk35.partIIProject.runtime.CharacterValue;
 import rmk35.partIIProject.runtime.StringValue;
 import rmk35.partIIProject.runtime.IdentifierValue;

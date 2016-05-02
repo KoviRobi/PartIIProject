@@ -12,12 +12,6 @@ import rmk35.partIIProject.runtime.ConsValue;
 import rmk35.partIIProject.runtime.IdentifierValue;
 import rmk35.partIIProject.runtime.NullValue;
 import rmk35.partIIProject.runtime.SelfquotingValue;
-// SelfquotingValues
-import rmk35.partIIProject.runtime.BooleanValue;
-import rmk35.partIIProject.runtime.BytevectorValue;
-import rmk35.partIIProject.runtime.CharacterValue;
-import rmk35.partIIProject.runtime.NumberValue;
-import rmk35.partIIProject.runtime.StringValue;
 import rmk35.partIIProject.runtime.VectorValue;
 import rmk35.partIIProject.runtime.EnvironmentValue;
 

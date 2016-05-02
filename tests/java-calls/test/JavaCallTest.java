@@ -30,8 +30,8 @@ public class JavaCallTest
   { System.out.println(message + ", but what does " + object + " mean?");
   }
 
-  public void printMessage(Integer integer)
-  { System.out.println(message + " at ID " + integer + ".");
+  public void printMessage(Long longV)
+  { System.out.println(message + " at ID " + longV + ".");
   }
 
   public static void printStaticMessage()

@@ -4,7 +4,6 @@ import rmk35.partIIProject.InternalCompilerException;
 
 import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.LambdaValue;
-import rmk35.partIIProject.runtime.NumberValue;
 import rmk35.partIIProject.runtime.NullValue;
 import rmk35.partIIProject.runtime.ConsValue;
 

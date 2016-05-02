@@ -24,7 +24,7 @@ simpleDatum[String filename] returns [RuntimeValue expr]
   ;
 
 bool[String filename] returns [BooleanValue expr] : Boolean { $expr = new BooleanValue($Boolean.text, new SourceInfo($filename, $Boolean.line, $Boolean.pos)); } ;
-number[String filename] returns [NumberValue expr]: Number { $expr = new NumberValue($Number.text, new SourceInfo($filename, $Number.line, $Number.pos)); } ;
+number[String filename] returns [NumberValue expr]: Number { $expr = (NumberValue) NumberValue.parse($Number.text, 10, new SourceInfo($filename, $Number.line, $Number.pos)); } ;
 character[String filename] returns [CharacterValue expr] : Character { $expr = new CharacterValue($Character.text, new SourceInfo($filename, $Character.line, $Character.pos)); } ;
 string[String filename] returns [StringValue expr]: String { $expr = new StringValue(StringValue.decodeParsedString($String.text), new SourceInfo($filename, $String.line, $String.pos)); } ;
 symbol[String filename] returns [IdentifierValue expr] : Identifier { $expr = new IdentifierValue($Identifier.text, new SourceInfo($filename, $Identifier.line, $Identifier.pos)); } ;

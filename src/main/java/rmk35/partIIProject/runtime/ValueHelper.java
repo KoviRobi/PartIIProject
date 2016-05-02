@@ -1,5 +1,7 @@
 package rmk35.partIIProject.runtime;
 
+import rmk35.partIIProject.runtime.numbers.NumberValue;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.ListIterator;
@@ -12,8 +14,8 @@ public class ValueHelper
     { return (RuntimeValue) value;
     } else if (value instanceof Boolean)
     { return new BooleanValue((Boolean) value);
-    } else if (value instanceof Integer)
-    { return new NumberValue((Integer) value);
+    } else if (value instanceof Number)
+    { return NumberValue.parse(value.toString());
     } else if (value instanceof String)
     { return new StringValue((String) value);
     } else if (value instanceof Character)

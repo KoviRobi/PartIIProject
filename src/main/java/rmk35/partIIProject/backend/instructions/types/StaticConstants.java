@@ -4,6 +4,7 @@ import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.LambdaValue;
 import rmk35.partIIProject.runtime.CallValue;
 import rmk35.partIIProject.runtime.ObjectValue;
+import rmk35.partIIProject.runtime.numbers.NumberValue;
 
 public class StaticConstants
 { public static final JVMType voidType = new VoidType();
@@ -14,6 +15,7 @@ public class StaticConstants
   public static final JVMType byteArrayType = new ArrayType(new ByteType());
   public static final JVMType runtimeValueType = new ObjectType(RuntimeValue.class);
   public static final JVMType runtimeValueArrayType = new ArrayType(new ObjectType(RuntimeValue.class));
+  public static final JVMType numberValueType = new ObjectType(NumberValue.class);
   public static final JVMType lambdaValueType = new ObjectType(LambdaValue.class);
   public static final JVMType callValueType = new ObjectType(CallValue.class);
   public static final JVMType objectValueType = new ObjectType(ObjectValue.class);
