@@ -41,16 +41,22 @@ import rmk35.partIIProject.middle.bindings.LetSyntaxBinding;
 import rmk35.partIIProject.middle.bindings.SyntaxRulesBinding;
 import rmk35.partIIProject.middle.bindings.SyntaxErrorBinding;
 
-public abstract class base extends ReflectiveEnvironment
-{ public base()
+// This is stuff that macros in (scheme base) depend on
+public class simple_base extends ReflectiveEnvironment
+{ public simple_base()
   { bind();
-    setMutable(true);
-    copyBindings(new simple_base());
-    copyBindings(new numbers());
-    copyBindings(new booleans());
-    copyBindings(new lists());
-    copyBindings(new vectors());
-    copyBindings(new derived_expression_types());
-    setMutable(false);
   }
+
+  // R7RS, Primitive Expressions, section 4.1.
+  public static Binding lambda = new LambdaSyntaxBinding();
+  public static Binding i$000066 = new IfBinding();
+  public static Binding define = new DefineBinding();
+  public static Binding set$000021 = new SetBinding();
+  public static Binding let = new LetBinding();
+  public static Binding define_syntax = new DefineSyntaxBinding();
+  public static Binding begin = new BeginBinding();
+  public static Binding let_syntax = new LetSyntaxBinding();
+  public static Binding syntax_rules = new SyntaxRulesBinding();
+  public static Binding syntax_error = new SyntaxErrorBinding();
+  public static Binding quote = new QuoteBinding();
 }

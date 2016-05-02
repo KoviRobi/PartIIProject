@@ -19,10 +19,13 @@ import java.util.ArrayList;
 
 public class SyntaxBindingCreator
 { public static SyntaxBinding create(EnvironmentValue environment, String... patternsAndTemplates)
+  { return create(environment, new ArrayList<>(), patternsAndTemplates);
+  }
+
+  public static SyntaxBinding create(EnvironmentValue environment, List<String> literals, String... patternsAndTemplates)
   { if (patternsAndTemplates.length % 2 != 0)
       throw new InternalCompilerException("Not an even number of patterns and templates");
     environment = new EnvironmentValue(environment, /* mutable */ true);
-    Collection<String> literals = new ArrayList<>();
     List<Pair<RuntimeValue, RuntimeValue>> parsedPatternsAndTemplates = new ArrayList<>();
     for (int i = 0; i < patternsAndTemplates.length; i++)
     { parsedPatternsAndTemplates.add(new Pair<>(SchemeParser.read(patternsAndTemplates[i++]),

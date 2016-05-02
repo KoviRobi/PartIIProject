@@ -14,13 +14,9 @@ eval tail call---can we test this?  ((lambda (x) (eval `(,x ',x))) '(lambda (x) 
 Java call order, e.g. CLOS is left to right for specialisation
 make CallStack not static, for multithreading
 
-split scheme base
-
 own stack: catch exceptions (e.g. ClassCastException)
 
-current implementation of store is broken for macros defining macros
-
-dynamic wind
+dynamic wind and exceptions
 
 For the benchmarks:
 fib:

@@ -32,10 +32,14 @@ public class EnvironmentValue implements RuntimeValue
   public EnvironmentValue(EnvironmentValue other) { this(other, other.mutable()); }
   public EnvironmentValue(EnvironmentValue other, boolean mutable)
   { this.mutable = true;
-    for (Map.Entry<String, Binding> binding : other.entrySet())
+    copyBindings(other);
+    this.mutable = mutable;
+  }
+
+  public void copyBindings(EnvironmentValue other)
+  { for (Map.Entry<String, Binding> binding : other.entrySet())
     { addBinding(binding.getKey(), binding.getValue());
     }
-    this.mutable = mutable;
   }
 
   public void addToInitializer(Statement statement)

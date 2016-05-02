@@ -49,6 +49,7 @@ public class Compiler
       .tryMatch(new Trampolining(), "trampoline", "trampolining", "1")
       .tryMatch(new NonTailCalls(), "none", "no", "off", "0")
       .get();
+  public static final EnvironmentValue simpleBaseEnvironment = new scheme.simple_base();
   public static final EnvironmentValue baseEnvironment =
     tailCallSettings instanceof NonTailCalls ? new scheme.base_notail()
     : tailCallSettings instanceof Trampolining ? new scheme.base_trampolining()

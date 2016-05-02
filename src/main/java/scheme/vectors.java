@@ -41,16 +41,18 @@ import rmk35.partIIProject.middle.bindings.LetSyntaxBinding;
 import rmk35.partIIProject.middle.bindings.SyntaxRulesBinding;
 import rmk35.partIIProject.middle.bindings.SyntaxErrorBinding;
 
-public abstract class base extends ReflectiveEnvironment
-{ public base()
+public class vectors extends ReflectiveEnvironment
+{ public vectors()
   { bind();
-    setMutable(true);
-    copyBindings(new simple_base());
-    copyBindings(new numbers());
-    copyBindings(new booleans());
-    copyBindings(new lists());
-    copyBindings(new vectors());
-    copyBindings(new derived_expression_types());
-    setMutable(false);
   }
+
+  // R7RS, Vectors, section 6.8
+  public static RuntimeValue vector_ref =
+  new BinaryLambda()
+  { @Override
+    public RuntimeValue run2(RuntimeValue vector, RuntimeValue k)
+    { Object[] javaVector = ((VectorValue) vector).toJavaValue();
+      return ValueHelper.toSchemeValue(javaVector[(int) ((IntegerValue) k).toJavaValue()]);
+    }
+  };
 }

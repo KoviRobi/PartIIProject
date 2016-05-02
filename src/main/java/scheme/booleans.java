@@ -41,16 +41,27 @@ import rmk35.partIIProject.middle.bindings.LetSyntaxBinding;
 import rmk35.partIIProject.middle.bindings.SyntaxRulesBinding;
 import rmk35.partIIProject.middle.bindings.SyntaxErrorBinding;
 
-public abstract class base extends ReflectiveEnvironment
-{ public base()
+public class booleans extends ReflectiveEnvironment
+{ public booleans()
   { bind();
-    setMutable(true);
-    copyBindings(new simple_base());
-    copyBindings(new numbers());
-    copyBindings(new booleans());
-    copyBindings(new lists());
-    copyBindings(new vectors());
-    copyBindings(new derived_expression_types());
-    setMutable(false);
   }
+
+  // R7RS, Booleans, section 6.3
+  public static RuntimeValue not =
+  new UnaryLambda()
+  { @Override
+    public RuntimeValue run1(RuntimeValue first) { return ValueHelper.toSchemeValue(first.eqv(ValueHelper.toSchemeValue(false)) ? true : false); }
+  };
+
+  public static RuntimeValue boolean$00003F =
+  new UnaryLambda()
+  { @Override
+    public RuntimeValue run1(RuntimeValue first) { return ValueHelper.toSchemeValue(first instanceof BooleanValue); }
+  };
+
+  public static RuntimeValue boolean$00003D$00003F =
+  new UnaryLambda()
+  { @Override
+    public RuntimeValue run1(RuntimeValue first) { return ValueHelper.toSchemeValue(first instanceof BooleanValue && first.eqv(ValueHelper.toSchemeValue(false))); }
+  };
 }
