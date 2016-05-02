@@ -31,16 +31,21 @@ public class ASTConsStarMatchVisitor extends ASTMatchVisitor
   public Substitution visit(ConsValue consCell)
   { RuntimeValue car = consCell.getCar();
     RuntimeValue cdr = consCell.getCdr();
-    Substitution cdrSubstitution;
-    Substitution carSubstitution;
+    Substitution carSubstitution = null;
+    Substitution cdrSubstitution = null;
     Substitution returnSubstitution = new Substitution();
 
     // Try matching the rest with carVisitor
     do
-    { carSubstitution = car.accept(carVisitor);
-      cdrSubstitution = cdr.accept(cdrVisitor);
-      if (carSubstitution == null)
+    { Substitution tmpCarSubstitution = car.accept(carVisitor);
+      Substitution tmpCdrSubstitution = cdr.accept(cdrVisitor);
+      if (tmpCarSubstitution == null)
       { return null;
+      } else
+      { carSubstitution = tmpCarSubstitution;
+      }
+      if (tmpCdrSubstitution != null)
+      { cdrSubstitution = tmpCdrSubstitution;
       }
       returnSubstitution.structuralMerge(carSubstitution);
       if (! (cdr instanceof ConsValue))
@@ -48,7 +53,7 @@ public class ASTConsStarMatchVisitor extends ASTMatchVisitor
       }
       car = ((ConsValue) cdr).getCar();
       cdr = ((ConsValue) cdr).getCdr();
-    } while (cdrSubstitution == null);
+    } while (true);
 
     if (cdrSubstitution == null)
     { return null;

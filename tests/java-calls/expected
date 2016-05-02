@@ -1,5 +1,5 @@
 class test.JavaCallTest
-#(public test.JavaCallTest() public test.JavaCallTest(java.lang.Object) public test.JavaCallTest(java.lang.String) public test.JavaCallTest(java.util.List))
+#(#<java object: public test.JavaCallTest()> #<java object: public test.JavaCallTest(java.lang.Object)> #<java object: public test.JavaCallTest(java.lang.String)> #<java object: public test.JavaCallTest(java.util.List)>)
 Constructed with string: Hello, world!
 Constructed with string: Hello, world!
 Shh, don't tell anyone!
