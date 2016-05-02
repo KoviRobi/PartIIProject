@@ -33,7 +33,7 @@ public class CharacterValue extends SelfquotingValue
   }
   public CharacterValue(String text, SourceInfo sourceInfo) throws SyntaxErrorException
   { if (text.length() == 3)
-    { value = text.charAt(3);
+    { value = text.charAt(2);
     } else if (text.startsWith("#\\x"))
     { value = Character.valueOf((char)Integer.parseInt(text.substring(3), 16));
     } else if (text.equals("#\\alarm"))
@@ -62,6 +62,10 @@ public class CharacterValue extends SelfquotingValue
 
   public char getValue() { return value; }
   public SourceInfo getSourceInfo() { return sourceInfo; }
+  @Override
+  public String writeString() { return "#\\" + value; }
+  @Override
+  public String displayString() { return Character.toString(value); }
 
   @Override
   public boolean eq(RuntimeValue other)

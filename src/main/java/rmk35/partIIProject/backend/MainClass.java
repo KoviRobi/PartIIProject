@@ -37,7 +37,7 @@ public class MainClass extends OutputClass
   { super(name);
     this.innerClasses = innerClasses;
     String mainInnerClassName = getName() + "$StartLambda";
-    mainInnerClass = new InnerClass(mainInnerClassName, new ArrayList<>(), this, "Main inner class");
+    mainInnerClass = new InnerClass(mainInnerClassName, new ArrayList<>(), null, this, "Main inner class");
     addInnerClass(mainInnerClass);
 
     ByteCodeMethod mainMethod = new ByteCodeMethod(/* jumps */ false, voidType, "public static", "main", stringArrayType);

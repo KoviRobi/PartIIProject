@@ -87,9 +87,44 @@ public class ConsValue implements PrimitiveValue
       list = ((ConsValue) list).getCdr();
     }
     if (! (list instanceof NullValue))
-    { // Not sure how to represent improper lists, so just returning this
-      returnValue.append(" . ");
+    { returnValue.append(" . ");
       returnValue.append(list.toString());
+    }
+    returnValue.append(")");
+    return returnValue.toString();
+  }
+
+  @Override
+  public String writeString()
+  { StringBuilder returnValue = new StringBuilder("(");
+    returnValue.append(getCar().writeString());
+    RuntimeValue list = getCdr();
+    while (list instanceof ConsValue)
+    { returnValue.append(" ");
+      returnValue.append(((ConsValue) list).getCar().writeString());
+      list = ((ConsValue) list).getCdr();
+    }
+    if (! (list instanceof NullValue))
+    { returnValue.append(" . ");
+      returnValue.append(list.writeString());
+    }
+    returnValue.append(")");
+    return returnValue.toString();
+  }
+
+  @Override
+  public String displayString()
+  { StringBuilder returnValue = new StringBuilder("(");
+    returnValue.append(getCar().displayString());
+    RuntimeValue list = getCdr();
+    while (list instanceof ConsValue)
+    { returnValue.append(" ");
+      returnValue.append(((ConsValue) list).getCar().displayString());
+      list = ((ConsValue) list).getCdr();
+    }
+    if (! (list instanceof NullValue))
+    { returnValue.append(" . ");
+      returnValue.append(list.displayString());
     }
     returnValue.append(")");
     return returnValue.toString();

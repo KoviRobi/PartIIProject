@@ -41,6 +41,10 @@ public class IdentifierValue implements PrimitiveValue
   public SourceInfo getSourceInfo() { return sourceInfo; }
   @Override
   public String toString() { return value; }
+  @Override
+  public String writeString() { return value.matches("\\s") ? "|" + value + "|" : value; }
+  @Override
+  public String displayString() { return value; }
 
   @Override
   public boolean eq(RuntimeValue other)

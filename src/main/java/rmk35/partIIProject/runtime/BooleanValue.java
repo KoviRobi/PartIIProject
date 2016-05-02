@@ -38,6 +38,10 @@ public class BooleanValue extends SelfquotingValue
 
   public boolean getValue() { return value; }
   public SourceInfo getSourceInfo() {return sourceInfo; }
+  @Override
+  public String writeString() { return "#" + value; }
+  @Override
+  public String displayString() { return "#" + value; }
 
   @Override
   public boolean eq(RuntimeValue other)

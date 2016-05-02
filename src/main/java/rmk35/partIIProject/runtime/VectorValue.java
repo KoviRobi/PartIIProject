@@ -95,6 +95,26 @@ public class VectorValue extends SelfquotingValue
     returnValue.append(")");
     return returnValue.toString();
   }
+  @Override
+  public String writeString()
+  { StringBuilder returnValue = new StringBuilder("#(");
+    for (int i = 0; i < value.length; i++)
+    { if (i > 0) returnValue.append(" ");
+      returnValue.append(value[i].writeString());
+    }
+    returnValue.append(")");
+    return returnValue.toString();
+  }
+  @Override
+  public String displayString()
+  { StringBuilder returnValue = new StringBuilder("#(");
+    for (int i = 0; i < value.length; i++)
+    { if (i > 0) returnValue.append(" ");
+      returnValue.append(value[i].displayString());
+    }
+    returnValue.append(")");
+    return returnValue.toString();
+  }
 
   @Override
   public Object[] toJavaValue()

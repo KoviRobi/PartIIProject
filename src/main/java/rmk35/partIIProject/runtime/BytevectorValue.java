@@ -46,6 +46,16 @@ public class BytevectorValue extends SelfquotingValue
 
   public byte[] getValue() { return value; }
   public SourceInfo getSourceInfo() { return sourceInfo; }
+  @Override
+  public String toString()
+  { StringBuilder returnValue = new StringBuilder("#u8(");
+    for (int i = 0; i < value.length; i++)
+    { if (i > 0) returnValue.append(" ");
+      returnValue.append(value[i]);
+    }
+    returnValue.append(")");
+    return returnValue.toString();
+  }
 
   @Override
   public boolean eq(RuntimeValue other)

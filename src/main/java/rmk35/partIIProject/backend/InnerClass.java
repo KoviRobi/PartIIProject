@@ -32,7 +32,7 @@ public class InnerClass extends OutputClass
 { int variableCount;
   String comment;
 
-  public InnerClass(String name, List<Binding> formals, MainClass mainClass, String comment)
+  public InnerClass(String name, List<Binding> formals, Binding improperFormalOrNull, MainClass mainClass, String comment)
   { super(name);
     this.variableCount = variableCount;
     this.comment = comment;
@@ -62,8 +62,14 @@ public class InnerClass extends OutputClass
       runMethod.addInstruction(new VirtualCallInstruction(runtimeValueType, ConsValue.class, "getCdr"));
     }
     // ToDo improper lists
-    runMethod.addInstruction(new CheckCastInstruction(NullValue.class));
-    runMethod.addInstruction(new PopInstruction()); // Pop null
+    if (improperFormalOrNull != null)
+    {  IdentifierStatement formalStatement = (IdentifierStatement) improperFormalOrNull.toStatement(null);
+      formalStatement.ensureExistence(mainClass, this, runMethod);
+      formalStatement.generateSetOutput(mainClass, this, runMethod);
+    } else
+    { runMethod.addInstruction(new CheckCastInstruction(NullValue.class));
+      runMethod.addInstruction(new PopInstruction()); // Pop null
+    }
     methods.put("run", runMethod);
   }
 

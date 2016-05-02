@@ -1,12 +1,15 @@
 package rmk35.partIIProject.middle.bindings;
 
+import rmk35.partIIProject.Compiler;
 import rmk35.partIIProject.InternalCompilerException;
 import rmk35.partIIProject.SyntaxErrorException;
 
 import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.ConsValue;
+import rmk35.partIIProject.runtime.NullValue;
 import rmk35.partIIProject.runtime.EnvironmentValue;
 
+import rmk35.partIIProject.middle.ASTMatcher;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectConsVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectIdentifierVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTImproperListFoldVisitor;
@@ -30,13 +33,17 @@ import lombok.ToString;
 public class LambdaSyntaxBinding extends SintacticBinding
 { @Override
   public Statement applicate(EnvironmentValue environment, OutputClass outputClass, MainClass mainClass, RuntimeValue operator, RuntimeValue operands)
-  { ConsValue first = operands.accept(new ASTExpectConsVisitor());
-    EnvironmentValue bodyEnvironment = environment.subEnvironment();
+  { EnvironmentValue bodyEnvironment = environment.subEnvironment();
 
     String innerClassName = mainClass.uniqueID() + "$Lambda"; // Using main class' unique ID as that way all files definitely have different names
-    String comment = new ConsValue(operator, operands, operator.getSourceInfo()).toString();
+    String comment = new ConsValue(operator, operands, operator.getSourceInfo()).writeString();
 
-    List<Binding> formals = first.getCar().accept(new ASTImproperListFoldVisitor<List<Binding>>(new ArrayList<Binding>(),
+    ASTMatcher lambda = new ASTMatcher(Compiler.baseEnvironment, environment, "((arguments ... . final) body ...)", operands);
+    if (!lambda.matched())
+    { throw new SyntaxErrorException("Wrong syntax for lambda: " + comment, operator.getSourceInfo());
+    }
+
+    List<Binding> formals = lambda.transform("(arguments ...)").accept(new ASTListFoldVisitor<List<Binding>>(new ArrayList<Binding>(),
       (List<Binding> list, RuntimeValue ast) ->
       { list.add
           (bodyEnvironment.addLocalVariable
@@ -45,9 +52,16 @@ public class LambdaSyntaxBinding extends SintacticBinding
         return list;
       } ));
 
-    InnerClass innerClass = new InnerClass(innerClassName, formals, mainClass, comment);
+    Binding lastFormal;
+    if (lambda.transform("final") instanceof NullValue)
+    { lastFormal = null;
+    } else
+    { lastFormal = bodyEnvironment.addLocalVariable(innerClassName, lambda.transform("final").accept(new ASTExpectIdentifierVisitor()).getValue());
+    }
 
-    List<Statement> body = first.getCdr().accept
+    InnerClass innerClass = new InnerClass(innerClassName, formals, lastFormal, mainClass, comment);
+
+    List<Statement> body = lambda.transform("(body ...)").accept
       (new ASTListFoldVisitor<List<Statement>>(new ArrayList<>(),
         (list, ast) -> { list.add(ast.accept(new ASTConvertVisitor(bodyEnvironment, innerClass, mainClass))); return list; } ));
     if (body.isEmpty())
