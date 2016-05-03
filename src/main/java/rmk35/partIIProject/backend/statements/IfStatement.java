@@ -36,6 +36,7 @@ public class IfStatement extends Statement
   public void generateOutput(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("IfStatement"));
     predicate.generateOutput(mainClass, outputClass, method);
+    Compiler.tailCallSettings.generateContinuation(method);
     // Top of stack is now predicate's value
     // XXX Speed: if we make booleans unique, we could use "if_acmpeq" to compare false
     (new BooleanValue(false)).generateByteCode(mainClass, outputClass, method);
