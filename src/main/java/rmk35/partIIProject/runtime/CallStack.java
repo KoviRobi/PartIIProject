@@ -90,6 +90,7 @@ public class CallStack
   { if (started) throw new InternalCompilerException("Already have one stack in use!");
     started = true;
 
+    programmeCounter = -1; // addFrame will increment it to 0;
     addFrame(function);
     RuntimeValue currentValue = arguments;
     while (! callStack.isEmpty())
