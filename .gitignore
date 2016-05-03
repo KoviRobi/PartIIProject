@@ -49,3 +49,6 @@ result
 *.old
 
 tmp/
+
+# Virtual machine disks
+*.qcow2
