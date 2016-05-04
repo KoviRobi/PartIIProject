@@ -50,32 +50,32 @@ public class RealValue extends ComplexValue
 
   @Override
   public boolean numberEquals(NumberValue other)
-  { return other instanceof IntegerValue && value == ((IntegerValue) other).value ||
-      other instanceof RealValue && value == ((RealValue) other).value;
+  { return other instanceof IntegerValue ? value == ((IntegerValue) other).value :
+      (other instanceof RealValue && value == ((RealValue) other).value);
   }
 
   @Override
   public boolean numberLessThan(NumberValue other)
-  { return other instanceof IntegerValue && value == ((IntegerValue) other).value ||
-      other instanceof RealValue && value == ((RealValue) other).value;
+  { return other instanceof IntegerValue ? value == ((IntegerValue) other).value :
+      (other instanceof RealValue && value < ((RealValue) other).value);
   }
 
   @Override
   public boolean numberGreaterThan(NumberValue other)
-  { return other instanceof IntegerValue && value == ((IntegerValue) other).value ||
-      other instanceof RealValue && value == ((RealValue) other).value;
+  { return other instanceof IntegerValue ? value == ((IntegerValue) other).value :
+      (other instanceof RealValue && value > ((RealValue) other).value);
   }
 
   @Override
   public boolean numberLessThanOrEquals(NumberValue other)
-  { return other instanceof IntegerValue && value == ((IntegerValue) other).value ||
-      other instanceof RealValue && value == ((RealValue) other).value;
+  { return other instanceof IntegerValue ? value == ((IntegerValue) other).value :
+      (other instanceof RealValue && value <= ((RealValue) other).value);
   }
 
   @Override
   public boolean numberGreaterThanOrEquals(NumberValue other)
-  { return other instanceof IntegerValue && value == ((IntegerValue) other).value ||
-      other instanceof RealValue && value == ((RealValue) other).value;
+  { return other instanceof IntegerValue ? value == ((IntegerValue) other).value :
+      (other instanceof RealValue && value >= ((RealValue) other).value);
   }
 
   @Override

@@ -69,27 +69,27 @@ public class IntegerValue extends RationalValue
 
   @Override
   public boolean numberEquals(NumberValue other)
-  { return other instanceof IntegerValue && value == ((IntegerValue) other).value || other.numberEquals(this);
+  { return other instanceof IntegerValue ? value == ((IntegerValue) other).value : new RealValue(value).numberEquals(other);
   }
 
   @Override
   public boolean numberLessThan(NumberValue other)
-  { return other instanceof IntegerValue && value < ((IntegerValue) other).value || other.numberLessThan(this);
+  { return other instanceof IntegerValue ? value < ((IntegerValue) other).value : new RealValue(value).numberLessThan(other);
   }
 
   @Override
   public boolean numberGreaterThan(NumberValue other)
-  { return other instanceof IntegerValue && value > ((IntegerValue) other).value || other.numberGreaterThan(this);
+  { return other instanceof IntegerValue ? value > ((IntegerValue) other).value : new RealValue(value).numberGreaterThan(other);
   }
 
   @Override
   public boolean numberLessThanOrEquals(NumberValue other)
-  { return other instanceof IntegerValue && value <= ((IntegerValue) other).value || other.numberLessThanOrEquals(this);
+  { return other instanceof IntegerValue ? value <= ((IntegerValue) other).value : new RealValue(value).numberLessThanOrEquals(other);
   }
 
   @Override
   public boolean numberGreaterThanOrEquals(NumberValue other)
-  { return other instanceof IntegerValue && value >= ((IntegerValue) other).value || other.numberGreaterThanOrEquals(this);
+  { return other instanceof IntegerValue ? value >= ((IntegerValue) other).value : new RealValue(value).numberGreaterThanOrEquals(other);
   }
 
   @Override
@@ -129,21 +129,21 @@ public class IntegerValue extends RationalValue
 
   @Override
   public NumberValue add(NumberValue other)
-  { return other instanceof IntegerValue ? new IntegerValue(value+((IntegerValue) other).value) : other.add(this);
+  { return other instanceof IntegerValue ? new IntegerValue(value+((IntegerValue) other).value) : new RealValue(value).add(other);
   }
 
   @Override
   public NumberValue subtract(NumberValue other)
-  { return other instanceof IntegerValue ? new IntegerValue(value-((IntegerValue) other).value) : new RealValue(value).subtract(this);
+  { return other instanceof IntegerValue ? new IntegerValue(value-((IntegerValue) other).value) : new RealValue(value).subtract(other);
   }
 
   @Override
   public NumberValue multiply(NumberValue other)
-  { return other instanceof IntegerValue ? new IntegerValue(value*((IntegerValue) other).value) : other.multiply(this);
+  { return other instanceof IntegerValue ? new IntegerValue(value*((IntegerValue) other).value) : new RealValue(value).multiply(other);
   }
 
   @Override
   public NumberValue divide(NumberValue other)
-  { return other instanceof IntegerValue ? new IntegerValue(value/((IntegerValue) other).value) : new RealValue(value).divide(this);
+  { return other instanceof IntegerValue ? new IntegerValue(value/((IntegerValue) other).value) : new RealValue(value).divide(other);
   }
 }
