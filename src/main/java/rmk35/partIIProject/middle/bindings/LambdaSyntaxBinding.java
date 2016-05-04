@@ -9,12 +9,13 @@ import rmk35.partIIProject.runtime.ConsValue;
 import rmk35.partIIProject.runtime.NullValue;
 import rmk35.partIIProject.runtime.EnvironmentValue;
 
+import rmk35.partIIProject.middle.ASTVisitor;
+import rmk35.partIIProject.middle.ASTConvertVisitor;
 import rmk35.partIIProject.middle.ASTMatcher;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectConsVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectIdentifierVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTImproperListFoldVisitor;
-import rmk35.partIIProject.middle.astExpectVisitor.ASTListFoldVisitor;
-import rmk35.partIIProject.middle.ASTConvertVisitor;
+import rmk35.partIIProject.middle.astExpectVisitor.ASTListMapVisitor;
 
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.MainClass;
@@ -43,15 +44,8 @@ public class LambdaSyntaxBinding extends SintacticBinding
     { throw new SyntaxErrorException("Wrong syntax for lambda: " + comment, operator.getSourceInfo());
     }
 
-    List<Binding> formals = lambda.transform("(arguments ...)").accept(new ASTListFoldVisitor<List<Binding>>(new ArrayList<Binding>(),
-      (List<Binding> list, RuntimeValue ast) ->
-      { list.add
-          (bodyEnvironment.addLocalVariable
-            (innerClassName,
-            ast.accept(new ASTExpectIdentifierVisitor()).getValue()));
-        return list;
-      } ));
-
+    List<Binding> formals = lambda.transform("(arguments ...)").accept(new ASTListMapVisitor<>
+      (ast -> bodyEnvironment.addLocalVariable(innerClassName, ast.accept(new ASTExpectIdentifierVisitor()).getValue())));
     Binding lastFormal;
     if (lambda.transform("final") instanceof NullValue)
     { lastFormal = null;
@@ -61,9 +55,8 @@ public class LambdaSyntaxBinding extends SintacticBinding
 
     InnerClass innerClass = new InnerClass(innerClassName, formals, lastFormal, mainClass, comment);
 
-    List<Statement> body = lambda.transform("(body ...)").accept
-      (new ASTListFoldVisitor<List<Statement>>(new ArrayList<>(),
-        (list, ast) -> { list.add(ast.accept(new ASTConvertVisitor(bodyEnvironment, innerClass, mainClass))); return list; } ));
+    ASTVisitor<Statement> bodyVisitor = new ASTConvertVisitor(bodyEnvironment, innerClass, mainClass);
+    List<Statement> body = lambda.transform("(body ...)").accept(new ASTListMapVisitor<>(bodyVisitor));
     if (body.isEmpty())
     { throw new SyntaxErrorException("Empty lambda body", operator.getSourceInfo());
     }

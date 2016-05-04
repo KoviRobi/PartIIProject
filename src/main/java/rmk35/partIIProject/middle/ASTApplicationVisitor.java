@@ -10,7 +10,7 @@ import rmk35.partIIProject.runtime.NullValue;
 import rmk35.partIIProject.runtime.SelfquotingValue;
 import rmk35.partIIProject.runtime.EnvironmentValue;
 
-import rmk35.partIIProject.middle.astExpectVisitor.ASTListFoldVisitor;
+import rmk35.partIIProject.middle.astExpectVisitor.ASTListMapVisitor;
 
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.MainClass;
@@ -38,9 +38,9 @@ public class ASTApplicationVisitor extends ASTVisitor<Statement>
 
   @Override
   public Statement visit(ConsValue consCell) throws SyntaxErrorException
-  { return new ApplicationStatement(consCell.accept(new ASTConvertVisitor(environment, outputClass, mainClass)),
-      arguments.accept(new ASTListFoldVisitor<List<Statement>>(new ArrayList<>(),
-        (list, ast) -> { list.add(ast.accept(new ASTConvertVisitor(environment, outputClass, mainClass))); return list; } )));
+  { ASTVisitor<Statement> convertVisitor = new ASTConvertVisitor(environment, outputClass, mainClass);
+    return new ApplicationStatement(consCell.accept(convertVisitor),
+      arguments.accept(new ASTListMapVisitor<>(convertVisitor)));
   }
 
   @Override

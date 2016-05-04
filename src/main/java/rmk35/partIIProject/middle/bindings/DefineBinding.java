@@ -8,12 +8,13 @@ import rmk35.partIIProject.runtime.ConsValue;
 import rmk35.partIIProject.runtime.NullValue;
 import rmk35.partIIProject.runtime.EnvironmentValue;
 
+import rmk35.partIIProject.middle.ASTVisitor;
 import rmk35.partIIProject.middle.ASTConvertVisitor;
 import rmk35.partIIProject.middle.ASTMatcher;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectConsVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectNilVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectIdentifierVisitor;
-import rmk35.partIIProject.middle.astExpectVisitor.ASTListFoldVisitor;
+import rmk35.partIIProject.middle.astExpectVisitor.ASTListMapVisitor;
 
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.MainClass;
@@ -44,14 +45,8 @@ public class DefineBinding extends SintacticBinding
 
       EnvironmentValue bodyEnvironment = environment.subEnvironment();
 
-      List<Binding> formals = functionDefine.transform("(arguments ...)").accept(new ASTListFoldVisitor<List<Binding>>(new ArrayList<Binding>(),
-        (List<Binding> list, RuntimeValue ast) ->
-        { list.add
-            (bodyEnvironment.addLocalVariable
-              (name,
-              ast.accept(new ASTExpectIdentifierVisitor()).getValue()));
-          return list;
-        } ));
+      List<Binding> formals = functionDefine.transform("(arguments ...)").accept(new ASTListMapVisitor<>
+        (ast -> bodyEnvironment.addLocalVariable(name, ast.accept(new ASTExpectIdentifierVisitor()).getValue())));
       Binding lastFormal;
       if (functionDefine.transform("final") instanceof NullValue)
       { lastFormal = null;
@@ -61,9 +56,8 @@ public class DefineBinding extends SintacticBinding
       String comment = new ConsValue(operator, operands, operator.getSourceInfo()).writeString();
       InnerClass innerClass = new InnerClass(name, formals, lastFormal, mainClass, comment);
 
-      List<Statement> body = functionDefine.transform("(body ...)").accept
-        (new ASTListFoldVisitor<List<Statement>>(new ArrayList<>(),
-          (list, ast) -> { list.add(ast.accept(new ASTConvertVisitor(bodyEnvironment, innerClass, mainClass))); return list; } ));
+      ASTVisitor<Statement> convertVisitor = new ASTConvertVisitor(bodyEnvironment, innerClass, mainClass);
+      List<Statement> body = functionDefine.transform("(body ...)").accept(new ASTListMapVisitor<>(convertVisitor));
       if (body.isEmpty())
       { throw new SyntaxErrorException("Empty lambda body", operator.getSourceInfo());
       }

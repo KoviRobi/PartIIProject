@@ -9,10 +9,11 @@ import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.ConsValue;
 import rmk35.partIIProject.runtime.EnvironmentValue;
 
-import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectConsVisitor;
-import rmk35.partIIProject.middle.astExpectVisitor.ASTListFoldVisitor;
+import rmk35.partIIProject.middle.ASTVisitor;
 import rmk35.partIIProject.middle.ASTSyntaxSpecificationVisitor;
 import rmk35.partIIProject.middle.ASTConvertVisitor;
+import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectConsVisitor;
+import rmk35.partIIProject.middle.astExpectVisitor.ASTListMapVisitor;
 
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.MainClass;
@@ -34,19 +35,18 @@ public class LetSyntaxBinding extends SintacticBinding
 
     // XXX To think about: letrec-syntax in particular this and looking up a variable in the environment to see if it has changed
 
-    List<Pair<String, SyntaxBinding>> macros = first.getCar().accept(new ASTListFoldVisitor<>(new ArrayList<>(),
-      (List<Pair<String, SyntaxBinding>> list, RuntimeValue ast) -> { list.add(ast.accept(new ASTSyntaxSpecificationVisitor(letEnvironment, mainClass))); return list; } ));
+    ASTVisitor<Pair<String, SyntaxBinding>> syntaxSpecificationVisitor = new ASTSyntaxSpecificationVisitor(letEnvironment, mainClass);
+    List<Pair<String, SyntaxBinding>> macros = first.getCar().accept(new ASTListMapVisitor<>(syntaxSpecificationVisitor));
 
     for (Pair<String, SyntaxBinding> macro : macros)
     { letEnvironment.addBinding(macro.getFirst(), macro.getSecond());
     }
 
     // Implicit begin (superset of the standard but useful)
-    List<Statement> body = first.getCdr().accept
-      (new ASTListFoldVisitor<List<Statement>>(new ArrayList<>(),
-        (list, ast) -> { list.add(ast.accept(new ASTConvertVisitor(letEnvironment, outputClass, mainClass))); return list; } ));
+    ASTVisitor<Statement> bodyVisitor = new ASTConvertVisitor(letEnvironment, outputClass, mainClass);
+    List<Statement> body = first.getCdr().accept(new ASTListMapVisitor<>(bodyVisitor));
     if (body.isEmpty())
-    { throw new SyntaxErrorException("Empty lambda body", operator.getSourceInfo());
+    { throw new SyntaxErrorException("Empty let-syntax body", operator.getSourceInfo());
     }
     return new BeginStatement(body);
   }

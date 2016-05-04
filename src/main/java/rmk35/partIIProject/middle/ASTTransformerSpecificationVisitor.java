@@ -14,7 +14,7 @@ import rmk35.partIIProject.middle.bindings.SyntaxBinding;
 import rmk35.partIIProject.middle.bindings.SyntaxRulesBinding;
 import rmk35.partIIProject.middle.bindings.EllipsisBinding;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTUnexpectedVisitor;
-import rmk35.partIIProject.middle.astExpectVisitor.ASTListFoldVisitor;
+import rmk35.partIIProject.middle.astExpectVisitor.ASTListMapVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTPairMapVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectIdentifierVisitor;
 import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectConsVisitor;
@@ -56,10 +56,10 @@ public class ASTTransformerSpecificationVisitor extends ASTUnexpectedVisitor<Syn
       literalsAST = second;
     }
     ConsValue literalsCell = literalsAST.accept(new ASTExpectConsVisitor());
-    List<String> literals = literalsCell.getCar().accept(new ASTListFoldVisitor<>(new ArrayList<>(),
-      (list, ast) -> { list.add(ast.accept(new ASTExpectIdentifierVisitor()).getValue()); return list; } ));
-    List<Pair<RuntimeValue, RuntimeValue>> patternAndTemplate = literalsCell.getCdr().accept(new ASTListFoldVisitor<>(new ArrayList<>(),
-      (list, current) -> { list.add(current.accept(new ASTPairMapVisitor<>(x -> x, y -> y))); return list; } ));
+    List<String> literals = literalsCell.getCar().accept(new ASTListMapVisitor<>
+      (ast -> ast.accept(new ASTExpectIdentifierVisitor()).getValue()));
+    List<Pair<RuntimeValue, RuntimeValue>> patternAndTemplate = literalsCell.getCdr().accept(new ASTListMapVisitor<>
+      (new ASTPairMapVisitor<>(x -> x, y -> y)));
     SyntaxBinding returnValue = new SyntaxBinding(environment, literals, patternAndTemplate, ellipsisString);
     return returnValue;
   }
