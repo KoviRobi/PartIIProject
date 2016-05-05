@@ -12,7 +12,7 @@ public class NonTailCalls implements TailCallSettings
   }
 
   public void generateStartEnd(ByteCodeMethod method)
-  {
+  { method.addInstruction(new VirtualCallInstruction(runtimeValueType, LambdaValue.class, "apply", runtimeValueType));
   }
 
   public void generateContinuation(ByteCodeMethod method)
