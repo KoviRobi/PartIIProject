@@ -40,6 +40,45 @@ public class derived_expression_types extends ReflectiveEnvironment
   , "(if test\n" +
     "     (begin result1 result2 ...)\n" +
     "     (cond clause1 clause2 ...))");
+
+  public static Binding d$00006F /* do */ = SyntaxBindingCreator.create
+  (Compiler.simpleBaseEnvironment
+  , "(do ((var init step ...) ...)\n" +
+    "     (test expr ...)\n" +
+    "     command ...)"
+  , "(letrec\n" +
+    "   ((loop\n" +
+    "     (lambda (var ...)\n" +
+    "       (if test\n" +
+    "           (begin\n" +
+    "             (if #f #f)\n" +
+    "             expr ...)\n" +
+    "           (begin\n" +
+    "             command\n" +
+    "             ...\n" +
+    "             (loop (do \"step\" var step ...)\n" +
+    "                   ...))))))\n" +
+    "   (loop init ...))"
+  , "(do \"step\" x)"
+  , "x"
+  , "(do \"step\" x y)"
+  , "y");
+
+  public static Binding when = SyntaxBindingCreator.create
+  (Compiler.simpleBaseEnvironment
+  , "(when test result1 result2 ...)"
+  , " (if test\n" +
+    "     (begin result1 result2 ...))");
+
+  public static Binding let$00002A /* let* */ = SyntaxBindingCreator.create
+  (Compiler.simpleBaseEnvironment
+  , "(let* () body1 body2 ...)"
+  , " (let () body1 body2 ...)"
+  , "(let* ((name1 val1) (name2 val2) ...)\n" +
+    "   body1 body2 ...)"
+  , " (let ((name1 val1))\n" +
+    "   (let* ((name2 val2) ...)\n" +
+    "     body1 body2 ...))");
 }
 /* Do more:
 (define-syntax \ide{case}
@@ -87,25 +126,11 @@ public class derived_expression_types extends ReflectiveEnvironment
     ((or test1 test2 ...)
      (let ((x test1))
        (if x x (or test2 ...))))))
-(define-syntax \ide{when}
-  (syntax-rules ()
-    ((when test result1 result2 ...)
-     (if test
-         (begin result1 result2 ...)))))
 (define-syntax \ide{unless}
   (syntax-rules ()
     ((unless test result1 result2 ...)
      (if (not test)
          (begin result1 result2 ...)))))
-(define-syntax \ide{let*}
-  (syntax-rules ()
-    ((let* () body1 body2 ...)
-     (let () body1 body2 ...))
-    ((let* ((name1 val1) (name2 val2) ...)
-       body1 body2 ...)
-     (let ((name1 val1))
-       (let* ((name2 val2) ...)
-         body1 body2 ...)))))
 (define-syntax \ide{do}
   (syntax-rules ()
     ((do ((var init step ...) ...)
