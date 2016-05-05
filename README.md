@@ -44,3 +44,14 @@ contains code to convert Java values to Scheme values
 ## Experiments
 This folder contains things that I found unsufficiently documented so
 I had a look for myself.
+
+## Settings
+The settings to the compiler are passed in via environment variables, the ones in use are
+- "tailcalls"
+ - 0: No tail calls
+ - 1: Trampolining
+ - 2: Use custom stack for Scheme calls (for call/cc)
+- "intermediate"
+ - When set, generates intermediate Jasmin assembly files
+- "profile"
+ - When set, Outputs simple profiling data

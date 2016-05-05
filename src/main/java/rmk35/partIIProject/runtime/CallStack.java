@@ -1,5 +1,6 @@
 package rmk35.partIIProject.runtime;
 
+import rmk35.partIIProject.Compiler;
 import rmk35.partIIProject.InternalCompilerException;
 
 import rmk35.partIIProject.utility.Pair;
@@ -11,6 +12,8 @@ import rmk35.partIIProject.middle.ASTVisitor;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 import lombok.Value;
 
@@ -21,6 +24,11 @@ public class CallStack
   static FunctionalList<FunctionalList<CallFrame>> handlers = new FunctionalListNull<>();
   static FunctionalList<Pair<LambdaValue, LambdaValue>> dynamicPoint = new FunctionalListNull<>();
   static int programmeCounter = 0;
+
+  static Map<String, Long> profile = new HashMap<>();
+  static long sumTime = 0;
+  static long startTime = 0;
+  static long endTime = 0;
 
   public static void incrementProgrammeCounter()
   { programmeCounter++;
@@ -98,15 +106,62 @@ public class CallStack
       valueStack = currentFrame.getValueStack();
       programmeCounter = currentFrame.getProgrammeCounter();
       callStack = callStack.tail();
-      currentValue = currentFrame.continueWith(currentValue);
+      if (Compiler.profile)
+      { currentValue = profile(currentFrame, currentValue);
+      } else
+      { currentValue = currentFrame.continueWith(currentValue);
+      }
+
       // Tail calls
       while (currentValue instanceof CallValue)
       { valueStack = new FunctionalListNull<>();
         programmeCounter = 0;
-        currentValue = ((CallValue) currentValue).call();
+        if (Compiler.profile)
+        { currentValue = profile((CallValue) currentValue);
+        } else
+        { currentValue = ((CallValue) currentValue).call();
+        }
       }
     }
+    for (Map. Entry<String, Long> entry : profile.entrySet())
+    { System.err.println(entry.getValue() + ", " + entry.getKey());
+    }
     return currentValue;
+  }
+
+  public static void preprofile(String key)
+  { if (profile.containsKey(key))
+    { sumTime = profile.get(key);
+    } else
+    { sumTime = 0;
+    }
+    startTime = System.nanoTime();
+  }
+  public static void postprofile(String key)
+  { endTime = System.nanoTime();
+    profile.put(key, sumTime + (endTime-startTime));
+  }
+  public static RuntimeValue profile(CallValue call)
+  { preprofile(functionString(call));
+     RuntimeValue returnValue = call.call();
+     postprofile(functionString(call));
+     return returnValue;
+  }
+  public static RuntimeValue profile(CallFrame call, RuntimeValue value)
+  { preprofile(functionString(call));
+     RuntimeValue returnValue = call.continueWith(value);
+     postprofile(functionString(call));
+     return returnValue;
+  }
+
+  public static String functionString(LambdaValue function, int programmeCounter)
+  { return function.getClass().toString() + ":" + programmeCounter;
+  }
+  public static String functionString(CallFrame frame)
+  { return functionString(frame.getFunction(), frame.getProgrammeCounter());
+  }
+  public static String functionString(RuntimeValue frame)
+  { return functionString(((CallValue) frame).getFunction(), 0);
   }
 }
 

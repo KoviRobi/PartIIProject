@@ -55,6 +55,7 @@ public class Compiler
     : tailCallSettings instanceof Trampolining ? new scheme.base_trampolining()
     : new scheme.base_stack();
   public static boolean intermediateCode = System.getenv("intermediate") != null || System.getenv("intermediateCode") != null;
+  public static boolean profile = System.getenv("profile") != null;
 
   public Compiler(String fileName, String outputName) throws Exception, IOException
   { MainClass mainClass = new MainClass(outputName);
