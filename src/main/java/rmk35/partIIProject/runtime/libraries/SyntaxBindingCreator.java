@@ -27,7 +27,7 @@ public class SyntaxBindingCreator
       throw new InternalCompilerException("Not an even number of patterns and templates");
     environment = new EnvironmentValue(environment, /* mutable */ true);
     List<Pair<RuntimeValue, RuntimeValue>> parsedPatternsAndTemplates = new ArrayList<>();
-    for (int i = 0; i < patternsAndTemplates.length; i++)
+    for (int i = 0; i < patternsAndTemplates.length; )
     { parsedPatternsAndTemplates.add(new Pair<>(SchemeParser.read(patternsAndTemplates[i++]),
         SchemeParser.read(patternsAndTemplates[i++])));
     }

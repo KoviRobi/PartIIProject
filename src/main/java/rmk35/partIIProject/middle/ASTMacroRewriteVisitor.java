@@ -75,7 +75,7 @@ public class ASTMacroRewriteVisitor extends ASTVisitor<Pair<RuntimeValue, Enviro
           { PerfectBinaryTree<RuntimeValue> carRewritten = car.accept(this).getFirst();
             PerfectBinaryTree<RuntimeValue> cddrRewritten = cdrCons.getCdr() // Ignore ellipsis
               .accept(this).getFirst();
-            if (cddrRewritten == null) return null;
+            if (cddrRewritten == null) return new Pair<>(null, returnEnvironment);
             if (carRewritten == null)
             { return new Pair<>(cddrRewritten, returnEnvironment);
             } else
@@ -91,7 +91,7 @@ public class ASTMacroRewriteVisitor extends ASTVisitor<Pair<RuntimeValue, Enviro
 
       PerfectBinaryTree<RuntimeValue> carRewritten = car.accept(this).getFirst();
       PerfectBinaryTree<RuntimeValue> cdrRewritten = cdr.accept(this).getFirst();
-      if (carRewritten == null || cdrRewritten == null) return null;
+      if (carRewritten == null || cdrRewritten == null) return new Pair<>(null, returnEnvironment);
       return new Pair<>(PerfectBinaryTree.map(carRewritten, cdrRewritten,
         (carValue, cdrValue) -> new ConsValue(carValue, cdrValue, list.getSourceInfo())), returnEnvironment);
     }

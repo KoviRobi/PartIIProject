@@ -17,6 +17,8 @@ public class RealValue extends ComplexValue
   { this.value = value;
   }
 
+  public double getValue() { return value; }
+
   @Override
   public <T> T accept(ASTVisitor<T> visitor) throws SyntaxErrorException
   { return visitor.visit(this);
@@ -105,12 +107,12 @@ public class RealValue extends ComplexValue
 
   @Override
   public NumberValue toExact()
-  { return this;
+  { throw new InternalCompilerException("Rationals not supported");
   }
 
   @Override
   public NumberValue toInexact()
-  { throw new InternalCompilerException("Rationals not supported");
+  { return this;
   }
 
   @Override

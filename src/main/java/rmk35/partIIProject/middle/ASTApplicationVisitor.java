@@ -55,6 +55,6 @@ public class ASTApplicationVisitor extends ASTVisitor<Statement>
 
   @Override
   public Statement visit(SelfquotingValue object) throws SyntaxErrorException
-  { throw new SyntaxErrorException("Don't know how to apply a constant as an operand", object.getSourceInfo());
+  { throw new SyntaxErrorException("Don't know how to apply a constant as an operand, got: " + object.toString(), object.getSourceInfo());
   }
 }
