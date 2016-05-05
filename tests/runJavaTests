@@ -1,0 +1,20 @@
+#!/bin/sh
+
+JAR=../target/part-II-project-1.0-SNAPSHOT-jar-with-dependencies.jar
+CLASSPATH="-classpath .:$JAR:../../target/classes:../../src/main/java"
+TESTS=${1:-*/}
+
+mount | grep /tmp/ram || mount -t tmpfs tmpfs /tmp/ram
+
+for test in $TESTS; do
+  test -f $test/test.java || continue
+  echo "Do test $test?"
+  read cont
+  [ "$cont" = "y" ] || continue
+  { echo -n Test $test;
+    javac $CLASSPATH ${test}test.java &&
+    java $CLASSPATH ${test}test > /tmp/ram/results.log;
+    cp /tmp/ram/results.log ${test}results.log;
+    echo ' completed';
+  }
+done
