@@ -3,7 +3,9 @@ package rmk35.partIIProject.backend;
 import rmk35.partIIProject.Compiler;
 
 import rmk35.partIIProject.runtime.NullValue;
-import rmk35.partIIProject.runtime.libraries.ReflectiveEnvironment;
+import rmk35.partIIProject.runtime.ConsValue;
+import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.libraries.LibraryEnvironment;
 
 import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.instructions.Instruction;
@@ -31,9 +33,12 @@ import java.io.IOException;
 
 public class LibraryClass extends MainClass
 { List<InnerClass> innerClasses;
+  RuntimeValue exports;
 
   public LibraryClass(List<String> packageAndName)
   { super(packageAndName);
+
+    exports = new NullValue();
 
     ByteCodeMethod classConstructor = new ByteCodeMethod(/* jumps */ false, voidType, "public static", "<clinit>");
     Compiler.tailCallSettings.generateStartStart(classConstructor);
@@ -53,7 +58,7 @@ public class LibraryClass extends MainClass
     init.addInstruction(new LocalLoadInstruction(objectType, 0));
     init.addInstruction(new NonVirtualCallInstruction(voidType, getSuperClassName() + "/<init>"));
     init.addInstruction(new LocalLoadInstruction(runtimeValueType, 0));
-    init.addInstruction(new NonVirtualCallInstruction(voidType, ReflectiveEnvironment.class, "bind"));
+    init.addInstruction(new NonVirtualCallInstruction(voidType, getSuperClassName() + "/bind"));
     methods.put("<init>", init);
   }
 
@@ -63,11 +68,19 @@ public class LibraryClass extends MainClass
   }
 
   @Override
-  public String getSuperClassName()
-  { return ReflectiveEnvironment.class.getName().replace('.', '/');
+  public String byteCode()
+  { ByteCodeMethod getExportsMethod = new ByteCodeMethod(/* jump */ false, runtimeValueType, "public", "getExports");
+    exports.generateByteCode(this, this, getExportsMethod);
+    methods.put("getExports", getExportsMethod);
+    return super.byteCode();
   }
 
-  public void addLibraryExport(String name) // ToDo: rename
-  {
+  @Override
+  public String getSuperClassName()
+  { return LibraryEnvironment.class.getName().replace('.', '/');
+  }
+
+  public void addLibraryExport(RuntimeValue export)
+  { exports = new ConsValue(export, exports);
   }
 }

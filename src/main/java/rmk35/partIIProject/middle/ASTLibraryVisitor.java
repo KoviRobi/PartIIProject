@@ -39,7 +39,7 @@ public class ASTLibraryVisitor extends ASTVisitor<Void>
   public Void visit(ConsValue consCell)
   { ASTMatcher export = new ASTMatcher(environment, environment, "(export identifier ...)", consCell, "export");
     if (export.matched()) // ToDo: rename
-    { export.get("identifier").forEach(value -> libraryClass.addLibraryExport(value.accept(new ASTExpectIdentifierVisitor()).getValue()));
+    { export.get("identifier").forEach(libraryClass::addLibraryExport);
       return null;
     }
 

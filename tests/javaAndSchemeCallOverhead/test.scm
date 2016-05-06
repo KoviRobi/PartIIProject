@@ -18,4 +18,4 @@
       (display "Scheme to Java,")
       (displayln (- end start)) ) ) )
 (writeln "foo")
-(writeln (scm-testf 1 "Foo"))
+(writeln (testf 1 "Foo"))
