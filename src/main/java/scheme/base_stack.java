@@ -39,7 +39,7 @@ public class base_stack extends base
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue first)
-    { if (CallStack.restoreHandler())
+    { if (CallStack.getCurrentCallStack().restoreHandler())
       { return new ThrowableValue(first);
       } else
       { throw new ThrowableValue(first);
@@ -51,14 +51,14 @@ public class base_stack extends base
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue first)
-    { return new ContinuableThrowableValue(first, CallStack.getContinuation());
+    { return new ContinuableThrowableValue(first, CallStack.getCurrentCallStack().getContinuation());
     }
   };
 
   public static RuntimeValue with_exception_handler =
   new BinaryLambda()
   { public RuntimeValue run2(RuntimeValue first, RuntimeValue second)
-    { CallStack.addHandler((LambdaValue) second);
+    { CallStack.getCurrentCallStack().addHandler((LambdaValue) second);
       return new CallValue((LambdaValue) first, new NullValue());
     }
   };
@@ -79,7 +79,7 @@ public class base_stack extends base
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue function)
-    { return new CallValue((LambdaValue) function, new ConsValue(CallStack.getContinuation(), new NullValue()));
+    { return new CallValue((LambdaValue) function, new ConsValue(CallStack.getCurrentCallStack().getContinuation(), new NullValue()));
     }
   };
   public static RuntimeValue call$00002Fcc =  call_with_current_continuation;

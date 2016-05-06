@@ -22,12 +22,14 @@ import rmk35.partIIProject.backend.instructions.LocalStoreInstruction;
 import rmk35.partIIProject.backend.instructions.LabelPseudoInstruction;
 import rmk35.partIIProject.backend.instructions.LocalLoadInstruction;
 import rmk35.partIIProject.backend.instructions.IntegerConstantInstruction;
+import rmk35.partIIProject.backend.instructions.SwapInstruction;
 import rmk35.partIIProject.backend.instructions.types.JVMType;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.voidType;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.integerType;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.runtimeValueType;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.lambdaValueType;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.callValueType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.callStackType;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.stringType;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.stringBuilderType;
 
@@ -122,7 +124,8 @@ public class ByteCodeMethod
   { if (! jump) return "";
     checkCanJump();
     return
-      new StaticCallInstruction(integerType, CallStack.class, "getProgrammeCounter").byteCode() + "\n" +
+      new StaticCallInstruction(callStackType, CallStack.class, "getCurrentCallStack").byteCode() + "\n" +
+      new VirtualCallInstruction(integerType, CallStack.class, "getProgrammeCounter").byteCode() + "\n" +
       new TableSwitchInstruction("InvalidJump", 0, "Jump", jumpCounter).byteCode() + "\n" +
       invalidJump() + "\n" +
       "Jump0:";
@@ -132,8 +135,9 @@ public class ByteCodeMethod
   public String invalidJump()
   { return
       "InvalidJump:\n" +
+      new StaticCallInstruction(callStackType, CallStack.class, "getCurrentCallStack").byteCode() + "\n" +
       new LocalLoadInstruction(runtimeValueType, 1).byteCode() + "\n" +
-      new StaticCallInstruction(voidType, CallStack.class, "invalidJump", runtimeValueType).byteCode();
+      new VirtualCallInstruction(voidType, CallStack.class, "invalidJump", runtimeValueType).byteCode();
   }
 
   // One value on stack before, one value on stack after
@@ -141,8 +145,9 @@ public class ByteCodeMethod
   { checkCanJump();
     addInstruction(new LocalStoreInstruction(runtimeValueType, 1));
     int valueCount = storeValues();
+    addInstruction(new StaticCallInstruction(callStackType, CallStack.class, "getCurrentCallStack"));
     addInstruction(new LocalLoadInstruction(lambdaValueType, 0));
-    addInstruction(new StaticCallInstruction(voidType, CallStack.class, "addFrame", lambdaValueType));
+    addInstruction(new VirtualCallInstruction(voidType, CallStack.class, "addFrame", lambdaValueType));
     addInstruction(new LocalLoadInstruction(runtimeValueType, 1));
     addInstruction(new ReturnInstruction(callValueType));
     jumpCounter++;
@@ -154,19 +159,23 @@ public class ByteCodeMethod
   public int storeValues()
   { int storedStackCount = stackCount;
     for (int i = 0; i < storedStackCount; i++)
-    { addInstruction(new StaticCallInstruction(voidType, CallStack.class, "pushValue", runtimeValueType));
+    { addInstruction(new StaticCallInstruction(callStackType, CallStack.class, "getCurrentCallStack"));
+      addInstruction(new SwapInstruction());
+      addInstruction(new VirtualCallInstruction(voidType, CallStack.class, "pushValue", runtimeValueType));
     }
     return storedStackCount;
   }
 
   public void restoreValues(int storedStackCount)
   { for (int i = 0; i < storedStackCount; i++)
-    { addInstruction(new StaticCallInstruction(runtimeValueType, CallStack.class, "popValue"));
+    { addInstruction(new StaticCallInstruction(callStackType, CallStack.class, "getCurrentCallStack"));
+      addInstruction(new VirtualCallInstruction(runtimeValueType, CallStack.class, "popValue"));
     }
   }
 
   public void setProgrammeCounter()
-  { addInstruction(new IntegerConstantInstruction(jumpCounter));
-    addInstruction(new StaticCallInstruction(voidType, CallStack.class, "setProgrammeCounter", integerType));
+  { addInstruction(new StaticCallInstruction(callStackType, CallStack.class, "getCurrentCallStack"));
+    addInstruction(new IntegerConstantInstruction(jumpCounter));
+    addInstruction(new VirtualCallInstruction(voidType, CallStack.class, "setProgrammeCounter", integerType));
   }
 }

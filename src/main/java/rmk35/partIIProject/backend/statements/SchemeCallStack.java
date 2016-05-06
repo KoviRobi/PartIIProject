@@ -12,21 +12,22 @@ import rmk35.partIIProject.backend.instructions.DupX2Instruction;
 import rmk35.partIIProject.backend.instructions.PopInstruction;
 import rmk35.partIIProject.backend.instructions.CheckCastInstruction;
 import rmk35.partIIProject.backend.instructions.SwapInstruction;
-import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
+import rmk35.partIIProject.backend.instructions.VirtualCallInstruction;
 import rmk35.partIIProject.backend.instructions.ReturnInstruction;
 import rmk35.partIIProject.backend.instructions.LocalLoadInstruction;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.voidType;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.callValueType;
+import static rmk35.partIIProject.backend.instructions.types.StaticConstants.callStackType;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.lambdaValueType;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.runtimeValueType;
 
 public class SchemeCallStack implements TailCallSettings
 { public void generateStartStart(ByteCodeMethod method)
-  {
+  {method.addInstruction(new StaticCallInstruction(callStackType, CallStack.class, "getCurrentCallStack"));
   }
 
   public void generateStartEnd(ByteCodeMethod method)
-  { method.addInstruction(new StaticCallInstruction(runtimeValueType, CallStack.class, "start", lambdaValueType, runtimeValueType));
+  { method.addInstruction(new VirtualCallInstruction(runtimeValueType, CallStack.class, "start", lambdaValueType, runtimeValueType));
   }
 
   public void generateContinuation(ByteCodeMethod method)

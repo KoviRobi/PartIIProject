@@ -42,7 +42,7 @@ public class ContinuationValue extends LambdaValue
   public boolean eq(RuntimeValue other) { return this == other; }
 
   public RuntimeValue apply(RuntimeValue argument)
-  { CallStack.setContinuation(this);
+  { CallStack.getCurrentCallStack().setContinuation(this);
     // NEXT: CallStack.setDynamicPoint(dynamicPoint);
     return ((ConsValue) argument).getCar();
   }
