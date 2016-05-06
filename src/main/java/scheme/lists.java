@@ -86,25 +86,25 @@ public class lists extends ReflectiveEnvironment
   public static RuntimeValue caar =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) car).apply(((UnaryLambda) car).apply(cell)); }
+    public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) car).run1(((UnaryLambda) car).run1(cell)); }
   };
 
   public static RuntimeValue cadr =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) car).apply(((UnaryLambda) cdr).apply(cell)); }
+    public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) car).run1(((UnaryLambda) cdr).run1(cell)); }
   };
 
   public static RuntimeValue cdar =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) cdr).apply(((UnaryLambda) car).apply(cell)); }
+    public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) cdr).run1(((UnaryLambda) car).run1(cell)); }
   };
 
   public static RuntimeValue cddr =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) cdr).apply(((UnaryLambda) cdr).apply(cell)); }
+    public RuntimeValue run1(RuntimeValue cell) { return ((UnaryLambda) cdr).run1(((UnaryLambda) cdr).run1(cell)); }
   };
 
   public static RuntimeValue null$00003F =
@@ -124,24 +124,35 @@ public class lists extends ReflectiveEnvironment
     }
   };
 
+/*
   public static RuntimeValue make_list =
   new VariadicLambda()
   { @Override
     public RuntimeValue run(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
+*/
 
   public static RuntimeValue list =
-  new UnaryLambda()
+  new VariadicLambda()
   { @Override
-    public RuntimeValue run1(RuntimeValue value) { return value; }
+    public RuntimeValue run(RuntimeValue value) { return value; }
   };
 
   public static RuntimeValue length =
   new UnaryLambda()
   { @Override
-    public RuntimeValue run1(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
+    public RuntimeValue run1(RuntimeValue value)
+    { long returnValue = 0;
+      while (value instanceof ConsValue)
+      { value = ((ConsValue) value).getCdr();
+        returnValue++;
+      }
+      if (! (value instanceof NullValue)) throw new IllegalArgumentException("Length expects proper lists");
+      return ValueHelper.toSchemeValue(returnValue);
+    }
   };
 
+/*
   public static RuntimeValue append =
   new VariadicLambda()
   { @Override
@@ -213,4 +224,5 @@ public class lists extends ReflectiveEnvironment
   { @Override
     public RuntimeValue run1(RuntimeValue value) { throw new UnsupportedOperationException("Not yet implemented"); }
   };
+*/
 }

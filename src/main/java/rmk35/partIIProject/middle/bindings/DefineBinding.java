@@ -55,7 +55,7 @@ public class DefineBinding extends SintacticBinding
       { lastFormal = functionDefine.transform("final").accept(new ASTExpectIdentifierVisitor());
       }
       String comment = new ConsValue(operator, operands, operator.getSourceInfo()).writeString();
-      InnerClass innerClass = new InnerClass(mainClass.getPackage(), name, bodyEnvironment, formals, lastFormal, mainClass, comment);
+      InnerClass innerClass = new InnerClass(mainClass.getPackage(), outputClass.getClassName() + "$" + name, bodyEnvironment, formals, lastFormal, mainClass, comment);
 
       ASTVisitor<Statement> convertVisitor = new ASTConvertVisitor(bodyEnvironment, innerClass, mainClass);
       List<Statement> body = functionDefine.transform("(body ...)").accept(new ASTListMapVisitor<>(convertVisitor));

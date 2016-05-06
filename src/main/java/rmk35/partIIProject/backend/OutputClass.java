@@ -33,7 +33,7 @@ public abstract class OutputClass
 { List<String> fullName;
   Map<String, String> fields;
   Map<String, ByteCodeMethod> methods;
-  int uniqueNumber = 0;
+  long uniqueNumber = 0;
 
   public OutputClass(String... name)
   { this(Arrays.asList(name));
@@ -67,9 +67,8 @@ public abstract class OutputClass
   { return packagePart(fullName);
   }
 
-  public String uniqueID()
-  { uniqueNumber++;
-    return getClassName() + Integer.toString(uniqueNumber);
+  public long uniqueNumber()
+  { return uniqueNumber++;
   }
 
   public void ensureFieldExists(String modifier, String name, JVMType type)

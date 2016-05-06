@@ -4,7 +4,7 @@ FILE=$(basename $1)
 ARGDIR=$(dirname $1)
 DIR=$(dirname $0)
 JAR=$DIR/../target/part-II-project-1.0-SNAPSHOT-jar-with-dependencies.jar
-CLASSPATH="-classpath .:$JAR:$DIR/../target/classes:$DIR/../src/main/java"
+CLASSPATH="-classpath .:$JAR:$DIR/../target/classes:$DIR/../src/main/java:$DIR/../target/generated-sources/antlr4"
 
 intermediate=1
 

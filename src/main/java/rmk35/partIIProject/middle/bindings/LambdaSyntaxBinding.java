@@ -37,7 +37,7 @@ public class LambdaSyntaxBinding extends SintacticBinding
   public Statement applicate(EnvironmentValue environment, OutputClass outputClass, MainClass mainClass, RuntimeValue operator, RuntimeValue operands)
   { EnvironmentValue bodyEnvironment = environment.subEnvironment();
 
-    String innerClassName = mainClass.uniqueID() + "$Lambda"; // Using main class' unique ID as that way all files definitely have different names
+    String innerClassName = mainClass.getClassName() + "$Lambda" + mainClass.uniqueNumber(); // Using main class' unique ID as that way all files definitely have different names
     String comment = new ConsValue(operator, operands, operator.getSourceInfo()).writeString();
 
     ASTMatcher lambda = new ASTMatcher(Compiler.baseEnvironment, environment, "((arguments ... . final) body ...)", operands);

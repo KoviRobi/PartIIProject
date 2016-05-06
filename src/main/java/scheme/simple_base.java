@@ -13,6 +13,7 @@ import rmk35.partIIProject.runtime.numbers.RealValue;
 import rmk35.partIIProject.runtime.numbers.RationalValue;
 import rmk35.partIIProject.runtime.numbers.IntegerValue;
 import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.ErrorValue;
 import rmk35.partIIProject.runtime.ThrowableValue;
 import rmk35.partIIProject.runtime.ContinuableThrowableValue;
 import rmk35.partIIProject.runtime.Trampoline;
@@ -59,4 +60,28 @@ public class simple_base extends ReflectiveEnvironment
   public static Binding syntax_rules = new SyntaxRulesBinding();
   public static Binding syntax_error = new SyntaxErrorBinding();
   public static Binding quote = new QuoteBinding();
+
+  public static RuntimeValue eq$00003F =
+  new BinaryLambda()
+  { @Override
+    public RuntimeValue run2(RuntimeValue a, RuntimeValue b) { return ValueHelper.toSchemeValue(a.eq(b)); }
+  };
+
+  public static RuntimeValue eqv$00003F =
+  new BinaryLambda()
+  { @Override
+    public RuntimeValue run2(RuntimeValue a, RuntimeValue b) { return ValueHelper.toSchemeValue(a.eqv(b)); }
+  };
+
+  public static RuntimeValue equal$00003F =
+  new BinaryLambda()
+  { @Override
+    public RuntimeValue run2(RuntimeValue a, RuntimeValue b) { return ValueHelper.toSchemeValue(a.equal(b)); }
+  };
+
+  public static RuntimeValue error =
+  new VariadicLambda()
+  { @Override
+    public RuntimeValue run(RuntimeValue arguments) { throw new ThrowableValue(new ErrorValue(arguments)); }
+  };
 }

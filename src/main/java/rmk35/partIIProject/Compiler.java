@@ -60,16 +60,28 @@ public class Compiler
     : new scheme.base_stack();
   public static boolean intermediateCode = System.getenv("intermediate") != null || System.getenv("intermediateCode") != null;
   public static boolean profile = System.getenv("profile") != null;
+  public static boolean timeStages = System.getenv("profile") != null;
 
   public Compiler(String fileName, String outputName) throws Exception, IOException
-  { MainClass mainClass = new MainClass(outputName);
+  { long start = 0;
+
+    if (timeStages) start = System.nanoTime();
+    MainClass mainClass = new MainClass(outputName);
     List<RuntimeValue> parsedFile = SchemeParser.parseFile(fileName);
+    if (timeStages) System.out.print((System.nanoTime()-start) + ",");
+
+    if (timeStages) start = System.nanoTime();
     EnvironmentValue environment = new EnvironmentValue(/* mutable */ true);
     Statement programme = new LibraryOrProgramme(environment, mainClass).compile(parsedFile);
+    environment.warnUndefinedVariables();
+    if (timeStages) System.out.print((System.nanoTime()-start) + ",");
+
     // Mutates mainClass
+    if (timeStages) start = System.nanoTime();
     programme.generateOutput(mainClass, mainClass.getMainInnerClass(), mainClass.getPrimaryMethod());
     if (intermediateCode) mainClass.saveToDisk();
     mainClass.assembleToDisk();
+    if (timeStages) System.out.println(System.nanoTime()-start);
   }
 
   public static Object schemeCall(LambdaValue function, Object... arguments)

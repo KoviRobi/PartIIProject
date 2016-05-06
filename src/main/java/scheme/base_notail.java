@@ -64,4 +64,20 @@ public class base_notail extends base
       }
     }
   };
+
+  public static RuntimeValue apply =
+  new VariadicLambda()
+  { @Override
+    public RuntimeValue run(RuntimeValue arguments) // (apply proc arg1 ... args)
+    { ConsValue first = (ConsValue) arguments;
+      LambdaValue function = (LambdaValue) first.getCar();
+      // append! (arg1 ...) to args
+      ConsValue second = (ConsValue) first.getCdr();
+      ConsValue end = second;
+      while (end.getCdr() instanceof ConsValue) { end = (ConsValue) end.getCdr(); }
+      if (! (end.getCdr() instanceof NullValue)) throw new RuntimeException("append expects a proper list!");
+      end.setCar(((ConsValue) end.getCar()).getCar());
+      return function.apply(second);
+    }
+  };
 }

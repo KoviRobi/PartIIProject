@@ -21,7 +21,7 @@ public abstract class UnaryLambda extends LambdaValue
     if (length == 1)
     { return run1(((ConsValue) arguments).getCar());
     } else
-    { throw new IllegalArgumentException("Expecting one RuntimeValue arguments, got " + arguments);
+    { throw new IllegalArgumentException(this.getClass().getName() + " is expecting one RuntimeValue argument, got " + arguments);
     }
   }
 

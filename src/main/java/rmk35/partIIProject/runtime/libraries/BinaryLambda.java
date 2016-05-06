@@ -21,7 +21,7 @@ public abstract class BinaryLambda extends LambdaValue
     if (length == 2)
     { return run2(((ConsValue) arguments).getCar(), ((ConsValue) ((ConsValue) arguments).getCdr()).getCar());
     } else
-    { throw new IllegalArgumentException("Expecting two RuntimeValue arguments, got " + arguments);
+    { throw new IllegalArgumentException(this.getClass().getName() + " is expecting two RuntimeValue arguments, got " + arguments);
     }
   }
 

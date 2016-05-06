@@ -43,9 +43,9 @@ public class IfStatement extends Statement
     method.addInstruction(new InterfaceCallInstruction(/* static */ false, booleanType, RuntimeValue.class, "eq", runtimeValueType));
 
     // Stack now contains 1 if predicate is false, otherwise 0.
-    String uniqueID = outputClass.uniqueID();
-    String falseLabel = "FalseCase" + uniqueID;
-    String endLabel = "IfEnd" + uniqueID;
+    long uniqueNumber = outputClass.uniqueNumber();
+    String falseLabel = "FalseCase" + uniqueNumber;
+    String endLabel = "IfEnd" + uniqueNumber;
     method.addInstruction(new IfNotEqualsInstruction(falseLabel)); // ifne branches if non 0, but 0 is boolean false (hence predicate true by above)
     trueCase.generateOutput(mainClass, outputClass, method);
     method.addInstruction(new GotoInstruction(endLabel));

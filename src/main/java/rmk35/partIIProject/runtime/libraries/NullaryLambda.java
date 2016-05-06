@@ -21,7 +21,7 @@ public abstract class NullaryLambda extends LambdaValue
     if (length == 0)
     { return run0();
     } else
-    { throw new IllegalArgumentException("Expecting zero RuntimeValue arguments, got " + arguments);
+    { throw new IllegalArgumentException(this.getClass().getName() + " is expecting zero RuntimeValue arguments, got " + arguments);
     }
   }
 

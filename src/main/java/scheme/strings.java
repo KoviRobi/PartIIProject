@@ -41,18 +41,15 @@ import rmk35.partIIProject.middle.bindings.LetSyntaxBinding;
 import rmk35.partIIProject.middle.bindings.SyntaxRulesBinding;
 import rmk35.partIIProject.middle.bindings.SyntaxErrorBinding;
 
-public abstract class base extends ReflectiveEnvironment
-{ public base()
+public class strings extends ReflectiveEnvironment
+{ public strings()
   { bind();
-    setMutable(true);
-    copyBindings(new simple_base());
-    copyBindings(new numbers());
-    copyBindings(new booleans());
-    copyBindings(new lists());
-    copyBindings(new symbols());
-    copyBindings(new strings());
-    copyBindings(new vectors());
-    copyBindings(new derived_expression_types());
-    setMutable(false);
   }
+
+  // R7RS, Strings, section 6.7
+  public static RuntimeValue string$00003F =
+  new UnaryLambda()
+  { @Override
+    public RuntimeValue run1(RuntimeValue argument) { return ValueHelper.toSchemeValue(argument instanceof StringValue); }
+  };
 }

@@ -23,7 +23,7 @@ public abstract class TernaryLambda extends LambdaValue
     ((ConsValue) ((ConsValue) arguments).getCdr()).getCar(),
     ((ConsValue) ((ConsValue) ((ConsValue) arguments).getCdr()).getCdr()).getCar());
     } else
-    { throw new IllegalArgumentException("Expecting two RuntimeValue arguments, got " + arguments);
+    { throw new IllegalArgumentException(this.getClass().getName() + " is expecting three RuntimeValue arguments, got " + arguments);
     }
   }
 

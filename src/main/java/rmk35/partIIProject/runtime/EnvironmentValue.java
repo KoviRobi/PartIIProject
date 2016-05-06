@@ -20,6 +20,7 @@ import rmk35.partIIProject.backend.statements.SequenceStatement;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -27,6 +28,7 @@ public class EnvironmentValue implements RuntimeValue
 { Map<String, Binding> bindings = new HashMap<>();
   boolean mutable = false;
   List<Statement> initializer = new ArrayList<>();
+  static Set<String> undefinedVariables = new HashSet<>();
 
   public EnvironmentValue() { }
   public EnvironmentValue(boolean mutable) { this.mutable = mutable; }
@@ -41,6 +43,15 @@ public class EnvironmentValue implements RuntimeValue
   { for (Map.Entry<String, Binding> binding : other.entrySet())
     { addBinding(binding.getKey(), binding.getValue());
     }
+  }
+
+  public EnvironmentValue subEnvironment()
+  { EnvironmentValue returnValue = new EnvironmentValue(/* mutable */ true);
+    for (Map.Entry<String, Binding> binding : entrySet())
+    { returnValue.addBinding(binding.getKey(), binding.getValue().subEnvironment());
+    }
+    returnValue.setMutable(mutable);
+    return returnValue;
   }
 
   public void addToInitializer(Statement statement)
@@ -59,8 +70,16 @@ public class EnvironmentValue implements RuntimeValue
   { if (contains(identifier))
     { return bindings.get(identifier);
     } else
-    { System.err.println("Warning: unbound variable \"" + identifier + "\" found, assuming it is a global that has not been bound yet.");
+    { undefinedVariables.add(identifier);
       return addGlobalVariable(mainClass, identifier);
+    }
+  }
+
+  public void warnUndefinedVariables()
+  { for (String variable : undefinedVariables)
+    { if (getOrNull(variable) == null)
+      { System.out.println("Undefined variable \"" + variable + "\", I assumed it is a global variable.");
+      }
     }
   }
 
@@ -80,15 +99,6 @@ public class EnvironmentValue implements RuntimeValue
 
   public Binding removeBinding(String identifier)
   { return bindings.remove(identifier);
-  }
-
-  public EnvironmentValue subEnvironment()
-  { EnvironmentValue returnValue = new EnvironmentValue(/* mutable */ true);
-    for (Map.Entry<String, Binding> binding : entrySet())
-    { returnValue.addBinding(binding.getKey(), binding.getValue().subEnvironment());
-    }
-    returnValue.setMutable(mutable);
-    return returnValue;
   }
 
   public String similarFreshKey(String key)
