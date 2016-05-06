@@ -25,19 +25,25 @@ import java.util.ArrayList;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class MainClass extends OutputClass
 { List<InnerClass> innerClasses;
+  List<LibraryClass> libraries;
   InnerClass mainInnerClass;
 
-  public MainClass(String name)
-  { this(name, new ArrayList<>());
+  public MainClass(String... fullName)
+  { this(Arrays.asList(fullName), new ArrayList<>(), new ArrayList<>());
   }
-  public MainClass(String name, List<InnerClass> innerClasses)
-  { super(name);
+  public MainClass(List<String> fullName)
+  { this(fullName, new ArrayList<>(), new ArrayList<>());
+  }
+  public MainClass(List<String> fullName, List<InnerClass> innerClasses, List<LibraryClass> libraries)
+  { super(fullName);
     this.innerClasses = innerClasses;
-    String mainInnerClassName = getName() + "$StartLambda";
-    mainInnerClass = new InnerClass(mainInnerClassName, new ArrayList<>(), null, this, "Main inner class");
+    this.libraries = libraries;
+    String mainInnerClassName = getClassName() + "$StartLambda";
+    mainInnerClass = new InnerClass(getPackage(), mainInnerClassName, null, new ArrayList<>(), null, this, "Main inner class");
     addInnerClass(mainInnerClass);
 
     ByteCodeMethod mainMethod = new ByteCodeMethod(/* jumps */ false, voidType, "public static", "main", stringArrayType);
@@ -45,7 +51,7 @@ public class MainClass extends OutputClass
     mainMethod.addInstruction(new NewObjectInstruction(mainInnerClass.getName()));
     mainMethod.addInstruction(new DupInstruction());
     mainMethod.addInstruction(new NullConstantInstruction());
-    mainMethod.addInstruction(new NonVirtualCallInstruction(voidType, mainInnerClass.getName() + "/<init>", lambdaValueType));
+    mainMethod.addInstruction(new NonVirtualCallInstruction(voidType, getMainInnerClass().getName() + "/<init>", lambdaValueType));
     mainMethod.addInstruction(new NewObjectInstruction(NullValue.class));
     mainMethod.addInstruction(new DupInstruction());
     mainMethod.addInstruction(new NonVirtualCallInstruction(voidType, NullValue.class, "<init>"));
@@ -58,6 +64,10 @@ public class MainClass extends OutputClass
   { innerClasses.add(innerClass);
   }
 
+  public void addLibrary(LibraryClass library)
+  { libraries.add(library);
+  }
+
   public List<InnerClass> getInnerClasses()
   { return innerClasses;
   }
@@ -68,7 +78,7 @@ public class MainClass extends OutputClass
 
   @Override
   public ByteCodeMethod getPrimaryMethod()
-  { return mainInnerClass.getPrimaryMethod();
+  { return getMainInnerClass().getPrimaryMethod();
   }
 
   @Override
@@ -82,12 +92,18 @@ public class MainClass extends OutputClass
     for (OutputClass oc : innerClasses)
     { oc.saveToDisk();
     }
+    for (OutputClass oc : libraries)
+    { oc.saveToDisk();
+    }
   }
 
   @Override
   public void assembleToDisk() throws Exception, IOException
   { super.assembleToDisk();
     for (OutputClass oc : innerClasses)
+    { oc.assembleToDisk();
+    }
+    for (OutputClass oc : libraries)
     { oc.assembleToDisk();
     }
   }

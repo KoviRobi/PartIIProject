@@ -4,6 +4,8 @@ import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.LambdaValue;
 import rmk35.partIIProject.runtime.NullValue;
 import rmk35.partIIProject.runtime.ConsValue;
+import rmk35.partIIProject.runtime.IdentifierValue;
+import rmk35.partIIProject.runtime.EnvironmentValue;
 
 import rmk35.partIIProject.middle.bindings.Binding;
 
@@ -29,12 +31,10 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class InnerClass extends OutputClass
-{ int variableCount;
-  String comment;
+{ String comment;
 
-  public InnerClass(String name, List<Binding> formals, Binding improperFormalOrNull, MainClass mainClass, String comment)
-  { super(name);
-    this.variableCount = variableCount;
+  public InnerClass(List<String> packageName, String name, EnvironmentValue environment, List<IdentifierValue> formals, IdentifierValue improperFormalOrNull, MainClass mainClass, String comment)
+  { super(makeFullName(packageName, name));
     this.comment = comment;
 
     // Ensure closure variables exist and also that they are set on construction
@@ -52,18 +52,17 @@ public class InnerClass extends OutputClass
     ByteCodeMethod runMethod = new ByteCodeMethod(/* jumps */ true, runtimeValueType, "public", "run", runtimeValueType);
     // Store values into local variables
     runMethod.addInstruction(new LocalLoadInstruction(runtimeValueType, 1));
-    for (Binding  formal : formals)
+    for (IdentifierValue  formal : formals)
     { runMethod.addInstruction(new CheckCastInstruction(ConsValue.class));
       runMethod.addInstruction(new DupInstruction()); // Current head
       runMethod.addInstruction(new VirtualCallInstruction(runtimeValueType, ConsValue.class, "getCar"));
-      IdentifierStatement formalStatement = (IdentifierStatement) formal.toStatement(null);
+      IdentifierStatement formalStatement = (IdentifierStatement) environment.addLocalVariable(this, formal.getValue()).toStatement(null);
       formalStatement.ensureExistence(mainClass, this, runMethod);
       formalStatement.generateSetOutput(mainClass, this, runMethod);
       runMethod.addInstruction(new VirtualCallInstruction(runtimeValueType, ConsValue.class, "getCdr"));
     }
-    // ToDo improper lists
     if (improperFormalOrNull != null)
-    {  IdentifierStatement formalStatement = (IdentifierStatement) improperFormalOrNull.toStatement(null);
+    {  IdentifierStatement formalStatement = (IdentifierStatement) environment.addLocalVariable(this, improperFormalOrNull.getValue()).toStatement(null);
       formalStatement.ensureExistence(mainClass, this, runMethod);
       formalStatement.generateSetOutput(mainClass, this, runMethod);
     } else
@@ -86,5 +85,14 @@ public class InnerClass extends OutputClass
   public void invokeConstructor(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new LocalLoadInstruction(runtimeValueType, 0));
     method.addInstruction(new NonVirtualCallInstruction(voidType, this.getName() + "/<init>", lambdaValueType));
+  }
+
+  public static List<String> makeFullName(List<String> packagePart, String name)
+  { List<String> returnValue = new ArrayList<>();
+    for (String part : packagePart)
+    { returnValue.add(part);
+    }
+    returnValue.add(name);
+    return returnValue;
   }
 }

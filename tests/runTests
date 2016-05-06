@@ -10,7 +10,7 @@ rm -f *.j *.class || true
 term=win
 
 for test in $TESTS; do
-  test -f $test/test.scm || continue
+  test -f ${test}test.scm -a -f ${test}expected || continue
   cd $test || continue
   if [ -x ./hook ]; then ./hook; fi
   echo -n Test $test

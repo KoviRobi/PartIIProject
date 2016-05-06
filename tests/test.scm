@@ -36,7 +36,7 @@
    (display "@") cc)
   (get/cc) ) )
 
-(define-syntax case
+#;(define-syntax case
   (syntax-rules (else =>)
     ((case (key ...)
        clauses ...)
@@ -69,7 +69,7 @@
          (begin result1 result2 ...)
          (case key clause clauses ...)))))
 
-(define make-box
+#;(define make-box
   (lambda (value)
     (let ((box
       (call-with-current-continuation (lambda (exit)
@@ -84,5 +84,5 @@
       (box 'set value)
       box ) ) )
 
-(define box (make-box 1))
-(displayln (box 'get))
+#;(define box (make-box 1))
+#;(displayln (box 'get))

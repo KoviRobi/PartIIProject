@@ -36,7 +36,7 @@
 
 #;(time 0 30 1 100 fib)
 
-(fib 25)
+(fib 30)
 
 #;(loop 0 30
     (lambda (n)

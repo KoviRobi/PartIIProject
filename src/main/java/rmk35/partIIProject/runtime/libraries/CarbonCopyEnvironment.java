@@ -9,6 +9,7 @@ import rmk35.partIIProject.middle.bindings.LocalBinding;
 import rmk35.partIIProject.middle.bindings.GlobalBinding;
 
 import rmk35.partIIProject.backend.MainClass;
+import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.statements.Statement;
 
 import java.util.Set;
@@ -47,9 +48,9 @@ public class CarbonCopyEnvironment extends EnvironmentValue
     return original.addGlobalVariable(mainClass, identifier);
   }
 
-  public LocalBinding addLocalVariable(String className, String identifier)
-  { copy.addLocalVariable(className, identifier);
-    return original.addLocalVariable(className, identifier);
+  public LocalBinding addLocalVariable(OutputClass outputClass, String identifier)
+  { copy.addLocalVariable(outputClass, identifier);
+    return original.addLocalVariable(outputClass, identifier);
   }
 
   public Binding removeBinding(String identifier)

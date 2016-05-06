@@ -1,6 +1,7 @@
 package rmk35.partIIProject.backend.statements;
 
 import rmk35.partIIProject.runtime.LambdaValue;
+import rmk35.partIIProject.runtime.RuntimeValue;
 
 import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.instructions.VirtualCallInstruction;
@@ -29,5 +30,9 @@ public class NonTailCalls implements TailCallSettings
 
   public void postJumpCleanUp(ByteCodeMethod method)
   {
+  }
+
+  public RuntimeValue apply(LambdaValue function, RuntimeValue arguments)
+  { return function.apply(arguments);
   }
 }

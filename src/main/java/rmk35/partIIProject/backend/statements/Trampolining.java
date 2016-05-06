@@ -2,6 +2,8 @@ package rmk35.partIIProject.backend.statements;
 
 import rmk35.partIIProject.runtime.CallValue;
 import rmk35.partIIProject.runtime.Trampoline;
+import rmk35.partIIProject.runtime.LambdaValue;
+import rmk35.partIIProject.runtime.RuntimeValue;
 
 import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.instructions.StaticCallInstruction;
@@ -38,5 +40,9 @@ public class Trampolining implements TailCallSettings
 
   public void postJumpCleanUp(ByteCodeMethod method)
   {
+  }
+
+  public RuntimeValue apply(LambdaValue function, RuntimeValue arguments)
+  { return Trampoline.bounce(new CallValue(function, arguments));
   }
 }

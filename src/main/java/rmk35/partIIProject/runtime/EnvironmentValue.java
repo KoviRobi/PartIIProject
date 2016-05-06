@@ -12,6 +12,7 @@ import rmk35.partIIProject.middle.bindings.GlobalBinding;
 
 import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
+import rmk35.partIIProject.backend.InnerClass;
 import rmk35.partIIProject.backend.ByteCodeMethod;
 import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.statements.SequenceStatement;
@@ -73,8 +74,8 @@ public class EnvironmentValue implements RuntimeValue
   { return addBinding(identifier, new GlobalBinding(mainClass.getName(), identifier, IdentifierValue.javaifyName(identifier)));
   }
 
-  public LocalBinding addLocalVariable(String className, String identifier)
-  { return addBinding(identifier, new LocalBinding(className, identifier, IdentifierValue.javaifyName(identifier)));
+  public LocalBinding addLocalVariable(OutputClass outputClass, String identifier)
+  { return addBinding(identifier, new LocalBinding(outputClass.getName(), identifier, IdentifierValue.javaifyName(identifier)));
   }
 
   public Binding removeBinding(String identifier)

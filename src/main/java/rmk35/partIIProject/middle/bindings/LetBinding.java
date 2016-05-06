@@ -43,7 +43,7 @@ public class LetBinding extends SintacticBinding
           ,(nameAST, valueAST) ->
             { String name = nameAST.accept(new ASTExpectIdentifierVisitor()).getValue();
               letStatements.add(new DefineStatement
-                  (letEnvironment.addLocalVariable(outputClass.getName(), name).toStatement(operator.getSourceInfo())
+                  (letEnvironment.addLocalVariable(outputClass, name).toStatement(operator.getSourceInfo())
                   ,valueAST.accept(new ASTConvertVisitor(environment, outputClass, mainClass)))); /* Note the use of environment, not letEnvironment, as this is not let* */
               return null;
             }

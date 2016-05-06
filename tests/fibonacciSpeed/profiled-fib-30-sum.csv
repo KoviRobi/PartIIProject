@@ -1,0 +1,17 @@
+Access,1,Access n,2389130471
+Access,2,Access fib,1061523265
+Access,3,Access -,838322845
+Access,4,Access =,581413644
+Access,5,Access +,300520436
+Create,1,Create call,3385623571
+Create,2,Create object,2689362406
+Create,3,0,0
+Initialise,1,Initialise,11528680
+Initialise,2,0,0
+Initialise,3,0,0
+Library,1,Library =,1772289715
+Library,2,Library -,895027630
+Library,3,Library +,457253836
+Branch,1,Test,1228604525
+Type-check,1,Type-check and unwrap,785057515
+Total,0,Total,16395658539

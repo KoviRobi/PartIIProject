@@ -6,7 +6,11 @@ import rmk35.partIIProject.SyntaxErrorException;
 import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.EnvironmentValue;
 
+import rmk35.partIIProject.middle.astExpectVisitor.ASTListMapVisitor;
+import rmk35.partIIProject.middle.astExpectVisitor.ASTExpectIdentifierOrIntegerVisitor;
+
 import rmk35.partIIProject.backend.MainClass;
+import rmk35.partIIProject.backend.LibraryClass;
 import rmk35.partIIProject.backend.statements.Statement;
 import rmk35.partIIProject.backend.statements.BeginStatement;
 
@@ -31,13 +35,15 @@ public class LibraryOrProgramme
     for (RuntimeValue datum : data)
     { ASTMatcher library = new ASTMatcher(Compiler.baseEnvironment, environment, "(define-library library-name library-declaration ...)", datum, "define-library");
       if (library.matched())
-      { if (! returnValue.isEmpty())
-        { throw new SyntaxErrorException("Was not expecting library definition in a programme", datum.getSourceInfo());
+      { List<String> libraryName = library.transform("library-name").accept
+          (new ASTListMapVisitor<>(new ASTExpectIdentifierOrIntegerVisitor()));
+        LibraryClass libraryClass = new LibraryClass(libraryName);
+        ASTLibraryVisitor libraryVisitor = new ASTLibraryVisitor(new EnvironmentValue(/* mutable */ true), libraryClass);
+        for (RuntimeValue declaration : library.transform("(library-declaration ...)").accept(new ASTListMapVisitor<>(x -> x)))
+        { declaration.accept(libraryVisitor);
         }
-        if (data.size() > 1)
-        { throw new SyntaxErrorException("Was only expect a library definition, nothing more", data.get(1).getSourceInfo());
-        }
-        throw new UnsupportedOperationException("We don't support library definitions yet");
+        mainClass.addLibrary(libraryClass);
+        continue;
       }
 
       ASTMatcher importDeclaration = new ASTMatcher(Compiler.baseEnvironment, environment, "(import import-set ...)", datum, "import");

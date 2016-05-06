@@ -8,6 +8,7 @@ import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.ConsValue;
 import rmk35.partIIProject.runtime.NullValue;
 import rmk35.partIIProject.runtime.EnvironmentValue;
+import rmk35.partIIProject.runtime.IdentifierValue;
 
 import rmk35.partIIProject.middle.ASTVisitor;
 import rmk35.partIIProject.middle.ASTConvertVisitor;
@@ -44,22 +45,19 @@ public class LambdaSyntaxBinding extends SintacticBinding
     { throw new SyntaxErrorException("Wrong syntax for lambda: " + comment, operator.getSourceInfo());
     }
 
-    List<Binding> formals = lambda.transform("(arguments ...)").accept(new ASTListMapVisitor<>
-      (ast -> bodyEnvironment.addLocalVariable(innerClassName, ast.accept(new ASTExpectIdentifierVisitor()).getValue())));
-    Binding lastFormal;
+    List<IdentifierValue> formals = lambda.transform("(arguments ...)").accept(new ASTListMapVisitor<>
+      (new ASTExpectIdentifierVisitor()));
+    IdentifierValue lastFormal;
     if (lambda.transform("final") instanceof NullValue)
     { lastFormal = null;
     } else
-    { lastFormal = bodyEnvironment.addLocalVariable(innerClassName, lambda.transform("final").accept(new ASTExpectIdentifierVisitor()).getValue());
+    { lastFormal = lambda.transform("final").accept(new ASTExpectIdentifierVisitor());
     }
 
-    InnerClass innerClass = new InnerClass(innerClassName, formals, lastFormal, mainClass, comment);
+    InnerClass innerClass = new InnerClass(mainClass.getPackage(), innerClassName, bodyEnvironment, formals, lastFormal, mainClass, comment);
 
     ASTVisitor<Statement> bodyVisitor = new ASTConvertVisitor(bodyEnvironment, innerClass, mainClass);
     List<Statement> body = lambda.transform("(body ...)").accept(new ASTListMapVisitor<>(bodyVisitor));
-    if (body.isEmpty())
-    { throw new SyntaxErrorException("Empty lambda body", operator.getSourceInfo());
-    }
     BeginStatement bodyStatement = new BeginStatement(body);
 
     return new LambdaStatement(innerClass, bodyStatement, comment);

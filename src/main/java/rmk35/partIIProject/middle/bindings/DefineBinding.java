@@ -7,6 +7,7 @@ import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.ConsValue;
 import rmk35.partIIProject.runtime.NullValue;
 import rmk35.partIIProject.runtime.EnvironmentValue;
+import rmk35.partIIProject.runtime.IdentifierValue;
 
 import rmk35.partIIProject.middle.ASTVisitor;
 import rmk35.partIIProject.middle.ASTConvertVisitor;
@@ -45,22 +46,19 @@ public class DefineBinding extends SintacticBinding
 
       EnvironmentValue bodyEnvironment = environment.subEnvironment();
 
-      List<Binding> formals = functionDefine.transform("(arguments ...)").accept(new ASTListMapVisitor<>
-        (ast -> bodyEnvironment.addLocalVariable(name, ast.accept(new ASTExpectIdentifierVisitor()).getValue())));
-      Binding lastFormal;
+      List<IdentifierValue> formals = functionDefine.transform("(arguments ...)").accept(new ASTListMapVisitor<>
+        (new ASTExpectIdentifierVisitor()));
+      IdentifierValue lastFormal;
       if (functionDefine.transform("final") instanceof NullValue)
       { lastFormal = null;
       } else
-      { lastFormal = bodyEnvironment.addLocalVariable(name, functionDefine.transform("final").accept(new ASTExpectIdentifierVisitor()).getValue());
+      { lastFormal = functionDefine.transform("final").accept(new ASTExpectIdentifierVisitor());
       }
       String comment = new ConsValue(operator, operands, operator.getSourceInfo()).writeString();
-      InnerClass innerClass = new InnerClass(name, formals, lastFormal, mainClass, comment);
+      InnerClass innerClass = new InnerClass(mainClass.getPackage(), name, bodyEnvironment, formals, lastFormal, mainClass, comment);
 
       ASTVisitor<Statement> convertVisitor = new ASTConvertVisitor(bodyEnvironment, innerClass, mainClass);
       List<Statement> body = functionDefine.transform("(body ...)").accept(new ASTListMapVisitor<>(convertVisitor));
-      if (body.isEmpty())
-      { throw new SyntaxErrorException("Empty lambda body", operator.getSourceInfo());
-      }
       BeginStatement bodyStatement = new BeginStatement(body);
 
       IdentifierStatement variableStatement = (IdentifierStatement) environment.getOrGlobal(mainClass, name).toStatement(operator.getSourceInfo());

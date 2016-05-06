@@ -9,7 +9,7 @@ golden_ratio = (1+sqrt(5))/2
 
 # Multiply time units by 1e-6 to have milli and not nanoseconds
 f(x)=a*golden_ratio**(x)
-fit f(x) 'results.log' using 1:(column(2)*1e-6) via a
+fit f(x) 'results-java.log' using 1:(column(2)*1e-6) via a
 labelf="$" . gprintf("%.1t", a) . "\\times10^{" . gprintf("%.1T", a) . "}\\times{\\varphi}^{n}" . "$"
 
 g(x)=c*golden_ratio**(x)
@@ -29,7 +29,7 @@ set mytics 2
 set y2tics rotate 1000 nomirror
 set my2tics 2
 
-plot 'results.log' using 1:(column(2)*1e-6):(column(3)*1e-6) with errorbars linecolor '#000000' title "Java (".labelf.")", \
+plot 'results-java.log' using 1:(column(2)*1e-6):(column(3)*1e-6) with errorbars linecolor '#000000' title "Java (".labelf.")", \
     f(x) with lines linetype 'dashed' linecolor '#000000' notitle labelf, \
     'results-scheme-own-stack.log' using 1:(column(2)*1e-6):(column(3)*1e-6) with errorbars title "Scheme (".labelg.")" axes x1y2, \
     g(x) with lines linetype 'dotdash' linecolor '#000000' notitle labelg axes x1y2

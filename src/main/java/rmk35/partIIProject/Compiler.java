@@ -2,6 +2,10 @@ package rmk35.partIIProject;
 
 import rmk35.partIIProject.runtime.RuntimeValue;
 import rmk35.partIIProject.runtime.EnvironmentValue;
+import rmk35.partIIProject.runtime.LambdaValue;
+import rmk35.partIIProject.runtime.NullValue;
+import rmk35.partIIProject.runtime.ConsValue;
+import rmk35.partIIProject.runtime.ValueHelper;
 
 import rmk35.partIIProject.frontend.SchemeParser;
 
@@ -66,6 +70,14 @@ public class Compiler
     programme.generateOutput(mainClass, mainClass.getMainInnerClass(), mainClass.getPrimaryMethod());
     if (intermediateCode) mainClass.saveToDisk();
     mainClass.assembleToDisk();
+  }
+
+  public static Object schemeCall(LambdaValue function, Object... arguments)
+  { RuntimeValue schemeArguments = new NullValue();
+    for (int i = arguments.length-1; i >= 0; i--)
+    { schemeArguments = new ConsValue(ValueHelper.toSchemeValue(arguments[i]), schemeArguments);
+    }
+    return tailCallSettings.apply(function, schemeArguments).toJavaValue();
   }
 }
 

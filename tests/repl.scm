@@ -11,7 +11,8 @@
     '(scheme java)
     '(scheme read)
     '(scheme repl)
-    '(scheme write)))
+    '(scheme write)
+    '(scheme time)))
 
 (let loop ()
   ((static-field (class 'java.lang.System) 'out) 'print "> ")

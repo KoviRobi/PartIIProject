@@ -29,7 +29,7 @@ public class CallStack
   long startTime = 0;
   long endTime = 0;
 
-  static CallStack currentCallStack;
+  static CallStack currentCallStack; // ToDo: Make this per thread, e.g using a thread ID to CallStack map
 
   public static CallStack getCurrentCallStack()
   { if (currentCallStack == null)
@@ -102,7 +102,17 @@ public class CallStack
     return returnValue;
   }
 
-  public RuntimeValue start(LambdaValue function, RuntimeValue arguments)
+  public static RuntimeValue start(LambdaValue function, RuntimeValue arguments)
+  { CallStack savedCallStack = currentCallStack;
+    try
+    { currentCallStack = new CallStack();
+      return currentCallStack.run(function, arguments);
+    } finally
+    { currentCallStack = savedCallStack;
+    }
+  }
+
+  public RuntimeValue run(LambdaValue function, RuntimeValue arguments)
   { programmeCounter = -1; // addFrame will increment it to 0;
     addFrame(function);
     RuntimeValue currentValue = arguments;
