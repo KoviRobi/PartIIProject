@@ -54,4 +54,6 @@ The settings to the compiler are passed in via environment variables, the ones i
 - "intermediate"
  - When set, generates intermediate Jasmin assembly files
 - "profile"
- - When set, Outputs simple profiling data
+ - When set, outputs simple profiling data
+- timeStages
+ - When set, outputs time spent in front, middle (macros, mainly) and back-end stages

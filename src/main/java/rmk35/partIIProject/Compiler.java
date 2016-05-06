@@ -60,7 +60,7 @@ public class Compiler
     : new scheme.base_stack();
   public static boolean intermediateCode = System.getenv("intermediate") != null || System.getenv("intermediateCode") != null;
   public static boolean profile = System.getenv("profile") != null;
-  public static boolean timeStages = System.getenv("profile") != null;
+  public static boolean timeStages = System.getenv("timeStages") != null;
 
   public Compiler(String fileName, String outputName) throws Exception, IOException
   { long start = 0;
