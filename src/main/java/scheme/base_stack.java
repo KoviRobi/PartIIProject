@@ -39,10 +39,11 @@ public class base_stack extends base
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue first)
-    { if (CallStack.getCurrentCallStack().restoreHandler())
-      { return new ThrowableValue(first);
-      } else
+    { LambdaValue handler = CallStack.getCurrentCallStack().restoreHandler();
+      if (handler == null)
       { throw new ThrowableValue(first);
+      } else
+      { return new CallValue(handler, new ConsValue(first, new NullValue()));
       }
     }
   };
@@ -57,9 +58,9 @@ public class base_stack extends base
 
   public static RuntimeValue with_exception_handler =
   new BinaryLambda()
-  { public RuntimeValue run2(RuntimeValue first, RuntimeValue second)
-    { CallStack.getCurrentCallStack().addHandler((LambdaValue) second);
-      return new CallValue((LambdaValue) first, new NullValue());
+  { public RuntimeValue run2(RuntimeValue handler, RuntimeValue body)
+    { CallStack.getCurrentCallStack().addHandler((LambdaValue) handler);
+      return new CallValue((LambdaValue) body, new NullValue());
     }
   };
 

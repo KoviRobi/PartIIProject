@@ -2,6 +2,5 @@
         (scheme write))
 
 (with-exception-handler
-  (lambda (x)
-    (displayln x))
+  displayln
   (lambda () (raise "Raise and handle exceptions")))

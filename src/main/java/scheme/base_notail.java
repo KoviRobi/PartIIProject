@@ -58,7 +58,8 @@ public class base_notail extends base
   { @Override
     public RuntimeValue run3(RuntimeValue before, RuntimeValue body, RuntimeValue after)
     { try
-      { return ((LambdaValue) body).apply(new NullValue());
+      { ((LambdaValue) before).apply(new NullValue());
+        return ((LambdaValue) body).apply(new NullValue());
       } finally
       { ((LambdaValue) after).apply(new NullValue());
       }

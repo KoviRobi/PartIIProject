@@ -29,6 +29,9 @@ import rmk35.partIIProject.runtime.ErrorValue;
 import rmk35.partIIProject.runtime.UnspecifiedValue;
 import rmk35.partIIProject.runtime.EnvironmentValue;
 import rmk35.partIIProject.runtime.ContinuationValue;
+import rmk35.partIIProject.runtime.ports.PortValue;
+import rmk35.partIIProject.runtime.ports.InputPortValue;
+import rmk35.partIIProject.runtime.ports.OutputPortValue;
 
 public abstract class ASTVisitor<T>
 { // This is subclass only access modifier, as below explicitly lists all values,
@@ -46,7 +49,7 @@ public abstract class ASTVisitor<T>
   public T visit(BooleanValue booln) throws SyntaxErrorException { return visit((SelfquotingValue)booln); }
   public T visit(BytevectorValue bytevector) throws SyntaxErrorException { return visit((SelfquotingValue)bytevector); }
   public T visit(CharacterValue character) throws SyntaxErrorException { return visit((SelfquotingValue)character); }
-  public T visit(NumberValue number) throws SyntaxErrorException { return visit((SelfquotingValue)number); }
+  protected T visit(NumberValue number) throws SyntaxErrorException { return visit((SelfquotingValue)number); }
   public T visit(StringValue string) throws SyntaxErrorException { return visit((SelfquotingValue)string); }
   public T visit(VectorValue vector) throws SyntaxErrorException { return visit((SelfquotingValue)vector); }
 
@@ -66,4 +69,7 @@ public abstract class ASTVisitor<T>
   public T visit(UnspecifiedValue unspecified) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Don't know what to do with an unspecified value!"); }
   public T visit(EnvironmentValue environment) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Don't know what to do with an environment!"); }
   public T visit(ContinuationValue continuation) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Don't know what to do with a continuation!"); }
+  protected T visit(PortValue continuation) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Don't know what to do with a port!"); }
+  public T visit(InputPortValue continuation) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Don't know what to do with an input port!"); }
+  public T visit(OutputPortValue continuation) throws SyntaxErrorException { throw new InternalCompilerException("Unexpected state: Don't know what to do with an output port!"); }
 }

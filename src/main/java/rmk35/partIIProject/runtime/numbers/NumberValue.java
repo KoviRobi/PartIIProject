@@ -49,11 +49,6 @@ public abstract class NumberValue extends SelfquotingValue
   public SourceInfo getSourceInfo() { return sourceInfo; }
 
   @Override
-  public <T> T accept(ASTVisitor<T> visitor) throws SyntaxErrorException
-  { return visitor.visit(this);
-  }
-
-  @Override
   public void generateByteCode(MainClass mainClass, OutputClass outputClass, ByteCodeMethod method)
   { method.addInstruction(new CommentPseudoInstruction("ByteCode for " + NumberValue.class.getName()));
     method.addInstruction(new StringConstantInstruction(toString()));

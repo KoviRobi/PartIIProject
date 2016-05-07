@@ -20,7 +20,7 @@ import lombok.Value;
 public class CallStack
 { FunctionalList<CallFrame> callStack = new FunctionalListNull<>();
   FunctionalList<RuntimeValue> valueStack = new FunctionalListNull<>();
-  FunctionalList<FunctionalList<CallFrame>> handlers = new FunctionalListNull<>();
+  FunctionalList<Pair<FunctionalList<CallFrame>, LambdaValue>> handlers = new FunctionalListNull<>();
   FunctionalList<Pair<LambdaValue, LambdaValue>> dynamicPoint = new FunctionalListNull<>();
   int programmeCounter = 0;
 
@@ -73,14 +73,15 @@ public class CallStack
 
   public void addHandler(LambdaValue handler)
   { if (programmeCounter != 0 || ! valueStack.isEmpty()) throw new InternalCompilerException("Was expecting handler at start");
-    handlers = new FunctionalListCons<>(new FunctionalListCons<>(new CallFrame(handler, new FunctionalListNull<>(), 0), callStack), handlers);
+    handlers = new FunctionalListCons<>(new Pair<>(callStack, handler), handlers);
   }
 
-  public boolean restoreHandler()
-  { if (handlers.isEmpty()) return false;
-    callStack = handlers.head();
+  public LambdaValue restoreHandler()
+  { if (handlers.isEmpty()) return null;
+    callStack = handlers.head().getFirst();
+    LambdaValue returnValue = handlers.head().getSecond();
     handlers = handlers.tail();
-    return true;
+    return returnValue;
   }
 
 //  public static List<Pair<LambdaValue, LambdaValue>> getDynamicPoints()

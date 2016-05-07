@@ -58,7 +58,8 @@ public class base_trampolining extends base
   { @Override
     public RuntimeValue run3(RuntimeValue before, RuntimeValue body, RuntimeValue after)
     { try
-      { return Trampoline.bounce(new CallValue((LambdaValue) body, new NullValue()));
+      { Trampoline.bounce(new CallValue((LambdaValue) before, new NullValue()));
+        return Trampoline.bounce(new CallValue((LambdaValue) body, new NullValue()));
       } finally
       { Trampoline.bounce(new CallValue((LambdaValue) after, new NullValue()));
       }
