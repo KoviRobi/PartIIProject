@@ -41,6 +41,40 @@ public class derived_expression_types extends ReflectiveEnvironment
     "     (begin result1 result2 ...)\n" +
     "     (cond clause1 clause2 ...))");
 
+  public static Binding cas$000065 = SyntaxBindingCreator.create
+  (Compiler.simpleBaseEnvironment
+  , Arrays.asList("else", "=>")
+  , "(case (key ...)\n" +
+    "  clauses ...)"
+  , "(let ((atom-key (key ...)))\n" +
+    "  (case atom-key clauses ...))"
+  , "(case key\n" +
+    "  (else => result))"
+  , "(result key)"
+  , "(case key\n" +
+    "  (else result1 result2 ...))"
+  , "(begin result1 result2 ...)"
+  , "(case key\n" +
+    "  ((atoms ...) result1 result2 ...))"
+  , "(if (memv key '(atoms ...))\n" +
+    "    (begin result1 result2 ...))"
+  , "(case key\n" +
+    "  ((atoms ...) => result))"
+  , "(if (memv key '(atoms ...))\n" +
+    "    (result key))"
+  , "(case key\n" +
+    "  ((atoms ...) => result)\n" +
+    "  clause clauses ...)"
+  , "(if (memv key '(atoms ...))\n" +
+    "    (result key)\n" +
+    "    (case key clause clauses ...))"
+  , "(case key\n" +
+    "  ((atoms ...) result1 result2 ...)\n" +
+    "  clause clauses ...)"
+  , "(if (memv key '(atoms ...))\n" +
+    "    (begin result1 result2 ...)\n" +
+    "    (case key clause clauses ...))");
+
   public static Binding d$00006F /* do */ = SyntaxBindingCreator.create
   (Compiler.simpleBaseEnvironment
   , "(do ((var init step ...) ...)\n" +
@@ -64,11 +98,32 @@ public class derived_expression_types extends ReflectiveEnvironment
   , "(do \"step\" x y)"
   , "y");
 
+  public static Binding and = SyntaxBindingCreator.create
+  (Compiler.simpleBaseEnvironment
+  , "(and)", "#true"
+  , "(and test)", "test"
+  , "(and test1 test2 ...)"
+  , "(if test1 (and test2 ...) #true)");
+
+  public static Binding or = SyntaxBindingCreator.create
+  (Compiler.simpleBaseEnvironment
+  , "(or)", "#false"
+  , "(or test)", "test"
+  , "(or test1 test2 ...)"
+  , "(let ((x test1))\n" +
+    "  (if x x (or test2 ...)))");
+
   public static Binding when = SyntaxBindingCreator.create
   (Compiler.simpleBaseEnvironment
   , "(when test result1 result2 ...)"
   , " (if test\n" +
     "     (begin result1 result2 ...))");
+
+  public static Binding unless = SyntaxBindingCreator.create
+  (Compiler.simpleBaseEnvironment
+  , "(unless test result1 result2 ...)"
+  , "(if (not test)\n" +
+    "    (begin result1 result2 ...))");
 
   public static Binding let$00002A /* let* */ = SyntaxBindingCreator.create
   (Compiler.simpleBaseEnvironment
@@ -79,79 +134,6 @@ public class derived_expression_types extends ReflectiveEnvironment
   , " (let ((name1 val1))\n" +
     "   (let* ((name2 val2) ...)\n" +
     "     body1 body2 ...))");
+
+/* TODO: letrec, letrec*, (these might be better as non-macros?), cond-expand */
 }
-/* Do more:
-(define-syntax \ide{case}
-  (syntax-rules (else =>)
-    ((case (key ...)
-       clauses ...)
-     (let ((atom-key (key ...)))
-       (case atom-key clauses ...)))
-    ((case key
-       (else => result))
-     (result key))
-    ((case key
-       (else result1 result2 ...))
-     (begin result1 result2 ...))
-    ((case key
-       ((atoms ...) result1 result2 ...))
-     (if (memv key '(atoms ...))
-         (begin result1 result2 ...)))
-    ((case key
-       ((atoms ...) => result))
-     (if (memv key '(atoms ...))
-         (result key)))
-    ((case key
-       ((atoms ...) => result)
-       clause clauses ...)
-     (if (memv key '(atoms ...))
-         (result key)
-         (case key clause clauses ...)))
-    ((case key
-       ((atoms ...) result1 result2 ...)
-       clause clauses ...)
-     (if (memv key '(atoms ...))
-         (begin result1 result2 ...)
-         (case key clause clauses ...)))))
-(define-syntax \ide{and}
-  (syntax-rules ()
-    ((and) \sharpfoo{t})
-    ((and test) test)
-    ((and test1 test2 ...)
-     (if test1 (and test2 ...) \sharpfoo{f}))))
-(define-syntax \ide{or}
-  (syntax-rules ()
-    ((or) \sharpfoo{f})
-    ((or test) test)
-    ((or test1 test2 ...)
-     (let ((x test1))
-       (if x x (or test2 ...))))))
-(define-syntax \ide{unless}
-  (syntax-rules ()
-    ((unless test result1 result2 ...)
-     (if (not test)
-         (begin result1 result2 ...)))))
-(define-syntax \ide{do}
-  (syntax-rules ()
-    ((do ((var init step ...) ...)
-         (test expr ...)
-         command ...)
-     (letrec
-       ((loop
-         (lambda (var ...)
-           (if test
-               (begin
-                 (if \#f \#f)
-                 expr ...)
-               (begin
-                 command
-                 ...
-                 (loop (do "step" var step ...)
-                       ...))))))
-       (loop init ...)))
-    ((do "step" x)
-     x)
-    ((do "step" x y)
-     y)))
-* This is not exhaustive, do the rest too
-*/

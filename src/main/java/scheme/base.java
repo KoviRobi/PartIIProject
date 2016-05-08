@@ -53,6 +53,7 @@ public abstract class base extends ReflectiveEnvironment
     copyBindings(new strings());
     copyBindings(new vectors());
     copyBindings(new derived_expression_types());
+    copyBindings(new io());
     setMutable(false);
   }
 }

@@ -29,6 +29,7 @@ public class EnvironmentValue implements RuntimeValue
   boolean mutable = false;
   List<Statement> initializer = new ArrayList<>();
   static Set<String> undefinedVariables = new HashSet<>();
+  int level = 0;
 
   public EnvironmentValue() { }
   public EnvironmentValue(boolean mutable) { this.mutable = mutable; }
@@ -50,6 +51,7 @@ public class EnvironmentValue implements RuntimeValue
     for (Map.Entry<String, Binding> binding : entrySet())
     { returnValue.addBinding(binding.getKey(), binding.getValue().subEnvironment());
     }
+    returnValue.level = level + 1;
     returnValue.setMutable(mutable);
     return returnValue;
   }
@@ -61,6 +63,8 @@ public class EnvironmentValue implements RuntimeValue
   public Statement getInitializer()
   { return new SequenceStatement(initializer);
   }
+
+  public int getLevel() { return level; }
 
   public Set<Map.Entry<String, Binding>> entrySet() { return bindings.entrySet(); }
   public boolean contains(String identifier) { return bindings.containsKey(identifier); }

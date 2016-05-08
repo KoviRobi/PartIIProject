@@ -31,32 +31,15 @@ public class LetBinding extends SintacticBinding
 { @Override
   public Statement applicate(EnvironmentValue environment, OutputClass outputClass, MainClass mainClass, RuntimeValue operator, RuntimeValue operands)
   { //  Copy environment for lexical effect
-    EnvironmentValue letEnvironment = new EnvironmentValue(environment, /* mutable */ true);
     ASTMatcher simpleLetSubstitution = new ASTMatcher(Compiler.baseEnvironment, environment, "(((name value) ...) body ...)", operands);
     if (simpleLetSubstitution.matched())
-    { /* Case for simple let */
-      List<Statement> letStatements = new ArrayList<>();
-      if (simpleLetSubstitution.get("name") != null)
-      { PerfectBinaryTree.map
-          (simpleLetSubstitution.get("name")
-          ,simpleLetSubstitution.get("value")
-          ,(nameAST, valueAST) ->
-            { String name = nameAST.accept(new ASTExpectIdentifierVisitor()).getValue();
-              letStatements.add(new DefineStatement
-                  (letEnvironment.addLocalVariable(outputClass, name).toStatement(operator.getSourceInfo())
-                  ,valueAST.accept(new ASTConvertVisitor(environment, outputClass, mainClass)))); /* Note the use of environment, not letEnvironment, as this is not let* */
-              return null;
-            }
-          );
-        }
-      if (simpleLetSubstitution.get("body") == null)
-      { throw new SyntaxErrorException("Empty lambda body", operator.getSourceInfo());
-      }
-      simpleLetSubstitution.get("body").forEach(value -> letStatements.add(value.accept(new ASTConvertVisitor(letEnvironment, outputClass, mainClass))));
-      return new BeginStatement(letStatements);
+    { /* Case for named let */
+      return simpleLetSubstitution.convert(outputClass, mainClass,
+        "((lambda (name ...) body ...)\n" +
+        "value ...)");
     }
 
-    ASTMatcher namedLetSubstitution = new ASTMatcher(Compiler.baseEnvironment, letEnvironment, "(loop-name ((name value) ...) body ...)", operands);
+    ASTMatcher namedLetSubstitution = new ASTMatcher(Compiler.baseEnvironment, environment, "(loop-name ((name value) ...) body ...)", operands);
     if (namedLetSubstitution.matched())
     { /* Case for named let */
       return namedLetSubstitution.convert(outputClass, mainClass,

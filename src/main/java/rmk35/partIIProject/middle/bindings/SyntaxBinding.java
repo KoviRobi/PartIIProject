@@ -57,20 +57,19 @@ public class SyntaxBinding extends SintacticBinding
 
   @Override
   public Statement applicate(EnvironmentValue useEnvironment, OutputClass outputClass, MainClass mainClass, RuntimeValue operator, RuntimeValue operands)
-  { // See Macros That Work, figure 3
+  { // So that variables go up the correct number of parents
+    EnvironmentValue subDefinitionEnvironment = definitionEnvironment;
+    for (int i = definitionEnvironment.getLevel(); i < useEnvironment.getLevel(); i++)
+    { subDefinitionEnvironment = subDefinitionEnvironment.subEnvironment();
+    }
+    // See Macros That Work, figure 3
     for (Pair<ASTMatchVisitor, Pair<Collection<String>, RuntimeValue>> pair : patternsAndTemplates)
     { pair.getFirst().setUseEnvironment(useEnvironment);
       try
       { Substitution substitution = (new ConsValue(operator, operands, operator.getSourceInfo())).accept(pair.getFirst());
         if (substitution != null)
-        { Binding oldEllipsisBinding = definitionEnvironment.getOrNull(ellipsisString);
-          definitionEnvironment.addBinding(ellipsisString, new EllipsisBinding());
-          Pair<RuntimeValue, EnvironmentValue> rewritten = pair.getSecond().getSecond().accept(new ASTMacroRewriteVisitor(substitution, definitionEnvironment, useEnvironment, pair.getSecond().getFirst()));
-          if (oldEllipsisBinding == null)
-          { definitionEnvironment.removeBinding(ellipsisString);
-          } else
-          { definitionEnvironment.addBinding(ellipsisString, oldEllipsisBinding);
-          }
+        { subDefinitionEnvironment.addBinding(ellipsisString, new EllipsisBinding());
+          Pair<RuntimeValue, EnvironmentValue> rewritten = pair.getSecond().getSecond().accept(new ASTMacroRewriteVisitor(substitution, subDefinitionEnvironment, useEnvironment, pair.getSecond().getFirst()));
           return rewritten.getFirst().accept(new ASTConvertVisitor(new CarbonCopyEnvironment(rewritten.getSecond(), useEnvironment), outputClass, mainClass));
         }
       } finally
