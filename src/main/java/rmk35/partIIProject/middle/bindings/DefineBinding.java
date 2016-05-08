@@ -40,8 +40,14 @@ public class DefineBinding extends SintacticBinding
     if (functionDefine.matched())
     { String name = functionDefine.transform("name").accept(new ASTExpectIdentifierVisitor()).getValue();
       Binding variableBinding = environment.getOrNull(name);
-      if (variableBinding == null || ! (variableBinding instanceof VariableBinding))
-      { environment.addGlobalVariable(mainClass, name);
+      if (outputClass instanceof MainClass)
+      { if (variableBinding == null || ! (variableBinding instanceof VariableBinding))
+        { environment.addGlobalVariable((MainClass) outputClass, name);
+        }
+      } else /* Internal definitions */
+      { if (variableBinding == null || ! (variableBinding instanceof LocalBinding))
+        { environment.addLocalVariable(outputClass, name);
+        }
       }
 
       EnvironmentValue bodyEnvironment = environment.subEnvironment();
@@ -55,7 +61,8 @@ public class DefineBinding extends SintacticBinding
       { lastFormal = functionDefine.transform("final").accept(new ASTExpectIdentifierVisitor());
       }
       String comment = new ConsValue(operator, operands, operator.getSourceInfo()).writeString();
-      InnerClass innerClass = new InnerClass(mainClass.getPackage(), outputClass.getClassName() + "$" + name, bodyEnvironment, formals, lastFormal, mainClass, comment);
+      String innerClassName = outputClass.getClassName() + "$" + IdentifierValue.javaifyName(name);
+      InnerClass innerClass = new InnerClass(mainClass.getPackage(), innerClassName, bodyEnvironment, formals, lastFormal, mainClass, comment);
 
       ASTVisitor<Statement> convertVisitor = new ASTConvertVisitor(bodyEnvironment, innerClass, mainClass);
       List<Statement> body = functionDefine.transform("(body ...)").accept(new ASTListMapVisitor<>(convertVisitor));
@@ -73,8 +80,14 @@ public class DefineBinding extends SintacticBinding
     Statement expression = second.getCar().accept(new ASTConvertVisitor(environment, outputClass, mainClass));
     second.getCdr().accept(new ASTExpectNilVisitor());
 
-    if (variableBinding == null || ! (variableBinding instanceof VariableBinding))
-    { environment.addGlobalVariable(mainClass, variable);
+    if (outputClass instanceof MainClass)
+    { if (variableBinding == null || ! (variableBinding instanceof VariableBinding))
+      { environment.addGlobalVariable((MainClass) outputClass, variable);
+      }
+    } else /* Internal definitions */
+    { if (variableBinding == null || ! (variableBinding instanceof LocalBinding))
+      { environment.addLocalVariable(outputClass, variable);
+      }
     }
 
     IdentifierStatement variableStatement = (IdentifierStatement) environment.getOrGlobal(mainClass, variable).toStatement(operator.getSourceInfo());

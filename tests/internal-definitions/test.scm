@@ -1,0 +1,10 @@
+(import (scheme base)
+        (scheme write))
+
+(define x 0)
+(writeln x)
+(let ((x 1))
+  (writeln x)
+  (define x 2)
+  (writeln x) )
+(writeln x)
