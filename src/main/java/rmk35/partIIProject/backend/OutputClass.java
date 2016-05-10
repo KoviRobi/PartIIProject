@@ -139,6 +139,8 @@ public abstract class OutputClass
   /* Gets the primary method of the class, either the main or the apply method (for Main and Inner classes respectively) */
   public abstract ByteCodeMethod getPrimaryMethod();
   public abstract String getSuperClassName();
+  /* Whether definitions should be internal */
+  public abstract boolean isInternal();
 
   public static String namePart(List<String> packageAndName)
   { return packageAndName.get(packageAndName.size()-1);

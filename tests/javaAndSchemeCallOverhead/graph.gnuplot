@@ -4,7 +4,7 @@ set xrange [-0.5:3.5]
 
 set key off
 
-set xtic ("\\vspace{-1.5\\baselineskip}Java to Java" 0, "Java to Scheme" 1, "\\vspace{-1.5\\baselineskip}Scheme to Scheme" 2, "Scheme to Java" 3)
+set xtic ("\\vspace{-2\\baselineskip}Java to Java" 0, "Java to Scheme" 1, "\\vspace{-2\\baselineskip}Scheme to Scheme" 2, "Scheme to Java" 3)
 set xtic scale 0
 
 set ylabel "Execution time / ns"

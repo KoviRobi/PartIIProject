@@ -95,4 +95,8 @@ public class InnerClass extends OutputClass
     returnValue.add(name);
     return returnValue;
   }
+
+  public boolean isInternal()
+  { return true;
+  }
 }

@@ -107,4 +107,8 @@ public class MainClass extends OutputClass
     { oc.assembleToDisk();
     }
   }
+
+  public boolean isInternal()
+  { return false;
+  }
 }

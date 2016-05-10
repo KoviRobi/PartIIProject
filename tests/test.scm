@@ -19,19 +19,8 @@
 
 ;(displayln (call/cc (lambda (cc) (cc "Foo"))))
 
-(define get/cc (lambda () (call-with-current-continuation (lambda (c) c))))
-((lambda (yin)
-  ((lambda (yang)
-    (yin yang) )
-   ((lambda (cc)
-           (display "*") cc)
-          (get/cc) ) ) )
- ((lambda (cc)
-   (display "@") cc)
-  (get/cc) ) )
-
-(define behaviour 1)
-(define make-box
+#;(define behaviour 1)
+#;(define make-box
   (lambda (value)
     (let ((box
       (call-with-current-continuation (lambda (exit)
@@ -47,7 +36,18 @@
       (box 'set value)
       box ) ) )
 
-(define box (make-box 1))
-(displayln (box 'get))
-(box 'set 3)
-(displayln (box 'get))
+#;(define box (make-box 7))
+#;(displayln (box 'get))
+#;(box 'set 5)
+#;(displayln (box 'get))
+
+(define (get/cc) (call-with-current-continuation (lambda (c) c)))
+(let* ((yin
+         ((lambda (cc)
+           (display "@") cc)
+          (get/cc) ) )
+       (yang
+         ((lambda (cc)
+           (display "*") cc)
+          (get/cc) ) ) )
+    (yin yang) )

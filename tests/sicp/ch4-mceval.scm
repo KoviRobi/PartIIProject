@@ -5,7 +5,6 @@
 
 (define true #true)
 (define false #false)
-(define (newline) (display #\newline))
 (define (map f list)
   (if (null? list)
     '()
@@ -319,6 +318,13 @@
         (list 'cons cons)
         (list 'null? null?)
 ;;      more primitives
+        (list 'display display)
+        (list 'displayln displayln)
+        (list 'newline newline)
+        (list '+ +)
+        (list '- -)
+        (list '* *)
+        (list '/ /)
         ))
 
 (define (primitive-procedure-names)

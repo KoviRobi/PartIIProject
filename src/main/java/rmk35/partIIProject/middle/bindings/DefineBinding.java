@@ -40,9 +40,9 @@ public class DefineBinding extends SintacticBinding
     if (functionDefine.matched())
     { String name = functionDefine.transform("name").accept(new ASTExpectIdentifierVisitor()).getValue();
       Binding variableBinding = environment.getOrNull(name);
-      if (outputClass instanceof MainClass)
+      if (outputClass.isInternal())
       { if (variableBinding == null || ! (variableBinding instanceof VariableBinding))
-        { environment.addGlobalVariable((MainClass) outputClass, name);
+        { environment.addGlobalVariable(mainClass, name);
         }
       } else /* Internal definitions */
       { if (variableBinding == null || ! (variableBinding instanceof LocalBinding))
@@ -80,9 +80,9 @@ public class DefineBinding extends SintacticBinding
     Statement expression = second.getCar().accept(new ASTConvertVisitor(environment, outputClass, mainClass));
     second.getCdr().accept(new ASTExpectNilVisitor());
 
-    if (outputClass instanceof MainClass)
+    if (outputClass.isInternal())
     { if (variableBinding == null || ! (variableBinding instanceof VariableBinding))
-      { environment.addGlobalVariable((MainClass) outputClass, variable);
+      { environment.addGlobalVariable(mainClass, variable);
       }
     } else /* Internal definitions */
     { if (variableBinding == null || ! (variableBinding instanceof LocalBinding))
