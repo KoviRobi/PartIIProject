@@ -1,5 +1,5 @@
 (define-library (schemeCall test)
-  (export testf)
+  (export (rename testf test))
   (import (scheme base))
   (begin
     (define (testf a b) b) ) )

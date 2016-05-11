@@ -32,10 +32,12 @@ import java.util.ArrayList;
 
 public class InnerClass extends OutputClass
 { String comment;
+  boolean internal;
 
-  public InnerClass(List<String> packageName, String name, EnvironmentValue environment, List<IdentifierValue> formals, IdentifierValue improperFormalOrNull, MainClass mainClass, String comment)
+  public InnerClass(List<String> packageName, String name, EnvironmentValue environment, List<IdentifierValue> formals, IdentifierValue improperFormalOrNull, MainClass mainClass, String comment, boolean internal)
   { super(makeFullName(packageName, name));
     this.comment = comment;
+    this.internal = internal;
 
     // Ensure closure variables exist and also that they are set on construction
     ByteCodeMethod initializerMethod = new ByteCodeMethod(/* jumps */ false, voidType, "public", "<init>", lambdaValueType);
@@ -97,6 +99,6 @@ public class InnerClass extends OutputClass
   }
 
   public boolean isInternal()
-  { return true;
+  { return internal;
   }
 }

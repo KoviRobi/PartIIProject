@@ -21,7 +21,7 @@
 (repeat 0 100000 1
   (lambda (n)
     (let* ((start (current-jiffy))
-           (result (testf 1 "foo"))
+           (result (test 1 "foo"))
            (end (current-jiffy)) )
       (display "Scheme to Scheme,")
       (displayln (- end start)) ) ) )

@@ -41,12 +41,12 @@ public class DefineBinding extends SintacticBinding
     { String name = functionDefine.transform("name").accept(new ASTExpectIdentifierVisitor()).getValue();
       Binding variableBinding = environment.getOrNull(name);
       if (outputClass.isInternal())
-      { if (variableBinding == null || ! (variableBinding instanceof VariableBinding))
-        { environment.addGlobalVariable(mainClass, name);
-        }
-      } else /* Internal definitions */
       { if (variableBinding == null || ! (variableBinding instanceof LocalBinding))
         { environment.addLocalVariable(outputClass, name);
+        }
+      } else /* Global definitions */
+      { if (variableBinding == null || ! (variableBinding instanceof VariableBinding))
+        { environment.addGlobalVariable(mainClass, name);
         }
       }
 
@@ -62,7 +62,7 @@ public class DefineBinding extends SintacticBinding
       }
       String comment = new ConsValue(operator, operands, operator.getSourceInfo()).writeString();
       String innerClassName = outputClass.getClassName() + "$" + IdentifierValue.javaifyName(name);
-      InnerClass innerClass = new InnerClass(mainClass.getPackage(), innerClassName, bodyEnvironment, formals, lastFormal, mainClass, comment);
+      InnerClass innerClass = new InnerClass(mainClass.getPackage(), innerClassName, bodyEnvironment, formals, lastFormal, mainClass, comment, true);
 
       ASTVisitor<Statement> convertVisitor = new ASTConvertVisitor(bodyEnvironment, innerClass, mainClass);
       List<Statement> body = functionDefine.transform("(body ...)").accept(new ASTListMapVisitor<>(convertVisitor));
@@ -81,12 +81,12 @@ public class DefineBinding extends SintacticBinding
     second.getCdr().accept(new ASTExpectNilVisitor());
 
     if (outputClass.isInternal())
-    { if (variableBinding == null || ! (variableBinding instanceof VariableBinding))
-      { environment.addGlobalVariable(mainClass, variable);
-      }
-    } else /* Internal definitions */
     { if (variableBinding == null || ! (variableBinding instanceof LocalBinding))
       { environment.addLocalVariable(outputClass, variable);
+      }
+    } else /* Global definitions */
+    { if (variableBinding == null || ! (variableBinding instanceof VariableBinding))
+      { environment.addGlobalVariable(mainClass, variable);
       }
     }
 

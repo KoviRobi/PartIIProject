@@ -38,7 +38,7 @@ public class ASTLibraryVisitor extends ASTVisitor<Void>
   @Override
   public Void visit(ConsValue consCell)
   { ASTMatcher export = new ASTMatcher(environment, environment, "(export identifier ...)", consCell, "export");
-    if (export.matched()) // ToDo: rename
+    if (export.matched())
     { export.get("identifier").forEach(libraryClass::addLibraryExport);
       return null;
     }

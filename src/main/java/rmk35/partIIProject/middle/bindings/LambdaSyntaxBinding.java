@@ -54,7 +54,7 @@ public class LambdaSyntaxBinding extends SintacticBinding
     { lastFormal = lambda.transform("final").accept(new ASTExpectIdentifierVisitor());
     }
 
-    InnerClass innerClass = new InnerClass(mainClass.getPackage(), innerClassName, bodyEnvironment, formals, lastFormal, mainClass, comment);
+    InnerClass innerClass = new InnerClass(mainClass.getPackage(), innerClassName, bodyEnvironment, formals, lastFormal, mainClass, comment, true);
 
     ASTVisitor<Statement> bodyVisitor = new ASTConvertVisitor(bodyEnvironment, innerClass, mainClass);
     List<Statement> body = lambda.transform("(body ...)").accept(new ASTListMapVisitor<>(bodyVisitor));
