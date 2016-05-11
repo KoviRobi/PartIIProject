@@ -64,10 +64,7 @@ public class EnvironmentImporter
   }
 
   EnvironmentValue getEnvironment(RuntimeValue importSet)
-  { // ToDo: This way only, except and so on are reserved
-    // ToDo: At the moment this is not a problem as they appear before
-    // ToDo: definitions
-    ASTMatcher only = new ASTMatcher(Compiler.baseEnvironment, environment, "(only import-set identifier ...)", importSet, "only");
+  { ASTMatcher only = new ASTMatcher(Compiler.baseEnvironment, environment, "(only import-set identifier ...)", importSet, "only");
     if (only.matched()) return handleOnly(only);
 
     ASTMatcher except = new ASTMatcher(Compiler.baseEnvironment, environment, "(except import-set identifier ...)", importSet, "except");
