@@ -21,6 +21,7 @@ import lombok.Value;
 @Value
 public class ContinuationValue extends LambdaValue
 { FunctionalList<CallFrame> callStack;
+  FunctionalList<Pair<LambdaValue, LambdaValue>> dynamicPoints;
   FunctionalList<RuntimeValue> valueStack;
   int programmeCounter;
 
@@ -43,7 +44,7 @@ public class ContinuationValue extends LambdaValue
 
   public RuntimeValue apply(RuntimeValue argument)
   { CallStack.getCurrentCallStack().setContinuation(this);
-    // NEXT: CallStack.setDynamicPoint(dynamicPoint);
+    // NEXT: Do values
     return ((ConsValue) argument).getCar();
   }
 

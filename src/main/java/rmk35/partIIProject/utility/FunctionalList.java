@@ -1,5 +1,7 @@
 package rmk35.partIIProject.utility;
 
+import java.util.List;
+
 public interface FunctionalList<T>
 { public static <T> FunctionalList<T> list(T... elements)
   { FunctionalList<T> returnList = new FunctionalListNull<T>();
@@ -12,4 +14,6 @@ public interface FunctionalList<T>
   FunctionalList<T> tail();
   boolean isEmpty();
   <U> U accept(FunctionalListVisitor<T, U> visitor);
+  List<T> toJavaList();
+  List<T> toJavaList(List<T> accumulator);
 }

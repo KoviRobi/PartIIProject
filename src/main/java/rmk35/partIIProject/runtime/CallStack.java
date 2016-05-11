@@ -8,9 +8,12 @@ import rmk35.partIIProject.utility.FunctionalList;
 import rmk35.partIIProject.utility.FunctionalListNull;
 import rmk35.partIIProject.utility.FunctionalListCons;
 
+import rmk35.partIIProject.runtime.libraries.DynamicPointPathChain;
+
 import rmk35.partIIProject.middle.ASTVisitor;
 
 import java.util.List;
+import java.util.ListIterator;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
@@ -20,8 +23,8 @@ import lombok.Value;
 public class CallStack
 { FunctionalList<CallFrame> callStack = new FunctionalListNull<>();
   FunctionalList<RuntimeValue> valueStack = new FunctionalListNull<>();
-  FunctionalList<Pair<FunctionalList<CallFrame>, LambdaValue>> handlers = new FunctionalListNull<>();
-  FunctionalList<Pair<LambdaValue, LambdaValue>> dynamicPoint = new FunctionalListNull<>();
+  FunctionalList<ContinuationValue> handlers = new FunctionalListNull<>();
+  FunctionalList<Pair<LambdaValue, LambdaValue>> dynamicPoints = new FunctionalListNull<>();
   int programmeCounter = 0;
 
   Map<String, Long> profile = new HashMap<>();
@@ -62,39 +65,73 @@ public class CallStack
   }
 
   public ContinuationValue getContinuation()
-  { return new ContinuationValue(callStack, valueStack, programmeCounter);
+  { return new ContinuationValue(callStack, dynamicPoints, valueStack, programmeCounter);
   }
 
   public void setContinuation(ContinuationValue continuation)
   { callStack = continuation.getCallStack();
     valueStack = continuation.getValueStack();
-    programmeCounter = continuation.getProgrammeCounter();
+    programmeCounter = -1; // The next addFrame will increment it to zero
+    addFrame(new DynamicPointPathChain(dynamicPointTravel(dynamicPoints, continuation.getDynamicPoints())));
+    dynamicPoints = continuation.getDynamicPoints();
   }
 
-  public void addHandler(LambdaValue handler)
+  public void addHandler()
   { if (programmeCounter != 0 || ! valueStack.isEmpty()) throw new InternalCompilerException("Was expecting handler at start");
-    handlers = new FunctionalListCons<>(new Pair<>(callStack, handler), handlers);
+    handlers = new FunctionalListCons<>(getContinuation(), handlers);
   }
 
-  public LambdaValue restoreHandler()
-  { if (handlers.isEmpty()) return null;
-    callStack = handlers.head().getFirst();
-    LambdaValue returnValue = handlers.head().getSecond();
+  public boolean restoreHandler()
+  { if (handlers.isEmpty()) return false;
+    setContinuation(handlers.head());
     handlers = handlers.tail();
+    return true;
+  }
+
+  public void addDynamicPoint(LambdaValue before, LambdaValue after)
+  { dynamicPoints = new FunctionalListCons<>(new Pair<>(before, after), dynamicPoints);
+  }
+
+  public void removeDynamicPoint()
+  { dynamicPoints = dynamicPoints.tail();
+  }
+
+  public FunctionalList<Pair<LambdaValue, LambdaValue>> getDynamicPoints()
+  { return dynamicPoints;
+  }
+
+  public void setDynamicPoints(FunctionalList<Pair<LambdaValue, LambdaValue>> dynamicPoints)
+  { this.dynamicPoints = dynamicPoints;
+  }
+
+  public List<Pair<LambdaValue, FunctionalList<Pair<LambdaValue, LambdaValue>>>>
+  dynamicPointTravel(FunctionalList<Pair<LambdaValue, LambdaValue>> afters, FunctionalList<Pair<LambdaValue, LambdaValue>> befores)
+  { List<Pair<LambdaValue, FunctionalList<Pair<LambdaValue, LambdaValue>>>> returnValue = new ArrayList<>();
+    List<Pair<LambdaValue, LambdaValue>> aftersList = afters.toJavaList();
+    List<Pair<LambdaValue, LambdaValue>> beforesList = befores.toJavaList();
+    ListIterator<Pair<LambdaValue, LambdaValue>> aftersIterator = aftersList.listIterator(aftersList.size());
+    ListIterator<Pair<LambdaValue, LambdaValue>> beforesIterator = beforesList.listIterator(beforesList.size());
+    int aftersDifferenceSize = 0;
+    int beforesDifferenceSize = 0;
+    while (aftersIterator.hasPrevious() && beforesIterator.hasPrevious())
+    { if (! (aftersIterator.previous().equals(beforesIterator.previous()))) break;
+    }
+    while (aftersIterator.hasPrevious()) { aftersDifferenceSize++; aftersIterator.previous(); }
+    while (beforesIterator.hasPrevious()) { beforesDifferenceSize++; beforesIterator.previous(); }
+    for (int i = 0; i < aftersDifferenceSize; i++)
+    { returnValue.add(new Pair<>(afters.head().getSecond(), afters));
+      afters = afters.tail();
+    }
+    List<Pair<LambdaValue, FunctionalList<Pair<LambdaValue, LambdaValue>>>> beforesWrongOrder = new ArrayList<>();
+    for (int i = 0; i < beforesDifferenceSize; i++)
+    { beforesWrongOrder.add(new Pair<>(befores.head().getFirst(), befores));
+      befores = befores.tail();
+    }
+    for (Pair<LambdaValue, FunctionalList<Pair<LambdaValue, LambdaValue>>> before : beforesWrongOrder)
+    { returnValue.add(before);
+    }
     return returnValue;
   }
-
-//  public static List<Pair<LambdaValue, LambdaValue>> getDynamicPoints()
-//  { return (ArrayList<Pair<LambdaValue, LambdaValue>>) ((ArrayList<Pair<LambdaValue, LambdaValue>>) dynamicPoint).clone();
-//  }
-//
-//  public static void addDynamicPoint(LambdaValue before, LambdaValue after)
-//  { dynamicPoint.add(new Pair<>(before, after));
-//  }
-//
-//  public static void setDynamicPoint(List<Pair<LambdaValue, LambdaValue>> newDynamicPoint)
-//  {// NEXT:
-//  }
 
   public void pushValue(RuntimeValue value) { valueStack = new FunctionalListCons<>(value, valueStack); }
   public RuntimeValue popValue()

@@ -7,6 +7,7 @@ import rmk35.partIIProject.runtime.ConsValue;
 import rmk35.partIIProject.runtime.LambdaValue;
 import rmk35.partIIProject.runtime.NullValue;
 import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.ErrorValue;
 import rmk35.partIIProject.runtime.ThrowableValue;
 import rmk35.partIIProject.runtime.ContinuableThrowableValue;
 import rmk35.partIIProject.runtime.CallValue;
@@ -39,11 +40,10 @@ public class base_stack extends base
   new UnaryLambda()
   { @Override
     public RuntimeValue run1(RuntimeValue first)
-    { LambdaValue handler = CallStack.getCurrentCallStack().restoreHandler();
-      if (handler == null)
-      { throw new ThrowableValue(first);
+    { if (CallStack.getCurrentCallStack().restoreHandler())
+      { return new ThrowableValue(first);
       } else
-      { return new CallValue(handler, new ConsValue(first, new NullValue()));
+      { throw new ThrowableValue(first);
       }
     }
   };
@@ -56,23 +56,75 @@ public class base_stack extends base
     }
   };
 
+  public static RuntimeValue error =
+  new VariadicLambda()
+  { @Override
+    public RuntimeValue run(RuntimeValue arguments)
+    { return new ThrowableValue(new ErrorValue(arguments));
+    }
+  };
+
   public static RuntimeValue with_exception_handler =
   new BinaryLambda()
-  { public RuntimeValue run2(RuntimeValue handler, RuntimeValue body)
-    { CallStack.getCurrentCallStack().addHandler((LambdaValue) handler);
+  { LambdaValue handler;
+
+    public RuntimeValue run2(RuntimeValue handler, RuntimeValue body)
+    { CallStack currentCallStack = CallStack.getCurrentCallStack();
+      currentCallStack.addFrame(this);
+      currentCallStack.addHandler();
+      this.handler = (LambdaValue) handler;
       return new CallValue((LambdaValue) body, new NullValue());
+    }
+
+    public RuntimeValue run(RuntimeValue argument)
+    { CallStack currentCallStack = CallStack.getCurrentCallStack();
+      int programmeCounter = currentCallStack.getProgrammeCounter();
+      if (programmeCounter != 1) currentCallStack.invalidJump(argument);
+      if (argument instanceof ThrowableValue)
+      { return new CallValue(handler, new ConsValue(((ThrowableValue) argument).getValue(), new NullValue()));
+      } else
+      { return argument;
+      }
     }
   };
 
   public static RuntimeValue dynamic_wind =
   new TernaryLambda()
-  { @Override
+  { LambdaValue before = null;
+    LambdaValue body = null;
+    LambdaValue after = null;
+    RuntimeValue returnValue = null;
+
+    @Override
     public RuntimeValue run3(RuntimeValue before, RuntimeValue body, RuntimeValue after)
-    { // NEXT: Push before onto stack (which should add the dynamic point)
-      // NEXT: Push current value onto stack
-      // NEXT: Push after onto stack (which should remove the dynamic point)
-      // CallStack.addDynamicPoint((LambdaValue) before, (LambdaValue) after);
-      return null;
+    { this.before = (LambdaValue) before;
+      this.body = (LambdaValue) body;
+      this.after = (LambdaValue) after;
+      return run(new NullValue());
+    }
+    @Override
+    public RuntimeValue run(RuntimeValue arguments)
+    { CallStack currentCallStack = CallStack.getCurrentCallStack();
+      int programmeCounter = currentCallStack.getProgrammeCounter();
+       switch (programmeCounter)
+       { case 0:
+           currentCallStack.addFrame(this);
+           return new CallValue(before, new NullValue());
+         case 1:
+           currentCallStack.addDynamicPoint(before, after);
+           currentCallStack.addFrame(this);
+           return new CallValue(body, new NullValue());
+         case 2:
+           returnValue = arguments;
+           currentCallStack.removeDynamicPoint();
+           currentCallStack.addFrame(this);
+           return new CallValue(after, new NullValue());
+        case 3:
+          return returnValue;
+        default:
+           currentCallStack.invalidJump(arguments);
+       }
+       return null; // Never gets here because invalidJump throws an exception
     }
   };
 

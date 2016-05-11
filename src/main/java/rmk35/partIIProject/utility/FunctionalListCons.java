@@ -1,5 +1,8 @@
 package rmk35.partIIProject.utility;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import lombok.Value;
 
 @Value
@@ -22,4 +25,6 @@ public class FunctionalListCons<T> implements FunctionalList<T>
     returnValue.append("]");
     return returnValue.toString();
   }
+  public List<T> toJavaList() { return toJavaList(new ArrayList<>()); }
+  public List<T> toJavaList(List<T> accumulator) { accumulator.add(head); return tail.toJavaList(accumulator); }
 }
