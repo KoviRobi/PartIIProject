@@ -44,8 +44,7 @@ public class ContinuationValue extends LambdaValue
 
   public RuntimeValue apply(RuntimeValue argument)
   { CallStack.getCurrentCallStack().setContinuation(this);
-    // NEXT: Do values
-    return ((ConsValue) argument).getCar();
+    return ValueHelper.chain(argument);
   }
 
   public RuntimeValue run(RuntimeValue argument) { throw new InternalCompilerException("Called run for a built in function"); }

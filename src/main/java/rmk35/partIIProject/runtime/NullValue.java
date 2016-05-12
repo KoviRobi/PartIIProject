@@ -17,11 +17,12 @@ import static rmk35.partIIProject.backend.instructions.types.StaticConstants.voi
 
 import java.util.ArrayList;
 
-import lombok.Value;
+import lombok.Data;
 
-@Value
+@Data
 public class NullValue implements PrimitiveValue
 { SourceInfo sourceInfo;
+  RuntimeValue nextValue = null;
 
   public NullValue()
   { this(null);
@@ -66,5 +67,13 @@ public class NullValue implements PrimitiveValue
   @Override
   public boolean mutable()
   { return false;
+  }
+
+  public RuntimeValue getNext()
+  { return nextValue;
+  }
+
+  public void setNext(RuntimeValue nextValue)
+  { this.nextValue = nextValue;
   }
 }

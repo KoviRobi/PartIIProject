@@ -1,5 +1,7 @@
 package rmk35.partIIProject.runtime;
 
+import rmk35.partIIProject.SyntaxErrorException;
+
 import rmk35.partIIProject.runtime.numbers.NumberValue;
 
 import java.util.List;
@@ -44,6 +46,26 @@ public class ValueHelper
     } else
     { return new ObjectValue(value);
     }
+  }
+
+  public static RuntimeValue chain(RuntimeValue value)
+  { RuntimeValue returnValue = null;
+    RuntimeValue previousValue = null;
+    while (value instanceof ConsValue)
+    { ConsValue cons = (ConsValue) value;
+      if (returnValue == null) returnValue = cons.getCar();
+      if (previousValue != null) previousValue.setNext(cons.getCar());
+      previousValue = cons.getCar();
+      value = cons.getCdr();
+    }
+    if (! (value instanceof NullValue)) throw new SyntaxErrorException("Can only chain (set a list of values to multiple values) a proper list!", value.getSourceInfo());
+    previousValue.setNext(null);
+    return returnValue;
+  }
+
+  public static RuntimeValue unchain(RuntimeValue value)
+  { if (value == null) return new NullValue();
+    else return new ConsValue(value, unchain(value.getNext()));
   }
 
   static List<Class<?>> getClassHierarchy(Class<?> startClass)

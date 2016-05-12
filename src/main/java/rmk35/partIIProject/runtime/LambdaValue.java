@@ -16,6 +16,7 @@ import java.util.function.Function;
 
 public abstract class LambdaValue implements RuntimeValue, Function<RuntimeValue, RuntimeValue>, Cloneable
 { public LambdaValue parent = null;
+  RuntimeValue nextValue = null;
 
   @Override
   public SourceInfo getSourceInfo() { return null; }
@@ -59,5 +60,13 @@ public abstract class LambdaValue implements RuntimeValue, Function<RuntimeValue
     }
     returnValue.parent = parent;
     return returnValue;
+  }
+
+  public RuntimeValue getNext()
+  { return nextValue;
+  }
+
+  public void setNext(RuntimeValue nextValue)
+  { this.nextValue = nextValue;
   }
 }

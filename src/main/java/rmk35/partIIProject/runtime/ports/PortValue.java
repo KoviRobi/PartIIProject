@@ -3,6 +3,7 @@ package rmk35.partIIProject.runtime.ports;
 import rmk35.partIIProject.SyntaxErrorException;
 
 import rmk35.partIIProject.runtime.RuntimeValue;
+import rmk35.partIIProject.runtime.PrimitiveValue;
 
 import rmk35.partIIProject.frontend.SourceInfo;
 
@@ -20,9 +21,10 @@ import static rmk35.partIIProject.backend.instructions.types.StaticConstants.voi
 import java.io.Closeable;
 import java.io.IOException;
 
-public abstract class PortValue implements RuntimeValue
+public abstract class PortValue implements PrimitiveValue
 { SourceInfo sourceInfo;
   Closeable port;
+  RuntimeValue nextValue = null;
 
   public PortValue(Closeable port)
   { this(port, null);
@@ -64,5 +66,13 @@ public abstract class PortValue implements RuntimeValue
 
   public void close() throws IOException
   { port.close();
+  }
+
+  public RuntimeValue getNext()
+  { return nextValue;
+  }
+
+  public void setNext(RuntimeValue nextValue)
+  { this.nextValue = nextValue;
   }
 }

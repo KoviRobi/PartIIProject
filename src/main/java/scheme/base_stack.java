@@ -152,4 +152,29 @@ public class base_stack extends base
       return new CallValue(function, second);
     }
   };
+
+  public static RuntimeValue values =
+  new VariadicLambda()
+  { @Override
+    public RuntimeValue run(RuntimeValue value) { return ValueHelper.chain(value); }
+  };
+
+  public static RuntimeValue call_with_values =
+  new BinaryLambda()
+  { LambdaValue consumer;
+
+    @Override
+    public RuntimeValue run2(RuntimeValue producer, RuntimeValue consumer)
+    { this.consumer = (LambdaValue) consumer;
+      CallStack.getCurrentCallStack().addFrame(this);
+      return new CallValue((LambdaValue) producer, new NullValue());
+    }
+
+    @Override
+    public RuntimeValue run(RuntimeValue value)
+    { CallStack currentCallStack = CallStack.getCurrentCallStack();
+      if (currentCallStack.getProgrammeCounter() != 1) currentCallStack.invalidJump(value);
+      return new CallValue(consumer, ValueHelper.unchain(value));
+    }
+  };
 }

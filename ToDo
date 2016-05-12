@@ -1,6 +1,6 @@
 g -i 'todo'		`{find . -name '*.java'}
 g -i 'fixme'	`{find . -name '*.java'}
-g -i 'next'		`{find . -name '*.java'}
+g -i 'next:'		`{find . -name '*.java'}
 g -i 'xxx'		`{find . -name '*.java'}
 
 Immutable data (e.g. quoted data) - nice but not necessary

@@ -15,11 +15,12 @@ import rmk35.partIIProject.backend.instructions.DupInstruction;
 import rmk35.partIIProject.backend.instructions.NonVirtualCallInstruction;
 import static rmk35.partIIProject.backend.instructions.types.StaticConstants.voidType;
 
-import lombok.Value;
+import lombok.Data;
 
-@Value
+@Data
 public class EndOfFileValue implements RuntimeValue
 { SourceInfo sourceInfo;
+  RuntimeValue nextValue = null;
 
   public EndOfFileValue()
   { this(null);
@@ -64,5 +65,13 @@ public class EndOfFileValue implements RuntimeValue
   @Override
   public boolean mutable()
   { return false;
+  }
+
+  public RuntimeValue getNext()
+  { return nextValue;
+  }
+
+  public void setNext(RuntimeValue nextValue)
+  { this.nextValue = nextValue;
   }
 }

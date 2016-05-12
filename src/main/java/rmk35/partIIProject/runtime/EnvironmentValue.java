@@ -30,6 +30,7 @@ public class EnvironmentValue implements RuntimeValue
   List<Statement> initializer = new ArrayList<>();
   static Set<String> undefinedVariables = new HashSet<>();
   int level = 0;
+  RuntimeValue nextValue = null;
 
   public EnvironmentValue() { }
   public EnvironmentValue(boolean mutable) { this.mutable = mutable; }
@@ -148,5 +149,13 @@ public class EnvironmentValue implements RuntimeValue
   @Override
   public String toString()
   { return bindings.toString();
+  }
+
+  public RuntimeValue getNext()
+  { return nextValue;
+  }
+
+  public void setNext(RuntimeValue nextValue)
+  { this.nextValue = nextValue;
   }
 }

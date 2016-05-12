@@ -13,6 +13,7 @@ import rmk35.partIIProject.backend.ByteCodeMethod;
 
 public class ThrowableValue extends RuntimeException implements RuntimeValue
 { RuntimeValue value;
+  RuntimeValue nextValue = null;
 
   public ThrowableValue(RuntimeValue value)
   { this.value =  value;
@@ -63,5 +64,13 @@ public class ThrowableValue extends RuntimeException implements RuntimeValue
   @Override
   public boolean mutable()
   { return value.mutable();
+  }
+
+  public RuntimeValue getNext()
+  { return nextValue;
+  }
+
+  public void setNext(RuntimeValue nextValue)
+  { this.nextValue = nextValue;
   }
 }

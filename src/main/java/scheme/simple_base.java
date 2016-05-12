@@ -84,4 +84,10 @@ public class simple_base extends ReflectiveEnvironment
   { @Override
     public RuntimeValue run(RuntimeValue arguments) { throw new ThrowableValue(new ErrorValue(arguments)); }
   };
+
+  public static RuntimeValue procedure$00003F =
+  new UnaryLambda()
+  { @Override
+    public RuntimeValue run1(RuntimeValue value) { return new BooleanValue(value instanceof LambdaValue); }
+  };
 }

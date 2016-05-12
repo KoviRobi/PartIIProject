@@ -27,6 +27,7 @@ public class ConsValue implements PrimitiveValue
 { RuntimeValue car;
   RuntimeValue cdr;
   SourceInfo sourceInfo;
+  RuntimeValue nextValue = null;
 
   public static RuntimeValue create(RuntimeValue car, RuntimeValue cdr)
   { return new ConsValue(car, cdr);
@@ -150,5 +151,13 @@ public class ConsValue implements PrimitiveValue
   @Override
   public boolean mutable()
   { return true;
+  }
+
+  public RuntimeValue getNext()
+  { return nextValue;
+  }
+
+  public void setNext(RuntimeValue nextValue)
+  { this.nextValue = nextValue;
   }
 }

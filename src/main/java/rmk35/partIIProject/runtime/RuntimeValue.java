@@ -16,4 +16,7 @@ public interface RuntimeValue extends AST
   Object toJavaValue();
   default String displayString() { return toString(); }
   default String writeString() { return toString(); }
+
+  RuntimeValue getNext();
+  void setNext(RuntimeValue nextValue);
 }

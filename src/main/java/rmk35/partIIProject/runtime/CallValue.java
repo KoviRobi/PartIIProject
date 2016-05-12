@@ -11,13 +11,14 @@ import rmk35.partIIProject.backend.MainClass;
 import rmk35.partIIProject.backend.OutputClass;
 import rmk35.partIIProject.backend.ByteCodeMethod;
 
-import lombok.Value;
+import lombok.Data;
 
-@Value
+@Data
 public class CallValue implements RuntimeValue
 { // Encapsulate a call to a LambdaValue
   LambdaValue function;
   RuntimeValue arguments;
+  RuntimeValue nextValue = null;
 
   public static CallValue create(RuntimeValue function, RuntimeValue arguments)
   { return new CallValue((LambdaValue) function, arguments);
@@ -51,5 +52,13 @@ public class CallValue implements RuntimeValue
   @Override
   public boolean mutable()
   { return false;
+  }
+
+  public RuntimeValue getNext()
+  { return nextValue;
+  }
+
+  public void setNext(RuntimeValue nextValue)
+  { this.nextValue = nextValue;
   }
 }

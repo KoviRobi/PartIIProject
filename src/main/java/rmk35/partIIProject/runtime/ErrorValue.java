@@ -14,6 +14,7 @@ import rmk35.partIIProject.backend.ByteCodeMethod;
 public class ErrorValue implements RuntimeValue
 { StringValue message;
   RuntimeValue irritants;
+  RuntimeValue nextValue = null;
 
   public ErrorValue(RuntimeValue value)
   { ConsValue first = ((ConsValue) value);
@@ -52,5 +53,13 @@ public class ErrorValue implements RuntimeValue
   @Override
   public boolean mutable()
   { return false;
+  }
+
+  public RuntimeValue getNext()
+  { return nextValue;
+  }
+
+  public void setNext(RuntimeValue nextValue)
+  { this.nextValue = nextValue;
   }
 }

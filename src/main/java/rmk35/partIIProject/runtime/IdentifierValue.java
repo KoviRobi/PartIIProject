@@ -22,12 +22,13 @@ import java.util.Formatter;
 import java.util.Set;
 import java.util.HashSet;
 
-import lombok.Value;
+import lombok.Data;
 
-@Value
+@Data
 public class IdentifierValue implements PrimitiveValue
 { String value;
   SourceInfo sourceInfo;
+  RuntimeValue nextValue = null;
 
   public IdentifierValue(String value)
   { this(value, null);
@@ -129,5 +130,13 @@ public class IdentifierValue implements PrimitiveValue
       }
     }
     return returnValue.toString();
+  }
+
+  public RuntimeValue getNext()
+  { return nextValue;
+  }
+
+  public void setNext(RuntimeValue nextValue)
+  { this.nextValue = nextValue;
   }
 }
