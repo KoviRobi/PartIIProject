@@ -36,6 +36,8 @@ public class InputPortValue extends PortValue
   { return visitor.visit(this);
   }
 
+  public InputStream getInputStream() { return port; }
+
   public int read()
   { try
     { return port.read();
