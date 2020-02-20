@@ -5,27 +5,26 @@ Also see glossary.md
 ## Front-end
 The entry point to the parser is SchemeParser.java To understand the
 parser, have a look at
-src/main/antlr4/rmk35/partIIProject/frontend/SchemeFile.g4, it
+[SchemeFile.g4](src/main/antlr4/rmk35/partIIProject/frontend/SchemeFile.g4), it
 includes the other parts of the grammar, and uses parser actions to
 construct abstract syntax trees. The abstract syntax tree objects are
 under src/main/java/rmk35/partIIProject/runtime as the AST is exposed
 in Scheme to the runtime
 
 ## Back-end
-This is organised into OutputClasses (subclasses: inner and main
-class), which contain ByteCodeMethods which contain a list of
+This is organised into `OutputClasses` (subclasses: inner and main
+class), which contain `ByteCodeMethods` which contain a list of
 instructions. The ByteCodeMethod is populated by the Statements, with
-contain Instructions, by sending a 'generateOutput' message (method
-call) to the Statement class (one begin statement that encapsulates
+contain Instructions, by sending a `generateOutput` message (method
+call) to the `Statement` class (one begin statement that encapsulates
 the whole programme). There are three ways of doing tail calls, not
 doing them, using trampolines or maintaining our own stack. These are
-each subclasses of src/**/backend/statements/TailCallSettings. Briefly  these work by
+each subclasses of `src/**/backend/statements/TailCallSettings`. Briefly  these work by
 
-(tabstop of 8)
-			no tail calls		trampolines			own stack
-			------------------------------------------------------------------------------------------
-method call:	java method call	return a call value		return a call value
-continuation:	do nothing		spawn a trampoline	create a new frame
+|               | no tail calls    | trampolines         | own stack           |
+|---------------|------------------|---------------------|---------------------|
+| method call:  | java method call | return a call value | return a call value |
+| continuation: | do nothing       | spawn a trampoline  | create a new frame  |
 
 ##  Middle
 This connects the front and the back end by converting the data
@@ -38,7 +37,7 @@ or some other macro), hence why we only get such simple output from
 the front-end
 
 ## Runtime
-The AST/runtime objects (mainly the *Value objects). ValueHelper
+The AST/runtime objects (mainly the `*Value` objects). ValueHelper
 contains code to convert Java values to Scheme values
 
 ## Experiments
