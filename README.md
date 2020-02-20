@@ -1,6 +1,9 @@
 # PartIIProject
-Cambridge Part II Project
-Also see glossary.md
+Cambridge Part II Project.
+
+The end-result is the [dissertation](./robert-kovacsics-part-ii-dissertation.pdf), which is what I got marked on.
+
+Also see [glossary.md](glossary.md)
 
 ## Front-end
 The entry point to the parser is SchemeParser.java To understand the
